@@ -53,7 +53,7 @@ namespace ClockScreenSaverGL.Textes
 		private void ChoisitCitation( Form f )
 		{
 			Graphics g = f.CreateGraphics() ;
-			ProchaineCitation( g  ) ;
+			prochaineCitation( g  ) ;
 			g.Dispose() ;
 		}
 		
@@ -83,7 +83,7 @@ namespace ClockScreenSaverGL.Textes
 		/// Calcule une taille de texte adequate pour l'afficher
 		/// </summary>
 		/// <param name="g"></param>
-		private void ProchaineCitation( Graphics g )
+		private void prochaineCitation( Graphics g )
 		{
 			// Puisque les citations ont ete melangees, on prend la suivante dans la liste
 			if ( _derniereCitation < (_citations.Length-1))
@@ -92,10 +92,20 @@ namespace ClockScreenSaverGL.Textes
 				_derniereCitation = 0 ;
 			
 			// Separer la citation et l'auteur
-			string[] words = _citations[_derniereCitation].Split('|');
-			_citation = words[0].Replace("\\n","\n") ;
-			_auteur = "(" + words[1] + ")" ;// - {" + _derniereCitation + '/' + _citations.Length + '}';
-			
+            if (_citations[_derniereCitation].StartsWith("*"))
+            {
+                // C'est un 'Le saviez-vous'
+                _citation = Resources.LeSaviezVous;
+                _auteur = _citations[_derniereCitation].Substring(1);
+            }
+            else
+            {
+                string[] words = _citations[_derniereCitation].Split('|');
+                _citation = words[0];
+                _auteur = "(" + words[1] + ")";// - {" + _derniereCitation + '/' + _citations.Length + '}';
+            }
+
+            _citation.Replace("\\n", "\n");
 			// Choisir une taille de texte adequate
 			int TailleFonte = Math.Min( calculeTailleTexte( g, _citation ), calculeTailleTexte( g, _auteur )) ;
 			_fonte = new Font( FontFamily.GenericSansSerif, TailleFonte, FontStyle.Regular, GraphicsUnit.Pixel ) ;
@@ -182,7 +192,7 @@ namespace ClockScreenSaverGL.Textes
 			
 			// Changer la citation toutes les 5 minutes
 			if ( DateTime.Now.Subtract(_changement ).TotalMilliseconds > DELAI_CHANGEMENT)
-				ProchaineCitation(g) ;			
+				prochaineCitation(g) ;			
 			#if TRACER
 			RenderStop(CHRONO_TYPE.RENDER) ;
 			#endif

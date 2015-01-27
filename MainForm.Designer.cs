@@ -59,16 +59,16 @@ namespace ClockScreenSaverGL
 			this.openGLControl.Size = new System.Drawing.Size(951, 652);
 			this.openGLControl.TabIndex = 0;
 			this.openGLControl.OpenGLInitialized += new System.EventHandler(this.onOpenGLInitialized);
-			this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.OnOpenGLDraw);
+			this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.onOpenGLDraw);
 			this.openGLControl.GDIDraw += new SharpGL.RenderEventHandler(this.onGDIDraw);
-			this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
+			this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
 			this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
 			// 
 			// timerChangeFond
 			// 
 			this.timerChangeFond.Enabled = true;
 			this.timerChangeFond.Interval = 180000;
-			this.timerChangeFond.Tick += new System.EventHandler(this.onTimerChangeFond);
+			this.timerChangeFond.Tick += new System.EventHandler(this.onTimerChangeBackground);
 			// 
 			// MainForm
 			// 
@@ -83,7 +83,7 @@ namespace ClockScreenSaverGL
 			this.Text = "ClockScreenSaverGL";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.Load += new System.EventHandler(this.onLoad);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
+			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
 			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
 			((System.ComponentModel.ISupportInitialize)(this.openGLControl)).EndInit();
 			this.ResumeLayout(false);

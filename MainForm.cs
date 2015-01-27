@@ -31,22 +31,23 @@ namespace ClockScreenSaverGL
 		const string DELAI_CHANGE_FOND_MINUTES = "DelaiChangeFondMinutes" ;
 		private  static Config conf = Config.getInstance() ;
 		#endregion
-		CouleurGlobale couleur = new CouleurGlobale() ;
-		private List<DisplayedObject> listeObjets = new List<DisplayedObject>();
-		private int JourActuel = -1 ; // Pour forcer un changement de date avant la premiere image
-		private bool AfficherHelp = false ;
+
+		CouleurGlobale _couleur = new CouleurGlobale() ;
+		private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
+		private int _jourActuel = -1 ; // Pour forcer un changement de date avant la premiere image
+		private bool _afficherAide = false ;
 		
 		const string PARAM_FONDDESAISON = "FondDeSaison" ;
 		const string PARAM_TYPEFOND = "TypeFond" ;
+        const int NB_FONDS = 11;
 		
 		private bool _fondDeSaison  ;
 		DateTime _derniereFrame = DateTime.Now ;
 		DateTime _debut =  DateTime.Now ;
 		Temps _temps ;
-		const int NB_FONDS = 11 ;
 		
 		#if TRACER
-		bool AfficheDebug = conf.getParametre(CAT, "Debug", true );
+		bool _afficheDebug = conf.getParametre(CAT, "Debug", true );
 		DateTime lastFrame = DateTime.Now ;
 		
 		Process currentProc = Process.GetCurrentProcess();
@@ -119,7 +120,7 @@ namespace ClockScreenSaverGL
 		/// Creer l'objet qui anime le fond d'ecran
 		/// </summary>
 		/// <returns></returns>
-		private Fonds.Fond CreerObjetFond( int Type, bool initial )
+		private Fonds.Fond createBackgroundObject( int Type, bool initial )
 		{
 			OpenGL gl = openGLControl.OpenGL;
 			if ( _fondDeSaison && initial)
@@ -147,6 +148,12 @@ namespace ClockScreenSaverGL
 			
 			
 		}
+
+        /// <summary>
+        /// Chargement de la fenetre et de ses composants
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		void onLoad(object sender, System.EventArgs e)
 		{
 			try
@@ -168,10 +175,16 @@ namespace ClockScreenSaverGL
 				Application.Exit() ;
 			}
 		}
+
+        /// <summary>
+        /// Partie GDI (2D) de l'affichage
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
 		void onGDIDraw(object sender, SharpGL.RenderEventArgs args)
 		{
 			Graphics g = args.Graphics ;
-			DeplaceTous(g) ;
+			moveAll(g) ;
 			RectangleF r = g.ClipBounds ;
 			try
 			{
@@ -179,16 +192,16 @@ namespace ClockScreenSaverGL
 				g.TextRenderingHint = TextRenderingHint.AntiAlias ;
 				g.CompositingQuality = CompositingQuality.HighQuality ;
 				
-				Color Couleur = couleur.GetRGB() ;
+				Color Couleur = _couleur.GetRGB() ;
 				
 				// Deplacer et Afficher tous les objets
-				foreach( DisplayedObject b in listeObjets)
+				foreach( DisplayedObject b in _listeObjets)
 					b.AfficheGDI( g, _temps, Bounds, Couleur) ;
 				
 
 				#if TRACER
 				// Afficher les informations de DEBUG
-				if (AfficheDebug)
+				if (_afficheDebug)
 				{
 					StringBuilder s = new StringBuilder() ;
 					
@@ -201,12 +214,12 @@ namespace ClockScreenSaverGL
 					s.Append(Assembly.GetExecutingAssembly().GetName().Version).Append("\n\n");
 
 					s.Append( (1000.0/NbMillisec).ToString( "0.0") + " FPS\n\n")
-						.Append("Couleur: " + couleur.ToString() + "\n\n")
+						.Append("Couleur: " + _couleur.ToString() + "\n\n")
 						.Append( "CPU " + cpuCounter.NextValue().ToString("00")+"%\n")
 						.Append( "Free RAM " + (ramCounter.NextValue()/1024).ToString("0.00")+"GB\n")
 						.Append( "Memory usage " + ((currentProc.PrivateMemorySize64/1024.0)/1024.0).ToString("0.0") + "MB\n\n") ;
 					
-					foreach( DisplayedObject b in listeObjets)
+					foreach( DisplayedObject b in _listeObjets)
 						s.Append( b.DumpRender()).Append("\n" ) ;
 					
 					g.DrawString( s.ToString(), SystemFonts.DefaultFont, Brushes.White, 0, 0 ) ;
@@ -216,10 +229,10 @@ namespace ClockScreenSaverGL
 				if (_fontHelp == null)
 						_fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 					
-				if  (AfficherHelp )
+				if  (_afficherAide )
 				{
 					StringBuilder s = new StringBuilder(Resources.Aide) ;
-					foreach( DisplayedObject b in listeObjets)
+					foreach( DisplayedObject b in _listeObjets)
 						b.AppendHelpText(s) ;
 					
 					g.DrawString( s.ToString(), _fontHelp, Brushes.White, 10, 10 ) ;
@@ -238,40 +251,40 @@ namespace ClockScreenSaverGL
 		}
 		
 		/// <summary>
-		/// Reception du timer: refaire l'affichage
+		/// Deplacer tous les objets
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void DeplaceTous(Graphics g)
+		void moveAll(Graphics g)
 		{
-			couleur.AvanceCouleur() ;
+			_couleur.AvanceCouleur() ;
 			
 			_temps = new Temps( DateTime.Now, _derniereFrame ) ;
 			
-			foreach( DisplayedObject b in listeObjets)
+			foreach( DisplayedObject b in _listeObjets)
 				b.Deplace( _temps, Bounds) ;
 			
-			if ( JourActuel != _temps._JourDeLAnnee )
+			if ( _jourActuel != _temps._JourDeLAnnee )
 			{
 				// Detection de changement de date, avertir les objets qui sont optimises pour ne changer
 				// qu'une fois par jour
-				foreach( DisplayedObject b in listeObjets)
+				foreach( DisplayedObject b in _listeObjets)
 					b.DateChangee( g, _temps ) ;
 				
-				JourActuel = _temps._JourDeLAnnee ;
+				_jourActuel = _temps._JourDeLAnnee ;
 			}
 			
 			_derniereFrame = _temps._temps ;
 		}
 		
-		void OnOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
+		void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
 		{
 			// Get the OpenGL object, just to clean up the code.
 			OpenGL gl = openGLControl.OpenGL;
-			Color Couleur = couleur.GetRGB() ;
+			Color Couleur = _couleur.GetRGB() ;
 			
 			// Deplacer et Afficher tous les objets
-			foreach( DisplayedObject b in listeObjets)
+			foreach( DisplayedObject b in _listeObjets)
 				b.AfficheOpenGL( gl, _temps, Bounds, Couleur) ;
 			
 
@@ -280,18 +293,27 @@ namespace ClockScreenSaverGL
 			
 		}
 		
+        /// <summary>
+        /// OpenGL est initialise
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 		void onOpenGLInitialized(object sender, System.EventArgs e)
 		{
-			CreerObjetsGraphiques() ;
+			createAllObjects() ;
 			
 			OpenGL gl = openGLControl.OpenGL;
 			gl.Clear(0) ;
 			// Deplacer et Afficher tous les objets
-			foreach( DisplayedObject b in listeObjets)
+			foreach( DisplayedObject b in _listeObjets)
 				b.OpenGLInitialized( gl) ;
 		}
 		
-		private void CreerObjetsGraphiques()
+
+        /// <summary>
+        /// Creer tous les objets qui seront affiches
+        /// </summary>
+		private void createAllObjects()
 		{
 			int CentreX = Bounds.Width/2 ;
 			int CentreY = Bounds.Height/2 ;
@@ -304,56 +326,56 @@ namespace ClockScreenSaverGL
 			
 			_fondDeSaison = conf.getParametre( CAT, PARAM_FONDDESAISON, true ) ;
 			// Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
-			listeObjets.Add( CreerObjetFond( conf.getParametre(CAT, PARAM_TYPEFOND, 0), true) ) ;
+			_listeObjets.Add( createBackgroundObject( conf.getParametre(CAT, PARAM_TYPEFOND, 0), true) ) ;
 			
 			
 			// Copyright
-			listeObjets.Add( new Textes.TexteCopyright(-4, 100) );
+			_listeObjets.Add( new Textes.TexteCopyright(-4, 100) );
 			
 			
 			// citations
-			listeObjets.Add( new Textes.Citations( this, 200, 200 )) ;
+			_listeObjets.Add( new Textes.Citations( this, 200, 200 )) ;
 			
 			// Heure et date numeriques
-			listeObjets.Add( new Textes.DateTexte(0, 0 )) ;
-			listeObjets.Add( new Textes.HeureTexte(0, CentreY)) ;
+			_listeObjets.Add( new Textes.DateTexte(0, 0 )) ;
+			_listeObjets.Add( new Textes.HeureTexte(0, CentreY)) ;
 			
 			// Horloge ronde
-			listeObjets.Add( new HorlogeRonde( TailleHorloge, CentreX-TailleHorloge/2, CentreY-TailleHorloge/2)) ;
+			_listeObjets.Add( new HorlogeRonde( TailleHorloge, CentreX-TailleHorloge/2, CentreY-TailleHorloge/2)) ;
 			
 
 		}
 		
-		void onTimerChangeFond(object sender, EventArgs e)
+		void onTimerChangeBackground(object sender, EventArgs e)
 		{
 			int Type = conf.getParametre(CAT, PARAM_TYPEFOND, 0) ;
 			Type = (Type+1) % NB_FONDS ;
 			conf.setParametre(CAT, PARAM_TYPEFOND, Type) ;
 			
 			// Remplacer le premier objet de la liste par le nouveau fond
-			listeObjets[0] = CreerObjetFond(Type, false) ;
+			_listeObjets[0] = createBackgroundObject(Type, false) ;
 		}
 		
-		private void OnKeyDown(object sender, KeyEventArgs e)
+		private void onKeyDown(object sender, KeyEventArgs e)
 		{
 			if (!IsPreviewMode) //disable exit functions for preview
 			{
 				switch ((Keys)e.KeyValue )
 				{
-						case Keys.Insert : couleur.ChangeHue(1) ;  break ;
-						case Keys.Delete : couleur.ChangeHue(-1) ;  break ;
-						case Keys.Home : couleur.ChangeSaturation(1) ;  break ;
-						case Keys.End : couleur.ChangeSaturation(-1) ;  break ;
-						case Keys.PageUp : couleur.ChangeValue(1) ;  break ;
-						case Keys.PageDown : couleur.ChangeValue(-1) ;  break ;
-						case Keys.H : AfficherHelp = ! AfficherHelp ; break ;
+						case Keys.Insert : _couleur.ChangeHue(1) ;  break ;
+						case Keys.Delete : _couleur.ChangeHue(-1) ;  break ;
+						case Keys.Home : _couleur.ChangeSaturation(1) ;  break ;
+						case Keys.End : _couleur.ChangeSaturation(-1) ;  break ;
+						case Keys.PageUp : _couleur.ChangeValue(1) ;  break ;
+						case Keys.PageDown : _couleur.ChangeValue(-1) ;  break ;
+						case Keys.H : _afficherAide = ! _afficherAide ; break ;
 					case Keys.S :
 						{
 							// Changement de mode de fond
 							_fondDeSaison = !_fondDeSaison ;
 							conf.setParametre( CAT, PARAM_FONDDESAISON, _fondDeSaison ) ;
 							
-							listeObjets[0] = CreerObjetFond(conf.getParametre(CAT, PARAM_TYPEFOND, 0), false) ;
+							_listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison) ;
 						}
 						break ;
 					case Keys.F :
@@ -365,20 +387,20 @@ namespace ClockScreenSaverGL
 							conf.setParametre(CAT, PARAM_TYPEFOND, Type ) ;
 							
 							// Remplacer le premier objet de la liste par le nouveau fond
-							listeObjets[0] = CreerObjetFond(Type, false) ;
+							_listeObjets[0] = createBackgroundObject(Type, false) ;
 						}
 						break ;
 						#if TRACER
 					case Keys.D :
 						{
-							AfficheDebug = ! AfficheDebug ;
-							conf.setParametre(CAT, "Debug", AfficheDebug);
+							_afficheDebug = ! _afficheDebug ;
+							conf.setParametre(CAT, "Debug", _afficheDebug);
 						}
 						break ;
 						#endif
 					default:
 						bool b = false ;
-						foreach( DisplayedObject o in listeObjets )
+						foreach( DisplayedObject o in _listeObjets )
 							if (o.KeyDown(this, (Keys)e.KeyValue))
 								b = true ;
 						

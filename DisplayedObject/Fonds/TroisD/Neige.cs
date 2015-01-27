@@ -45,28 +45,16 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		static float	_xRotation ;
 		static DateTime debut = DateTime.Now ;
 		const float VIEWPORT_X = 2f ;
-		const float VIEWPORT_Y = 2f ;
-		const int NB_SOMMETS_DESSIN = 12 ;
+        const float VIEWPORT_Y = 2f;
+        const float VIEWPORT_Z = 2f;
+        const int NB_SOMMETS_DESSIN = 12;
 		const float TAILLE_FLOCON = 0.8f ;
-		
-		
-		private PointF[] _coordPoint ;		// Precalcul des coordonnees des branches des flocons
-		
-		public Neige()
+
+
+        public Neige()
+            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100, NB_SOMMETS_DESSIN, 1.0f)
 		{
-			_tailleCubeX = VIEWPORT_X ;
-			_tailleCubeY = VIEWPORT_Y ;
-			_tailleCubeZ = VIEWPORT_Y ;
-			_zCamera = 100 ;
-			
 			_xRotation = _tailleCubeX * 0.75f;
-			
-			// Precalcul des sommets des particules
-			_coordPoint = new PointF[NB_SOMMETS_DESSIN] ;
-			for ( int i = 0; i < NB_SOMMETS_DESSIN; i++)
-				_coordPoint[i] = new PointF((float)( Math.Sin( i * (Math.PI*2.0) / NB_SOMMETS_DESSIN )),
-				                            (float)( Math.Cos( i * (Math.PI*2.0) / NB_SOMMETS_DESSIN )));
-				
 			
 			_flocons = new Flocon[NB_FLOCONS] ;
 			for (int i = 0; i < NB_FLOCONS; i++)
@@ -120,7 +108,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			RenderStart(CHRONO_TYPE.RENDER) ;
 			#endif
 			float [] col = { couleur.R/255.0f, couleur.G/255.0f,couleur.B/255.0f, ALPHA_CENTRE } ;
-            GLfloat[] fogcolor = { couleur.R / 4096.0f, couleur.G / 4096.0f, couleur.B / 4096.0f, 1 };
+            GLfloat[] fogcolor = { couleur.R / 4096.0f, couleur.G / 4096.0f, couleur.B / 4096.0f, 0.5f};
            
 			gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3] ) ;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
@@ -129,14 +117,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			gl.Disable(OpenGL.GL_LIGHTING) ;
 			gl.Enable(OpenGL.GL_DEPTH ) ;
 			
-
             gl.Enable(OpenGL.GL_FOG) ;
             gl.Fog (OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR) ;
             gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor) ;
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.001f) ;
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ*3) ;
             gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ*50) ;
-
 
 			gl.LoadIdentity();
 			gl.Translate( 0, 0, - _zCamera) ;
@@ -161,7 +147,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 					gl.Vertex(taille*_coordPoint[i].X, taille*_coordPoint[i].Y, 0);
 				}
 				gl.Vertex(TAILLE_FLOCON*_coordPoint[0].X,TAILLE_FLOCON* _coordPoint[0].Y, 0);
-				
 				
 				gl.End();
 				gl.PopMatrix() ;

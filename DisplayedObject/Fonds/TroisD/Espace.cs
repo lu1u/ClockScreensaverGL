@@ -12,21 +12,21 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 	{
 		#region Parametres
 		public const string CAT = "Espace" ;
-		
-		protected readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)10 ) ;
-		protected readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.25f ) ;
-		protected readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 5000 ) ;
-		protected readonly float _periodeTranslation = conf.getParametre(CAT, "PeriodeTranslation", 13.0f ) ;
-		protected readonly float _periodeRotation = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
-		protected readonly float _vitesseRotation = conf.getParametre(CAT, "VitesseRotation", 100 ) ;
-		protected readonly float _vitesseTranslation = conf.getParametre(CAT, "VitesseTranslation", 1f ) ;
-		protected static readonly float _vitesse = conf.getParametre(CAT, "Vitesse", 5f ) ;
-		protected readonly int NB_SOMMETS_DESSIN = conf.getParametre(CAT, "NbSommets", 12 ) ;
-		
-		const float VIEWPORT_X = 5f ;
-		const float VIEWPORT_Y = 5f ;
+
+        protected static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)10);
+        protected static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
+        protected static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 10000);
+        protected static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
+        protected static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
+        protected static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 50f);
+        protected static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
+		protected static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 1f ) ;
+		protected static readonly int NB_SOMMETS_DESSIN = conf.getParametre(CAT, "NbSommets", 12 ) ;
 		#endregion
-		
+		const float VIEWPORT_X = 5f ;
+        const float VIEWPORT_Y = 5f;
+        const float VIEWPORT_Z = 5f;
+        
 		private class Etoile
 		{
 			public float x, y, z ;
@@ -35,22 +35,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		private readonly Etoile [] _etoiles ;
 		private DateTime _dernierDeplacement = DateTime.Now ;
 		private DateTime _debutAnimation = DateTime.Now ;
-		private PointF[] _coordPoint ;
-		public Espace(OpenGL gl)
+		
+		public Espace(OpenGL gl) :  base( VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100, NB_SOMMETS_DESSIN, TAILLE_ETOILE )
 		{
-			_tailleCubeX = VIEWPORT_X ;
-			_tailleCubeY = VIEWPORT_Y ;
-			_tailleCubeZ = VIEWPORT_Y ;
-			
-			_zCamera = 100 ;
-			
 			_etoiles = new Etoile[NB_ETOILES] ;
 			
 			// Precalcul des sommets des particules
-			_coordPoint = new PointF[NB_SOMMETS_DESSIN] ;
-			for ( int i = 0; i < NB_SOMMETS_DESSIN; i++)
-				_coordPoint[i] = new PointF((float)( TAILLE_ETOILE * Math.Sin( i * (Math.PI*2.0) / NB_SOMMETS_DESSIN )),
-				                            (float)( TAILLE_ETOILE * Math.Cos( i * (Math.PI*2.0) / NB_SOMMETS_DESSIN )));
 			
 			// Initialiser les etoiles
 			for (int i = 0; i < NB_ETOILES; i++)
@@ -58,18 +48,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				NouvelleEtoile( ref _etoiles[i] ) ;
 				_etoiles[i].z = FloatRandom( - _tailleCubeZ, _zCamera ) ;
 			}
-
-            InitGL(gl);
-		}
+        }
 
         private void InitGL(OpenGL gl)
         {
-            gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_DEPTH);
-
-            gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
         }
 		
 		private void NouvelleEtoile( ref Etoile f )
@@ -96,11 +78,21 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			RenderStart(CHRONO_TYPE.RENDER) ;
 			#endif
 			float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
-			float vitesseCamera = (float)Math.Sin(depuisdebut / _periodeRotation) * _vitesseRotation ;
+			float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION ;
 			
 			gl.ClearColor(0, 0, 0, 1) ;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
-			gl.LoadIdentity();
+            gl.LoadIdentity();
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_COLOR_MATERIAL);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Disable(OpenGL.GL_FOG);
+            gl.Disable(OpenGL.GL_DEPTH);
+
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+        
 			gl.Translate( 0, 0, - _zCamera) ;
             gl.Rotate(0, 0, vitesseCamera);
             
@@ -111,7 +103,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				gl.Begin(OpenGL.GL_TRIANGLE_FAN);
 				gl.Color( col ) ;
 				gl.Vertex(o.x, o.y, o.z);
-				gl.Color(col[0],col[1],col[2],0f) ;
+				gl.Color(col[0],col[1],col[2],0.01f) ;
 				for (int i = 0; i < NB_SOMMETS_DESSIN; i++)
 					gl.Vertex(o.x + _coordPoint[i].X, o.y + _coordPoint[i].Y, o.z);
 				gl.Vertex(o.x + _coordPoint[0].X, o.y + _coordPoint[0].Y, o.z);
@@ -137,9 +129,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			#endif
 			
 			float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
-			float vitesseCamera = (float)Math.Sin(depuisdebut / _periodeRotation) * _vitesseRotation ;
-			float deltaZ = _vitesse * maintenant._intervalle ;
-			float deltaWind = (float)Math.Sin(depuisdebut / _periodeTranslation) * _vitesseTranslation * maintenant._intervalle ;
+			float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION ;
+			float deltaZ = VITESSE * maintenant._intervalle ;
+			float deltaWind = (float)Math.Sin(depuisdebut / PERIODE_TRANSLATION) * VITESSE_TRANSLATION * maintenant._intervalle ;
 			// Deplace les flocons
 			bool trier = false ;
 			for (int i = 0; i < NB_ETOILES; i++)

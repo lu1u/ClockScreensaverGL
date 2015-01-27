@@ -212,13 +212,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="screenshots\Sans titre-1.png" />
-    <Content Include="screenshots\Sans titre-2.png" />
-    <Content Include="screenshots\Sans titre-3.png" />
-    <Content Include="screenshots\Sans titre-4.png" />
-    <Content Include="screenshots\Sans titre-5.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Ressources\Crate.bmp" />
   </ItemGroup>
   <ItemGroup>

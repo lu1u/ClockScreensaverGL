@@ -58,16 +58,13 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		Vecteur3D[,] _anneaux ;
 		readonly float _zMax ;
 		const float VIEWPORT_X = 2f ;
-		const float VIEWPORT_Y = 2f ;
-		GLfloat[]  LightPos= {0,RAYON_ANNEAU * 0.75f,0.5f, 2};
+        const float VIEWPORT_Y = 2f;
+        const float VIEWPORT_Z = 2f;
+        GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.75f, 0.5f, 2 };
 		//GLfloat[] 	global_ambient = { 0.01f, 0.01f, 0.01f, 0.01f };
-       public Tunnel()
+        public Tunnel()
+            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
 		{
-			_tailleCubeX = VIEWPORT_X ;
-			_tailleCubeY = VIEWPORT_Y ;
-			_tailleCubeZ = VIEWPORT_Y ;
-			_zCamera = VIEWPORT_Y / 2;
-			
 			_anneaux = new Vecteur3D[NB_ANNEAUX,TAILLE_ANNEAU] ;
 			
 			_zMax = - _tailleCubeZ ;

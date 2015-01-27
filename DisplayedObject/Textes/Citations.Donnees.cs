@@ -176,7 +176,10 @@ namespace ClockScreenSaverGL.Textes
 			"Une pomme par jour éloigne le docteur...\nA condition de viser juste.|Winston Churchill",
 			"Les familles nombreuses, je suis pour.\nTous le monde devrait avoir trois maris.|Zsa Zsa Gabor",
 			"Il n'y a qu'un décolleté\npour pousser un homme à chercher la profondeur chez une femme|Zsa Zsa Gabor",
-			"La contraception orale c'est terrible.\nJ'ai demandé à une fille de coucher avec moi.\nEt elle a répondu \"non\"|Woody Allen"
+			"La contraception orale c'est terrible.\nJ'ai demandé à une fille de coucher avec moi.\nEt elle a répondu \"non\"|Woody Allen",
+            "*Tous le monde ne possède pas le muscle 'long palmaire'",
+            "*La colonne vertébrale comporte:\n7 vertèbres cervicales\n12 vertèbres thoraciques\n5 vertèbres lombaires",
+            "*La proprioception (ou sensibilité profonde)\nvous permet de ressentir la position des différentes\nparties de votre corps"
 		} ;
 		
 		// Classe pour melanger un tableau
