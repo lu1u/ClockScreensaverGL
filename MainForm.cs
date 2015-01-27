@@ -225,7 +225,7 @@ namespace ClockScreenSaverGL
 					g.DrawString( s.ToString(), _fontHelp, Brushes.White, 10, 10 ) ;
 				}
 				else
-				if ( _temps._temps.Subtract(_debut).TotalMilliseconds < 10000 )
+				if ( _temps._temps.Subtract(_debut).TotalMilliseconds < 100 )
 				{
 					g.DrawString( "Pressez H pour de l'aide", _fontHelp, Brushes.White, 10, 10 ) ;
 				}
