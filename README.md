@@ -8,3 +8,4 @@ I daily use it as a physiotherapist to mesure exercices time.
 ![ScreenShot](https://github.com/lu1u/ClockScreensaver/screenshots/sans titre-3.png)
 ![ScreenShot](https://github.com/lu1u/ClockScreensaver/screenshots/sans titre-4.png)
 ![ScreenShot](https://github.com/lu1u/ClockScreensaver/screenshots/sans titre-5.png)
+![ScreenShot](https://github.com/lu1u/MesProjetsAndroid/blob/master/FrequentLauncherWidget/FrequentLauncherWidget/res/drawable-nodpi/preview_stack.png)
