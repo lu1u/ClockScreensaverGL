@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+# SharpDevelop 4.4
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockScreenSaver", "ClockScreenSaver\ClockScreenSaver.csproj", "{C6A1230D-E35E-4859-A829-AA20765FD464}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineFrontEnd", "CommandLineFrontEnd\CommandLineFrontEnd.csproj", "{5DDB120A-840D-4C4B-B88A-545362D90530}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6A1230D-E35E-4859-A829-AA20765FD464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6A1230D-E35E-4859-A829-AA20765FD464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6A1230D-E35E-4859-A829-AA20765FD464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6A1230D-E35E-4859-A829-AA20765FD464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DDB120A-840D-4C4B-B88A-545362D90530}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DDB120A-840D-4C4B-B88A-545362D90530}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DDB120A-840D-4C4B-B88A-545362D90530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DDB120A-840D-4C4B-B88A-545362D90530}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+EndGlobal
