@@ -11,11 +11,15 @@ Features:
 
 Snow background:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-1.png)
+
 Blobs:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-2.png)
+
 Space:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-3.png)
+
 Game of life:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-4.png)
+
 Moving bands:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-5.png)
