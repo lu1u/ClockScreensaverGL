@@ -72,7 +72,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				_flocons[i].ax = FloatRandom( 0, 360 ) ;
 				_flocons[i].ay = FloatRandom( 0, 360 ) ;
 				_flocons[i].az = FloatRandom( 0, 360 ) ;
-				_flocons[i].r = FloatRandom( 0.1f, 0.95f ) ;
+				_flocons[i].r = FloatRandom( 0.2f, 0.95f ) ;
 			}
 		}
 		
@@ -115,7 +115,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			
 			gl.Disable( OpenGL.GL_TEXTURE_2D ) ;
 			gl.Disable(OpenGL.GL_LIGHTING) ;
-			gl.Enable(OpenGL.GL_DEPTH ) ;
+			gl.Disable(OpenGL.GL_DEPTH ) ;
 			
             gl.Enable(OpenGL.GL_FOG) ;
             gl.Fog (OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR) ;
@@ -143,7 +143,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				
 				for (int i = 0; i < NB_SOMMETS_DESSIN; i++)
 				{
-					float taille = (i%2 == 0) ? TAILLE_FLOCON : TAILLE_FLOCON* o.r ;
+					float taille = (i%2 == 0) ? TAILLE_FLOCON : TAILLE_FLOCON * o.r ;
 					gl.Vertex(taille*_coordPoint[i].X, taille*_coordPoint[i].Y, 0);
 				}
 				gl.Vertex(TAILLE_FLOCON*_coordPoint[0].X,TAILLE_FLOCON* _coordPoint[0].Y, 0);

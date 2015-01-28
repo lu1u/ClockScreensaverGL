@@ -165,7 +165,7 @@
         XTesb3QPLh88M+QwdP6m681Lt7xuXbu94vbgcOjwnZHokdE77DtTd1PuvriXeW/h/sYH6AdFD6UeVjxS
         fNTws+7PbaOWo6fHXMf6Hwc/vj/OGn/2S8Yv7ycKnpCfVEyqTDZPmU2dmnafvvF05dOJZ+nPFmYKf5X+
         tfa5zvMffnP8rX82YnbiBf/Fp99LXsq/PPRq2aueuYC5R69TXy/MF72Rf3P4LeNt37vwd5MLWe+x7ys/
-        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALDgAACw4BQL7hQQAAC6dJREFUeF7t23morlUV
+        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALDQAACw0B7QfALAAAC6dJREFUeF7t23morlUV
         BvDrUKRRpjhBkmgmSZpiIFGpoJFi0TUQMQIH0D/UENFASggxR8w0JSsHLDIVp1QMc1bKCRVTK4cwCzUl
         yjHRHDo+v8u3Dvt8Z5/5+Mfl9YOH+7373XutZ+291tpr7+/cFRMTE4NGt/E9wJrB2sEHgw8F6wTrjvDh
         5rt27/XT37ievGVDt3GZsFbAEIZ9JPhYsEGwYbBxsEmwaQPP2r3XT3/jjCeHvJ6eJaHbuASsEXwgQPqj
@@ -698,7 +698,6 @@ Aide:
 Page haut/Page bas: luminance
 Début/Fin: Saturation
 Inser/Suppr: Couleur
-C: changer la citation
 F: changer le fond
 S: Commencer par le fond de saison (oui/non)
 
@@ -724,5 +723,8 @@ R: réinitialiser le fond</value>
   </data>
   <data name="LeSaviezVous" xml:space="preserve">
     <value>Le saviez-vous?</value>
+  </data>
+  <data name="AideCitation" xml:space="preserve">
+    <value>C: changer la citation</value>
   </data>
 </root>

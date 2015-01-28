@@ -68,7 +68,6 @@ namespace ClockScreenSaverGL {
         ///Page haut/Page bas: luminance
         ///Début/Fin: Saturation
         ///Inser/Suppr: Couleur
-        ///C: changer la citation
         ///F: changer le fond
         ///S: Commencer par le fond de saison (oui/non)
         ///
@@ -77,6 +76,15 @@ namespace ClockScreenSaverGL {
         internal static string Aide {
             get {
                 return ResourceManager.GetString("Aide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to C: changer la citation.
+        /// </summary>
+        internal static string AideCitation {
+            get {
+                return ResourceManager.GetString("AideCitation", resourceCulture);
             }
         }
         

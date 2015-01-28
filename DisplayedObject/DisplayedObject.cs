@@ -21,12 +21,9 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public abstract class DisplayedObject
 	{
+        const float PRECISION_RANDOM = 1000000.0f;
 		static public Random r = new Random() ;
 		static protected readonly Config conf = Config.getInstance() ;
-		static protected	int DECALAGE_OMBRE = 4 ;
-		static protected	Color COULEUR_OMBRE = Color.FromArgb( 160, 0, 0, 0) ;
-		static protected	Brush _brOmbre = new SolidBrush( COULEUR_OMBRE ) ;
-		
 		
 		protected SizeF 	_taille = new SizeF( -1, -1) ;
 		
@@ -63,7 +60,7 @@ namespace ClockScreenSaverGL
 		/// </summary>
 		/// <param name="f"></param>
 		/// <param name="k"></param>
-		/// <returns></returns>
+		/// <returns>true si touche utilisee</returns>
 		public virtual bool KeyDown( Form f, Keys k )
 		{
 			return false ;
@@ -95,9 +92,9 @@ namespace ClockScreenSaverGL
 		static protected float FloatRandom(float Min, float Max )
 		{
 			if  ( Min < Max )
-				return (float)r.Next((int)(Min*10000.0f), (int)(Max*10000.0f)) / 10000.0f ;
+                return (float)r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
 			else
-				return (float)r.Next((int)(Max*10000.0f), (int)(Min*10000.0f)) / 10000.0f ;
+                return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
 		}
 		
 		static protected Bitmap BitmapNuance( Graphics g,  Bitmap bmp, Color couleur )

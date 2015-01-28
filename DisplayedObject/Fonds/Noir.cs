@@ -54,13 +54,13 @@ namespace ClockScreenSaverGL.Fonds
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;
 			#endif
+
 			foreach( DisplayedObject b in listeObjets)
 				b.Deplace( maintenant, tailleEcran) ;
 			
 			#if TRACER
-			RenderStart(CHRONO_TYPE.DEPLACE) ;
-			#endif
-			
+			RenderStop(CHRONO_TYPE.DEPLACE) ;
+			#endif		
 		}
 		
 	}

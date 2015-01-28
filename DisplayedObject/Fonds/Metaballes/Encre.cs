@@ -73,13 +73,10 @@ namespace ClockScreenSaverGL.Metaballes
 			RenderStart(CHRONO_TYPE.DEPLACE) ;
 			#endif
 			
-			TimeSpan diff = maintenant._temps.Subtract(_DernierDeplacement);
-			float intervalle = (float)(diff.TotalMilliseconds / 1000.0);
-			
 			// Deplacement des metaballes
 			for ( int i = 0 ;i < NbMetaballes ; i++)
 			{
-				_metaballes[i]._Px += (_metaballes[i]._Vx * intervalle) ;
+                _metaballes[i]._Px += (_metaballes[i]._Vx * maintenant._intervalle);
 				
 				if ( (_metaballes[i]._Px < -_metaballes[i]._Taille ) && (_metaballes[i]._Vx < 0) ||	// Trop a gauche
 				    ( (_metaballes[i]._Px - _metaballes[i]._Taille) > Largeur ) && (_metaballes[i]._Vx > 0) || // Trop a droite
@@ -91,27 +88,26 @@ namespace ClockScreenSaverGL.Metaballes
 					NouvelleMetaballe(ref _metaballes[i]);
 				}
 				else
-					
-					_metaballes[i]._Py += (_metaballes[i]._Vy * intervalle) ;
+
+                    _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant._intervalle);
 				
 				// Variations de la vitesse horizontale + Variations sinusoidales en fonction de la profondeur
 				_metaballes[i]._Vx += //((float)Math.Sin( _metaballes[i]._Py / Hauteur * Math.PI*4.0 ))*0.25f
-					+ FloatRandom( -20, 20 ) * intervalle ;
+                    +FloatRandom(-20, 20) * maintenant._intervalle;
 				
 				// De moins en moins opaque
 				if ( _metaballes[i]._Intensite > IntensiteMin)
-					_metaballes[i]._Intensite -= (_metaballes[i]._Intensite * 0.1 * intervalle) ;
+                    _metaballes[i]._Intensite -= (_metaballes[i]._Intensite * 0.1 * maintenant._intervalle);
 				
 				// de plus en plus grandes
 				if ( _metaballes[i]._Taille < TailleMax )
 				{
-					_metaballes[i]._Taille += (_metaballes[i]._Taille * 0.1 * intervalle) ;
+                    _metaballes[i]._Taille += (_metaballes[i]._Taille * 0.1 * maintenant._intervalle);
 					_metaballes[i]._TailleCarre = _metaballes[i]._Taille * _metaballes[i]._Taille;
 				}
 			}
-			_DernierDeplacement = maintenant._temps ;
 			
-			// Ajouter eventuellement une metaballe
+            // Ajouter eventuellement une metaballe
 			if ( NbMetaballes < NbMax)
 				if ( maintenant._temps.Subtract( derniereCreation ).TotalMilliseconds> 800 )
 			{

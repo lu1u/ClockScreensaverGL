@@ -19,7 +19,7 @@ namespace ClockScreenSaverGL.Textes
 		const string CAT = "DateTexte" ;
 		static private string _date ; // Sera initialise dans OnDateChange
 		public DateTexte(int Px, int Py)
-			: base( Px, Py, conf.getParametre(CAT, "VX", -15), conf.getParametre(CAT, "VY", 16), conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)150) )
+			: base( Px, Py, conf.getParametre(CAT, "VX", -15), conf.getParametre(CAT, "VY", 18), conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160) )
 		{
 		}
 

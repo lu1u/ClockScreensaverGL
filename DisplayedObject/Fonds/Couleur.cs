@@ -32,7 +32,6 @@ namespace ClockScreenSaverGL.Fonds
 			#if TRACER
 			RenderStart(CHRONO_TYPE.RENDER) ;
 			#endif
-			
 				
 		}
 		
