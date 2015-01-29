@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Text;
 using SharpGL.SceneGraph.Assets;
+using System.Collections.Generic;
 namespace ClockScreenSaverGL.Fonds.TroisD
 {
     /// <summary>
@@ -19,29 +20,42 @@ namespace ClockScreenSaverGL.Fonds.TroisD
     /// </summary>
     public class Nuages : TroisD
     {
-        const string CAT = "Nuages";
+        const string CAT = "Nuages.OpenGL";
         static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.05f);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 1f);
-        static readonly float RAYON_MAX = conf.getParametre(CAT, "RayonMax", 2f);
-        static readonly float RAYON_MIN = conf.getParametre(CAT, "RayonMin", 0.5f);
-        static readonly int NBPARTICULES_MAX = conf.getParametre(CAT, "NbParticulesMax", 100);
-        static readonly float TAILLE_PARTICULE = 0.7f;//conf.getParametre(CAT, "TailleParticules", 0.7f);
-        static readonly int NB_NUAGES = conf.getParametre(CAT, "Nb", 150);
+        static readonly float RAYON_MAX = 8;//conf.getParametre(CAT, "RayonMax", 2f);
+        static readonly float RAYON_MIN = 4;//conf.getParametre(CAT, "RayonMin", 0.5f);
+        static readonly float TAILLE_PARTICULE = 1.0f;//conf.getParametre(CAT, "TailleParticules", 0.7f);
+        static readonly int NB_NUAGES =10;// conf.getParametre(CAT, "Nb", 150);
         static readonly int NB_SOMMETS_DESSIN = conf.getParametre(CAT, "NbSommets", 8);
         float _positionNuage = conf.getParametre(CAT, "EnHaut", true) ? 1f : -1f;
         const float VIEWPORT_X = 1f;
         const float VIEWPORT_Y = 1f;
         const float VIEWPORT_Z = 10f;
-
-        private class Particule
+        const int MAX_NIVEAU =6;
+        const int NB_EMBRANCHEMENTS = 3;
+        readonly int NBPARTICULES_MAX;
+        private class Particule : IComparable
         {
             public float x, y, z, taille, alpha;
+
+            int IComparable.CompareTo(Object o)
+            {
+                if (o is Particule)
+                {
+                    Particule O2 = (Particule)o;
+                    if (z > O2.z) return 1;
+                    if (z < O2.z) return -1;
+                }
+                return 0;
+
+            }
         }
 
         private class Nuage
         {
             public float x, y, z;
-            public Particule[] _particules;
+            public List<Particule> _particules;
         }
 
         private Nuage[] _nuages;					// Pour creer des nuages ressemblants
@@ -53,7 +67,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 0, NB_SOMMETS_DESSIN, 1.0f)
         {
             _nuages = new Nuage[NB_NUAGES];
-            _particules = new Particule[NB_NUAGES * NBPARTICULES_MAX];
+
+            NBPARTICULES_MAX = NB_NUAGES ;
+            for (int i = 1; i < MAX_NIVEAU; i++)
+                NBPARTICULES_MAX = NBPARTICULES_MAX * (1+ NB_EMBRANCHEMENTS);
+            _particules = new Particule[NBPARTICULES_MAX];
+
 
             for (int i = 0; i < NB_NUAGES; i++)
                 creerNuage(ref _nuages[i], true);
@@ -70,30 +89,51 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             if (nuage == null)
             {
                 nuage = new Nuage();
-                nuage._particules = new Particule[NBPARTICULES_MAX];
+                nuage._particules = new List<Particule>();
             }
+
+            nuage._particules.Clear();
 
             float rayonNuage = FloatRandom(RAYON_MIN, RAYON_MAX);
             nuage.x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
-            nuage.y = _positionNuage * _tailleCubeY * FloatRandom(0.1f, 5f);
+            nuage.y = _positionNuage * _tailleCubeY * FloatRandom(RAYON_MIN, RAYON_MAX*2);
 
             if (init)
                 nuage.z = -FloatRandom(-_zCamera, _tailleCubeZ * 10);
             else
                 nuage.z = -_tailleCubeZ * 10;
 
-            for (int i = 0; i < NBPARTICULES_MAX; i++)
-            {
-                float AngleX = FloatRandom(0, (float)Math.PI * 2);
-                float AngleZ = FloatRandom(0, (float)Math.PI * 2);
-                float distanceCentre = FloatRandom(rayonNuage * 0.1f, rayonNuage);
+            // Genere le nuage de facon 'fractale'
+            _NbParticules = 0;
+            GenereNuage(ref nuage, nuage.x, nuage.y, nuage.z, rayonNuage, MAX_NIVEAU);
+        }
 
-                nuage._particules[i] = new Particule();
-                nuage._particules[i].x = nuage.x + distanceCentre * 3.0f * (float)Math.Cos(AngleX);
-                nuage._particules[i].y = nuage.y + distanceCentre * 0.5f * (float)Math.Sin(AngleX);
-                nuage._particules[i].z = nuage.z + distanceCentre * 2.0f * (float)Math.Sin(AngleZ);
-                nuage._particules[i].taille = FloatRandom(TAILLE_PARTICULE, TAILLE_PARTICULE * 2.0f);
-                nuage._particules[i].alpha = FloatRandom(ALPHA * 0.9f, ALPHA * 2.0f);
+        private void GenereNuage(ref Nuage nuage, float x, float y, float z, float rayonNuage, int niveau)
+        {
+            Particule p = new Particule();
+
+            p.x = x;
+            p.y = y;
+            p.z = z;
+            p.taille = FloatRandom(TAILLE_PARTICULE * niveau, TAILLE_PARTICULE * niveau * 2.0f);
+            p.alpha = FloatRandom(ALPHA * 0.9f, ALPHA * 2.0f);
+            nuage._particules.Add(p);
+
+            if (niveau > 1)
+            {
+                for (int i = 0; i < NB_EMBRANCHEMENTS; i++)
+                {
+                    float AngleX = FloatRandom(0, (float)Math.PI * 2);
+                    float AngleZ = FloatRandom(0, (float)Math.PI * 2);
+                    float distanceCentre = FloatRandom(rayonNuage * 0.2f, rayonNuage);
+
+                    GenereNuage(ref nuage,
+                                x + distanceCentre * 3.0f * (float)Math.Cos(AngleX),
+                                y + distanceCentre * 0.5f * (float)Math.Sin(AngleX),
+                                z + distanceCentre * 2.0f * (float)Math.Sin(AngleZ),
+                                rayonNuage * 0.5f,
+                                niveau - 1);
+                }
             }
         }
 
@@ -120,9 +160,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             gl.Disable(OpenGL.GL_DEPTH);
             gl.Disable(OpenGL.GL_FOG);
 
-           gl.DepthMask((byte)OpenGL.GL_FALSE);
+            gl.DepthMask((byte)OpenGL.GL_FALSE);
 
-           gl.Begin(OpenGL.GL_QUADS);
+            gl.Begin(OpenGL.GL_QUADS);
             {
                 gl.Color(col);
                 gl.Vertex(-1, -0.5f, -1);
@@ -134,7 +174,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             gl.End();
             gl.LoadIdentity();
 
-            
+
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -152,7 +192,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
                 gl.Vertex(_particules[i].x + _coordPoint[0].X * taille, _particules[i].y + _coordPoint[0].Y * taille, _particules[i].z);
                 gl.End();
             }
-            
+
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -178,11 +218,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             {
                 derriereCam = true;
                 _nuages[i].z += vitesse;
-                for (int j = 0; j < NBPARTICULES_MAX; j++)
+                foreach (Particule p in _nuages[i]._particules)// (int j = 0; j < NBPARTICULES_MAX; j++)
                 {
-                    _nuages[i]._particules[j].z += vitesse;
+                    p.z += vitesse;
 
-                    if (_nuages[i]._particules[j].z < _zCamera)
+                    if (p.z < _zCamera)
                         // Au moins une des particules du nuage est devant la camera
                         derriereCam = false;
                 }
@@ -208,15 +248,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             // Recuperer le tableau des particules, et les trier en fonction de la distance
             _NbParticules = 0;
             for (int i = 0; i < NB_NUAGES; i++)
-                for (int j = 0; j < NBPARTICULES_MAX; j++)
-                    _particules[_NbParticules++] = _nuages[i]._particules[j];
+                foreach (Particule p in _nuages[i]._particules)  //for (int j = 0; j < NBPARTICULES_MAX; j++)
+                    _particules[_NbParticules++] = p;
 
-            Array.Sort(_particules, delegate(Particule O1, Particule O2)
-                       {
-                           if (O1.z > O2.z) return 1;
-                           if (O1.z < O2.z) return -1;
-                           return 0;
-                       });
+            Array.Sort(_particules, 0, _NbParticules);
+
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -250,6 +286,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD
         {
             s.Append(Resources.AideNuages);
         }
+
+#if TRACER
+        public override String DumpRender()
+        {
+            return base.DumpRender() + " NbParticules:" + _NbParticules + " Max:" + NBPARTICULES_MAX;
+        }
+
+#endif
 
     }
 

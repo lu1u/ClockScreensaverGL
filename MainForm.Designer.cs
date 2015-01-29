@@ -39,54 +39,57 @@ namespace ClockScreenSaverGL
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
-			this.openGLControl = new SharpGL.OpenGLControl();
-			this.timerChangeFond = new System.Windows.Forms.Timer(this.components);
-			((System.ComponentModel.ISupportInitialize)(this.openGLControl)).BeginInit();
-			this.SuspendLayout();
-			// 
-			// openGLControl
-			// 
-			this.openGLControl.BackColor = System.Drawing.Color.Black;
-			this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.openGLControl.DrawFPS = true;
-			this.openGLControl.FrameRate = 30;
-			this.openGLControl.Location = new System.Drawing.Point(0, 0);
-			this.openGLControl.Name = "openGLControl";
-			this.openGLControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;
-			this.openGLControl.RenderContextType = SharpGL.RenderContextType.FBO;
-			this.openGLControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
-			this.openGLControl.Size = new System.Drawing.Size(951, 652);
-			this.openGLControl.TabIndex = 0;
-			this.openGLControl.OpenGLInitialized += new System.EventHandler(this.onOpenGLInitialized);
-			this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.onOpenGLDraw);
-			this.openGLControl.GDIDraw += new SharpGL.RenderEventHandler(this.onGDIDraw);
-			this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
-			this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-			// 
-			// timerChangeFond
-			// 
-			this.timerChangeFond.Enabled = true;
-			this.timerChangeFond.Interval = 180000;
-			this.timerChangeFond.Tick += new System.EventHandler(this.onTimerChangeBackground);
-			// 
-			// MainForm
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(951, 652);
-			this.ControlBox = false;
-			this.Controls.Add(this.openGLControl);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-			this.Name = "MainForm";
-			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "ClockScreenSaverGL";
-			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-			this.Load += new System.EventHandler(this.onLoad);
-			this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
-			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
-			((System.ComponentModel.ISupportInitialize)(this.openGLControl)).EndInit();
-			this.ResumeLayout(false);
+            this.components = new System.ComponentModel.Container();
+            this.openGLControl = new SharpGL.OpenGLControl();
+            this.timerChangeFond = new System.Windows.Forms.Timer(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.openGLControl)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // openGLControl
+            // 
+            this.openGLControl.BackColor = System.Drawing.Color.Black;
+            this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.openGLControl.DrawFPS = true;
+            this.openGLControl.FrameRate = 30;
+            this.openGLControl.Location = new System.Drawing.Point(0, 0);
+            this.openGLControl.Name = "openGLControl";
+            this.openGLControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;
+            this.openGLControl.RenderContextType = SharpGL.RenderContextType.FBO;
+            this.openGLControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
+            this.openGLControl.Size = new System.Drawing.Size(951, 652);
+            this.openGLControl.TabIndex = 0;
+            this.openGLControl.OpenGLInitialized += new System.EventHandler(this.onOpenGLInitialized);
+            this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.onOpenGLDraw);
+            this.openGLControl.GDIDraw += new SharpGL.RenderEventHandler(this.onGDIDraw);
+            this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
+            this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            // 
+            // timerChangeFond
+            // 
+            this.timerChangeFond.Enabled = true;
+            this.timerChangeFond.Interval = 180000;
+            this.timerChangeFond.Tick += new System.EventHandler(this.onTimerChangeBackground);
+            // 
+            // MainForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(951, 652);
+            this.ControlBox = false;
+            this.Controls.Add(this.openGLControl);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Name = "MainForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "ClockScreenSaverGL";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.onLoad);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
+            ((System.ComponentModel.ISupportInitialize)(this.openGLControl)).EndInit();
+            this.ResumeLayout(false);
+
 		}
 		private System.Windows.Forms.Timer timerChangeFond;
 		private SharpGL.OpenGLControl openGLControl;

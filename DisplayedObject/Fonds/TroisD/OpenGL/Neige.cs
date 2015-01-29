@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 	/// </summary>
 	public class Neige : TroisD
 	{
-		public const string CAT = "Neige" ;
+        public const string CAT = "Neige.OpenGL";
 		
 		protected static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f) ;
 		protected static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 20.0f) ;

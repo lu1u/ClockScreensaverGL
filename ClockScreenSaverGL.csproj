@@ -37,7 +37,7 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <DisallowUrlActivation>true</DisallowUrlActivation>
     <ApplicationRevision>4</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -82,7 +82,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -141,12 +141,19 @@
     <Compile Include="DisplayedObject\Fonds\Metaballes\Metaballes.cs" />
     <Compile Include="DisplayedObject\Fonds\Metaballes\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\Noir.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\Espace.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\Neige.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\Nuages.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Espace.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Neige.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Nuages.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Objet3D.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\TroisD.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Tunnel.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Vecteur3D.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Neige.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Objet3D.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\Tunnel.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Tunnel.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />
     <Compile Include="DisplayedObject\HorlogeRonde.cs" />
     <Compile Include="DisplayedObject\Lune.cs" />
@@ -222,6 +229,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\nuage1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flocon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flocon2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

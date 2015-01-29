@@ -11,7 +11,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 	public class Espace : TroisD
 	{
 		#region Parametres
-		public const string CAT = "Espace" ;
+		public const string CAT = "Espace.OpenGL" ;
 
         protected static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)10);
         protected static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);

@@ -34,7 +34,7 @@ namespace ClockScreenSaverGL
         private static Config conf = Config.getInstance();
         #endregion
 
-        CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichage
+        CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
         private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
         private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
@@ -57,6 +57,7 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_NEIGE = 10;
         const int NB_FONDS = 11;
 
+        enum SAISON { HIVER, PRINTEMPS, ETE, AUTOMNE } ;
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
         DateTime lastFrame = DateTime.Now;
@@ -88,10 +89,18 @@ namespace ClockScreenSaverGL
             //
             // The InitializeComponent() call is required for Windows Forms designer support.
             //
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            _temps = new Temps(DateTime.Now, _derniereFrame);
-            _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
+                _temps = new Temps(DateTime.Now, _derniereFrame);
+                _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\ndans : " + ex.Source + "\n" + ex.StackTrace, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
         }
 
         //This constructor is the handle to the select screensaver dialog preview window
@@ -136,29 +145,76 @@ namespace ClockScreenSaverGL
             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
-                conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
-                return new Fonds.TroisD.Neige();
-            }
-            else
-            {
-                switch (Type)
+                switch (Saison())
                 {
-                    case TYPE_FOND_METABALLES: return new Metaballes.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case TYPE_FOND_ENCRE: return new Metaballes.Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case TYPE_FOND_BACTERIES: return new Metaballes.Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case TYPE_FOND_LIFE: return new Fonds.Life();
-                    case TYPE_FOND_NOIR: return new Fonds.Noir(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case TYPE_FOND_COULEUR: return new Fonds.Couleur(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case TYPE_FOND_ESPACE: return new Fonds.TroisD.Espace(gl);
-                    case TYPE_FOND_TUNNEL: return new Fonds.TroisD.Tunnel();
-                    case TYPE_FOND_NUAGES: return new Fonds.TroisD.Nuages(gl);
-                    case TYPE_FOND_NEIGE: return new Fonds.TroisD.Neige();
-                    default:
-                        return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    case SAISON.HIVER:
+                        conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
+                        if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
+                                return new Fonds.TroisD.Neige() ;
+                        else
+                                return new Fonds.TroisD.GDI.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+
+                    case SAISON.PRINTEMPS: break; // TODO:
+                    case SAISON.ETE: break; // TODO
+                    case SAISON.AUTOMNE: break; // TODO
                 }
             }
+            switch (Type)
+            {
+                case TYPE_FOND_METABALLES: return new Metaballes.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ENCRE: return new Metaballes.Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_BACTERIES: return new Metaballes.Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_LIFE: return new Fonds.Life();
+                case TYPE_FOND_NOIR: return new Fonds.Noir(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_COULEUR: return new Fonds.Couleur(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ESPACE:
+                    if (conf.getParametre(CAT, "Espace.PrefereOpenGL", true))
+                        return new Fonds.TroisD.Espace(gl);
+                    else
+                        return new Fonds.TroisD.GDI.Espace(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_TUNNEL:
+                    if (conf.getParametre(CAT, "Tunnel.PrefereOpenGL", true))
+                        return new Fonds.TroisD.Tunnel();
+                    else
+                        return new Fonds.TroisD.GDI.Tunnel(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_NUAGES:
+                    if (conf.getParametre(CAT, "Nuages.PrefereOpenGL", true))
+                        return new Fonds.TroisD.Nuages(gl);
+                    else
+                        return new Fonds.TroisD.GDI.Nuages(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_NEIGE: return new Fonds.TroisD.Neige();
+                default:
+                    return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+            }
+        }
 
 
+        /// <summary>
+        /// Retourne la saison, calcul approximatif
+        /// </summary>
+        /// <returns></returns>
+        private SAISON Saison()
+        {
+            DateTime date = DateTime.Now;
+
+            int quantieme = date.DayOfYear;
+            // Hiver : jusqu'a l'equinoxe de printemps
+            if (quantieme < 80)
+                return SAISON.HIVER;
+
+            // Printemps: jusqu'au solstice d'ete
+            if (quantieme < 202)
+                return SAISON.PRINTEMPS;
+
+            // Ete: jusqu'a l'equinoxe d'automne
+            if (quantieme < 266)
+                return SAISON.ETE;
+
+            // Automne : jusqu'au solstice d'hiver
+            if (quantieme < 356)
+                return SAISON.AUTOMNE;
+
+            return SAISON.HIVER;
         }
 
         /// <summary>
@@ -173,6 +229,8 @@ namespace ClockScreenSaverGL
                 UpdateStyles();
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
+                timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
+                timerChangeFond.Enabled = true;
 #if TRACER
                 cpuCounter = new PerformanceCounter();
                 cpuCounter.CategoryName = "Processor";
@@ -197,7 +255,7 @@ namespace ClockScreenSaverGL
         {
             Graphics g = args.Graphics;
             moveAll(g);
-            RectangleF r = g.ClipBounds;
+
             try
             {
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -206,10 +264,9 @@ namespace ClockScreenSaverGL
 
                 Color Couleur = _couleur.GetRGB();
 
-                // Deplacer et Afficher tous les objets
+                // Afficher tous les objets
                 foreach (DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
-
 
 #if TRACER
                 if (_afficheDebug)
@@ -347,22 +404,24 @@ namespace ClockScreenSaverGL
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
             _listeObjets.Add(createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
 
-
-            // Copyright
-            _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
+            if (conf.getParametre(CAT, "Copyright", true))
+                // Copyright
+                _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
 
 
             // citations
-            _listeObjets.Add(new Textes.Citations(this, 200, 200));
+            if (conf.getParametre(CAT, "Citation", true))
+                _listeObjets.Add(new Textes.Citations(this, 200, 200));
 
             // Heure et date numeriques
-            _listeObjets.Add(new Textes.DateTexte(0, 0));
-            _listeObjets.Add(new Textes.HeureTexte(0, CentreY));
+            if (conf.getParametre(CAT, "Date", true))
+                _listeObjets.Add(new Textes.DateTexte(0, 0));
+            if (conf.getParametre(CAT, "Heure", true))
+                _listeObjets.Add(new Textes.HeureTexte(0, CentreY));
 
             // Horloge ronde
-            _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
-
-
+            if (conf.getParametre(CAT, "HorlogeRonde", true))
+                _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
         }
 
         void onTimerChangeBackground(object sender, EventArgs e)
@@ -393,7 +452,6 @@ namespace ClockScreenSaverGL
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
                             conf.setParametre(CAT, PARAM_FONDDESAISON, _fondDeSaison);
-
                             _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
@@ -404,7 +462,6 @@ namespace ClockScreenSaverGL
                             int Type = conf.getParametre(CAT, PARAM_TYPEFOND, 0);
                             Type = (Type + 1) % NB_FONDS;
                             conf.setParametre(CAT, PARAM_TYPEFOND, Type);
-
                             // Remplacer le premier objet de la liste par le nouveau fond
                             _listeObjets[0] = createBackgroundObject(Type, false);
                         }
@@ -418,6 +475,7 @@ namespace ClockScreenSaverGL
                         break;
 #endif
                     default:
+                        // Proposer la touche a chaque objet affiche
                         bool b = false;
                         foreach (DisplayedObject o in _listeObjets)
                             if (o.KeyDown(this, (Keys)e.KeyValue))
@@ -425,6 +483,7 @@ namespace ClockScreenSaverGL
 
                         if (!b)
                         {
+                            // Touche non reconnue: terminer l'application
                             Cursor.Show();
                             Application.Exit();
                         }
@@ -454,9 +513,6 @@ namespace ClockScreenSaverGL
                     Application.Exit();
                 }
             }
-
-            timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
-            timerChangeFond.Enabled = true;
         }
     }
 }

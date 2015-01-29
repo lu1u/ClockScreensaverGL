@@ -109,6 +109,26 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flocon1 {
+            get {
+                object obj = ResourceManager.GetObject("flocon1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flocon2 {
+            get {
+                object obj = ResourceManager.GetObject("flocon2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Le saviez-vous?.
         /// </summary>
         internal static string LeSaviezVous {

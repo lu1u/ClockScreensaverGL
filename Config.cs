@@ -307,9 +307,16 @@ namespace ClockScreenSaverGL
 			_propre = false ;
 		}
 		
+        /// <summary>
+        /// Calcule un repertoire pour stocker les fichiers de conf
+        /// en utilisant le nom du programme et sa version
+        /// </summary>
+        /// <returns></returns>
 		public static string getRepertoire()
 		{
-			return  Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), "ClockScreenSaverGL" ) ;
+			return   Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(),
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
+            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString());
 		}
 		
 		/// <summary>

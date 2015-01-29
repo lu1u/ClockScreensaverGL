@@ -165,7 +165,7 @@
         XTesb3QPLh88M+QwdP6m681Lt7xuXbu94vbgcOjwnZHokdE77DtTd1PuvriXeW/h/sYH6AdFD6UeVjxS
         fNTws+7PbaOWo6fHXMf6Hwc/vj/OGn/2S8Yv7ycKnpCfVEyqTDZPmU2dmnafvvF05dOJZ+nPFmYKf5X+
         tfa5zvMffnP8rX82YnbiBf/Fp99LXsq/PPRq2aueuYC5R69TXy/MF72Rf3P4LeNt37vwd5MLWe+x7ys/
-        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALDQAACw0B7QfALAAAC6dJREFUeF7t23morlUV
+        6H7o/ujz8cGn1E+f/gUDmPP8usTo0wAAAAlwSFlzAAALDAAACwwBP0AiyAAAC6dJREFUeF7t23morlUV
         BvDrUKRRpjhBkmgmSZpiIFGpoJFi0TUQMQIH0D/UENFASggxR8w0JSsHLDIVp1QMc1bKCRVTK4cwCzUl
         yjHRHDo+v8u3Dvt8Z5/5+Mfl9YOH+7373XutZ+291tpr7+/cFRMTE4NGt/E9wJrB2sEHgw8F6wTrjvDh
         5rt27/XT37ievGVDt3GZsFbAEIZ9JPhYsEGwYbBxsEmwaQPP2r3XT3/jjCeHvJ6eJaHbuASsEXwgQPqj
@@ -726,5 +726,11 @@ R: réinitialiser le fond</value>
   </data>
   <data name="AideCitation" xml:space="preserve">
     <value>C: changer la citation</value>
+  </data>
+  <data name="flocon1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\flocon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flocon2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\flocon2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

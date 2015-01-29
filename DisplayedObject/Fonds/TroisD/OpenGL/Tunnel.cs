@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 	/// </summary>
 	public class Tunnel : TroisD
 	{
-		protected const string CAT = "Tunnel" ;
+        protected const string CAT = "Tunnel.OpenGL";
 		protected static readonly int TAILLE_ANNEAU = conf.getParametre(CAT, "NbFacettes", 16 ) ;
 		protected static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 500 ) ;
 		protected static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f ) ;

@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public abstract class DisplayedObject
 	{
-        const float PRECISION_RANDOM = 1000000.0f;
+        const float PRECISION_RANDOM = 100000.0f;
 		static public Random r = new Random() ;
 		static protected readonly Config conf = Config.getInstance() ;
 		
