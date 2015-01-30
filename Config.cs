@@ -44,13 +44,15 @@ namespace ClockScreenSaverGL
 			public Object _default ;
 		};
 		
+		private class  Categorie
+        {
+            public bool _propre = true ;
+            public Dictionary<string, Parameter> _valeurs = new Dictionary<string,Parameter>();
+        }		
 		
 		
-		
-		
-		bool _propre ; 	// AUcune valeur modifiee
 		static Config _instance ;
-		Dictionary<string, Dictionary<string, Parameter>> _categories ;
+		Dictionary<string, Categorie> _categories ;
 		
 		public static Config getInstance()
 		{
@@ -62,14 +64,13 @@ namespace ClockScreenSaverGL
 		
 		private Config()
 		{
-			_categories = new Dictionary<string, Dictionary<string, Config.Parameter>>() ;
+			_categories = new Dictionary<string, Categorie>() ;
 			LireFichierConf() ;
 		}
 		
 		~Config()
 		{
-			if (! _propre)
-				EcritFichier() ;
+			EcritFichier() ;
 		}
 		
 		/// <summary>
@@ -79,25 +80,30 @@ namespace ClockScreenSaverGL
 		{
 			// Un fichier par categorie
 			
-			foreach( string categorie in _categories.Keys)
+			foreach( string cat in _categories.Keys)
 			{
-				Dictionary<string, Parameter> valeurs ;
-				_categories.TryGetValue( categorie, out valeurs ) ;
-				if ( valeurs!= null)
+				Categorie categorie ;
+                _categories.TryGetValue(cat, out categorie);
+				if ( categorie!= null)
 				{
-					string nomFichier = getNomFichier(categorie) ;
-					TextWriter tw = new StreamWriter(nomFichier);
-					foreach( String key in valeurs.Keys )
-					{
-						Parameter p = valeurs[key] ;
-						tw.WriteLine( key + ':' + toLigneType(p)) ;
-						tw.WriteLine( key + ':' + toLigneValue(p)) ;
-						tw.WriteLine( key + ':' + toLigneDefaut(p)) ;
-					}
-					tw.Close();
-				}
+                    // Ne reecrire que les categories qui ont ete modifiees
+                    if (!categorie._propre)
+                    {
+                        string nomFichier = getNomFichier(cat);
+                        TextWriter tw = new StreamWriter(nomFichier);
+                        foreach (String key in categorie._valeurs.Keys)
+                        {
+                            Parameter p = categorie._valeurs[key];
+                            tw.WriteLine(key + ':' + toLigneType(p));
+                            tw.WriteLine(key + ':' + toLigneValue(p));
+                            tw.WriteLine(key + ':' + toLigneDefaut(p));
+                        }
+                        tw.Close();
+                        categorie._propre = true;
+                    }
+                }
 			}
-			_propre = true ;
+			
 		}
 		
 		string toLigneType(Parameter p)
@@ -179,7 +185,7 @@ namespace ClockScreenSaverGL
 					
 					// Creer la categorie
 					string categorieName = Path.GetFileNameWithoutExtension(filename) ;
-					Dictionary<string, Parameter> categorie = new Dictionary<string, Config.Parameter>() ;
+                    Categorie categorie = new Categorie();
 					
 					// La remplir a partir du contenu du fichier
 					StreamReader file = new System.IO.StreamReader(filename);
@@ -199,17 +205,17 @@ namespace ClockScreenSaverGL
 						string defaut = line.Substring(line.IndexOf(VALUE_SEPARATOR)+1) ;
 						
 						if ( type.Equals(TYPE_BOOL))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString( defaut) ) ;
+							setParametreFromFile( categorie._valeurs, name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString( defaut) ) ;
 						else if ( type.Equals(TYPE_DOUBLE))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_DOUBLE, Double.Parse(valeur), Double.Parse(defaut)) ;
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_DOUBLE, Double.Parse(valeur), Double.Parse(defaut));
 						else if ( type.Equals(TYPE_FLOAT))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_FLOAT, (float)Double.Parse(valeur), (float)Double.Parse(defaut)) ;
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_FLOAT, (float)Double.Parse(valeur), (float)Double.Parse(defaut));
 						else if ( type.Equals(TYPE_INT))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_INT, (int)Int64.Parse(valeur), (int)Int64.Parse(defaut)) ;
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, (int)Int64.Parse(valeur), (int)Int64.Parse(defaut));
 						else if ( type.Equals(TYPE_STRING))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_INT, valeur, defaut) ;
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, valeur, defaut);
 						else if ( type.Equals(TYPE_BYTE))
-							setParametreFromFile( categorie, name, TYPE_PARAMETRE.T_BYTE, (byte)Int64.Parse(valeur), (byte)Int64.Parse(defaut)) ;
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, (byte)Int64.Parse(valeur), (byte)Int64.Parse(defaut));
 					}
 					
 					file.Close() ;
@@ -303,8 +309,6 @@ namespace ClockScreenSaverGL
 			
 			Parameter par = new Parameter( valeur, type, defaut ) ;
 			categorie.Add( key, par ) ;
-			
-			_propre = false ;
 		}
 		
         /// <summary>
@@ -316,7 +320,7 @@ namespace ClockScreenSaverGL
 		{
 			return   Path.Combine( Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(),
             System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
-            System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString());
+            "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.Major.ToString());
 		}
 		
 		/// <summary>
@@ -342,16 +346,17 @@ namespace ClockScreenSaverGL
 		{
 			SortedList list = new SortedList() ;
 			
-			Dictionary<string, Parameter> categorie ;
+			Categorie categorie ;
 			_categories.TryGetValue( cat, out categorie ) ;
 			if ( categorie == null )
 			{
-				categorie = new Dictionary<string, Parameter>() ;
+				categorie = new Categorie() ;
+                categorie._propre = false;
 				_categories.Add(cat, categorie ) ;
 			}
 			
 			Parameter p ;
-			categorie.TryGetValue(name, out p ) ;
+			categorie._valeurs.TryGetValue(name, out p ) ;
 			if ( (p != null) &&  (p is Parameter))
 			{
 				if ( p._type != type )
@@ -360,13 +365,8 @@ namespace ClockScreenSaverGL
 				return p._value ;
 			}
 			
-			categorie.Add( name, new Parameter( defaut, type, defaut ) );
+			categorie._valeurs.Add( name, new Parameter( defaut, type, defaut ) );
 			return defaut ;
-		}
-		
-		string constructKey(string categorie, string name)
-		{
-			return categorie + CAT_SEPARATOR + name ;
 		}
 		
 		public int getParametre( string categorie, string name, int defaut )
@@ -406,22 +406,22 @@ namespace ClockScreenSaverGL
 
 		private void setParametre( string categorieName, string valueName, TYPE_PARAMETRE type, Object defaut )
 		{
-			Dictionary<string, Parameter> categorie ;
+			Categorie categorie ;
 			_categories.TryGetValue( categorieName, out categorie ) ;
 			
 			if ( categorie == null)
 			{
-				categorie = new Dictionary<string, Config.Parameter>() ;
+				categorie = new Categorie() ;
 				_categories.Add( categorieName, categorie ) ;
 			}
 			
-			if ( categorie.ContainsKey( valueName ))
-				categorie.Remove(valueName) ;
+			if ( categorie._valeurs.ContainsKey( valueName ))
+                categorie._valeurs.Remove(valueName);
 			
 			Parameter par = new Parameter( defaut, type, defaut ) ;
-			categorie.Add( valueName, par ) ;
-			
-			_propre = false ;
+            categorie._valeurs.Add(valueName, par);
+
+            categorie._propre = false;
 		}
 		
 		public void setParametre(string Cat, string nom, bool valeur)

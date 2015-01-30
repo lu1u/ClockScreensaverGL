@@ -21,19 +21,20 @@ namespace ClockScreenSaverGL.Fonds.TroisD
     public class Nuages : TroisD
     {
         const string CAT = "Nuages.OpenGL";
-        static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.05f);
-        static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 1f);
-        static readonly float RAYON_MAX = 8;//conf.getParametre(CAT, "RayonMax", 2f);
-        static readonly float RAYON_MIN = 4;//conf.getParametre(CAT, "RayonMin", 0.5f);
-        static readonly float TAILLE_PARTICULE = 1.0f;//conf.getParametre(CAT, "TailleParticules", 0.7f);
-        static readonly int NB_NUAGES =10;// conf.getParametre(CAT, "Nb", 150);
+        static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.25f);
+        static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2f);
+        static readonly float RAYON_MAX = conf.getParametre(CAT, "RayonMax", 8f);
+        static readonly float RAYON_MIN = conf.getParametre(CAT, "RayonMin", 4f);
+        static readonly float TAILLE_PARTICULE = 0.5f;//conf.getParametre(CAT, "TailleParticules", 1.2f);
+        static readonly int NB_NUAGES = conf.getParametre(CAT, "Nb", 10);
         static readonly int NB_SOMMETS_DESSIN = conf.getParametre(CAT, "NbSommets", 8);
+        static readonly bool CIEL_DEGRADE= conf.getParametre(CAT, "CielDegrade", true);
         float _positionNuage = conf.getParametre(CAT, "EnHaut", true) ? 1f : -1f;
         const float VIEWPORT_X = 1f;
         const float VIEWPORT_Y = 1f;
         const float VIEWPORT_Z = 10f;
-        const int MAX_NIVEAU =6;
-        const int NB_EMBRANCHEMENTS = 3;
+        static readonly int MAX_NIVEAU = conf.getParametre(CAT, "NbNiveaux", 4);
+        static readonly int NB_EMBRANCHEMENTS = conf.getParametre(CAT, "NbEmbranchements", 3);
         readonly int NBPARTICULES_MAX;
         private class Particule : IComparable
         {
@@ -68,9 +69,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
         {
             _nuages = new Nuage[NB_NUAGES];
 
-            NBPARTICULES_MAX = NB_NUAGES ;
+            NBPARTICULES_MAX = 1 ;
             for (int i = 1; i < MAX_NIVEAU; i++)
-                NBPARTICULES_MAX = NBPARTICULES_MAX * (1+ NB_EMBRANCHEMENTS);
+                NBPARTICULES_MAX = NBPARTICULES_MAX * (1+NB_EMBRANCHEMENTS);
+
+            NBPARTICULES_MAX *= NB_NUAGES;
+
             _particules = new Particule[NBPARTICULES_MAX];
 
 
@@ -96,7 +100,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 
             float rayonNuage = FloatRandom(RAYON_MIN, RAYON_MAX);
             nuage.x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
-            nuage.y = _positionNuage * _tailleCubeY * FloatRandom(RAYON_MIN, RAYON_MAX*2);
+            nuage.y = _positionNuage * _tailleCubeY * FloatRandom(-RAYON_MIN, RAYON_MAX*2);
 
             if (init)
                 nuage.z = -FloatRandom(-_zCamera, _tailleCubeZ * 10);
@@ -115,7 +119,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             p.x = x;
             p.y = y;
             p.z = z;
-            p.taille = FloatRandom(TAILLE_PARTICULE * niveau, TAILLE_PARTICULE * niveau * 2.0f);
+            p.taille = FloatRandom(TAILLE_PARTICULE * niveau, TAILLE_PARTICULE * niveau );
             p.alpha = FloatRandom(ALPHA * 0.9f, ALPHA * 2.0f);
             nuage._particules.Add(p);
 
@@ -149,31 +153,42 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-
             float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 1 };
-
-            gl.ClearColor(col[0] / 4, col[1] / 4, col[2] / 4, col[3]);
-            gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Disable(OpenGL.GL_DEPTH);
-            gl.Disable(OpenGL.GL_FOG);
-
-            gl.DepthMask((byte)OpenGL.GL_FALSE);
-
-            gl.Begin(OpenGL.GL_QUADS);
+           
+            if (CIEL_DEGRADE)
             {
-                gl.Color(col);
-                gl.Vertex(-1, -0.5f, -1);
-                gl.Vertex(1, -0.5f, -1);
-                gl.Color(0, 0, 0);
-                gl.Vertex(1, 0.5f, -1);
-                gl.Vertex(-1, 0.5f, -1);
-            }
-            gl.End();
-            gl.LoadIdentity();
+                gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
+                gl.LoadIdentity();
+                gl.Disable(OpenGL.GL_TEXTURE_2D);
+                gl.Disable(OpenGL.GL_LIGHTING);
+                gl.Disable(OpenGL.GL_COLOR_MATERIAL);
+                gl.Disable(OpenGL.GL_DEPTH);
+                gl.Disable(OpenGL.GL_FOG);
+                gl.DepthMask((byte)OpenGL.GL_FALSE);
 
+                gl.Begin(OpenGL.GL_QUADS);
+                {
+                    gl.Color(col);
+                    gl.Vertex(-1, -0.5f, -1);
+                    gl.Vertex(1, -0.5f, -1);
+                    gl.Color(0, 0, 0);
+                    gl.Vertex(1, 0.5f, -1);
+                    gl.Vertex(-1, 0.5f, -1);
+                }
+                gl.End();
+            }
+            else
+            {
+                gl.ClearColor(col[0] / 4, col[1] / 4, col[2] / 4, col[3]);
+                gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+                gl.LoadIdentity();
+                gl.Disable(OpenGL.GL_TEXTURE_2D);
+                gl.Disable(OpenGL.GL_LIGHTING);
+                gl.Disable(OpenGL.GL_COLOR_MATERIAL);
+                gl.Disable(OpenGL.GL_DEPTH);
+                gl.Disable(OpenGL.GL_FOG);
+                gl.DepthMask((byte)OpenGL.GL_FALSE);
+            }
 
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
@@ -184,7 +199,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
                 gl.Begin(OpenGL.GL_TRIANGLE_FAN);
                 gl.Color(1, 1, 1, _particules[i].alpha);
                 gl.Vertex(_particules[i].x, _particules[i].y, _particules[i].z);
-                gl.Color(col[0], col[1], col[2], 0f);
+                gl.Color(col[0], col[1], col[2], 0);
 
                 for (int z = 0; z < NB_SOMMETS_DESSIN; z++)
                     gl.Vertex(_particules[i].x + _coordPoint[z].X * taille, _particules[i].y + _coordPoint[z].Y * taille, _particules[i].z);

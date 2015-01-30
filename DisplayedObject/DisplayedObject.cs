@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public abstract class DisplayedObject
 	{
-        const float PRECISION_RANDOM = 100000.0f;
+        const float PRECISION_RANDOM = 10000.0f;
 		static public Random r = new Random() ;
 		static protected readonly Config conf = Config.getInstance() ;
 		
@@ -91,10 +91,13 @@ namespace ClockScreenSaverGL
 		/// <returns></returns>
 		static protected float FloatRandom(float Min, float Max )
 		{
-			if  ( Min < Max )
+            if (Min < Max)
                 return (float)r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
-			else
-                return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
+            else
+                if (Min > Max)
+                    return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
+                else
+                    return Min;
 		}
 		
 		static protected Bitmap BitmapNuance( Graphics g,  Bitmap bmp, Color couleur )
