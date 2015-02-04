@@ -162,7 +162,7 @@ namespace ClockScreenSaverGL.Metaballes
             InterpolationMode m = g.InterpolationMode;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             g.CompositingQuality = CompositingQuality.HighSpeed;
-            g.InterpolationMode = InterpolationMode.NearestNeighbor;
+            g.InterpolationMode = InterpolationMode.Default;
             g.DrawImage(_bmp, 0, 0, tailleEcran.Width, tailleEcran.Height);
             g.SmoothingMode = q;
             g.CompositingQuality = c;

@@ -1,4 +1,5 @@
 ﻿using SharpGL;
+using SharpGL.SceneGraph.Assets;
 /*
  * Crée par SharpDevelop.
  * Utilisateur: lucien
@@ -26,13 +27,13 @@ using GLsizei = System.Int32;
 using GLubyte = System.Byte;
 using GLushort = System.UInt16;
 using GLvoid = System.IntPtr;*/
-namespace ClockScreenSaverGL.Fonds.TroisD
+namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 	
 {
 	/// <summary>
 	/// Description of Neige.
 	/// </summary>
-	public class Neige : TroisD
+	public class NeigeOpenGL : TroisD
 	{
         public const string CAT = "Neige.OpenGL";
 		
@@ -41,7 +42,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		protected static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseChute", 5) ;
 		protected static readonly float VITESSE_DELTA_VENT = conf.getParametre(CAT, "VitesseDeltaVent", 1f) ;
 		protected static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f) ;
-		protected static readonly float ALPHA_CENTRE = conf.getParametre(CAT, "AlphaCentre", 0.5f) ;
+		protected static readonly float ALPHA_CENTRE = conf.getParametre(CAT, "AlphaCentre", 0.25f) ;
 		protected static readonly float ALPHA_BORD = conf.getParametre(CAT, "AlphaBord", 0.05f) ;
 		
 		protected readonly int NB_FLOCONS = conf.getParametre(CAT, "NbFlocons", 5000 )  ;
@@ -51,6 +52,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			public float x, y, z ;
 			public float vx, vy, vz ;
 			public float ax, ay, az ;
+            public int type;
 			public float r ;				// Ratio entre les branches et les creux des flocons, pour varier les formes
 		}
 		
@@ -64,10 +66,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 2f;
         const int NB_SOMMETS_DESSIN = 12;
-		const float TAILLE_FLOCON = 0.8f ;
+		const float TAILLE_FLOCON = 0.5f ;
 
+        const int NB_TYPES_FLOCONS = 3;
+        Texture[] texture = new Texture[NB_TYPES_FLOCONS];
 
-        public Neige()
+        public NeigeOpenGL(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100, NB_SOMMETS_DESSIN, 1.0f)
 		{
 			_xRotation = _tailleCubeX * 0.75f;
@@ -90,7 +94,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				_flocons[i].az = FloatRandom( 0, 360 ) ;
 				_flocons[i].r = FloatRandom( 0.2f, 0.95f ) ;
 			}
-		}
+
+            texture[0] = new Texture();
+            texture[0].Create(gl, Resources.flocon1);
+            texture[1] = new Texture();
+            texture[1].Create(gl, Resources.flocon2);
+            texture[2] = new Texture();
+            texture[2].Create(gl, Resources.flocon3);
+        }
 		
 		private void NouveauFlocon( ref Flocon f )
 		{
@@ -109,6 +120,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			f.ay = FloatRandom( 0, 360 ) ;
 			f.az = FloatRandom( 0, 360 ) ;
 			f.r = FloatRandom( 0.1f, 0.95f ) ;
+            f.type = r.Next(0, NB_TYPES_FLOCONS);
 		}
 		
 		/// <summary>
@@ -129,46 +141,62 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3] ) ;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
 			
-			gl.Disable( OpenGL.GL_TEXTURE_2D ) ;
-			gl.Disable(OpenGL.GL_LIGHTING) ;
-			gl.Disable(OpenGL.GL_DEPTH ) ;
 			
             gl.Enable(OpenGL.GL_FOG) ;
             gl.Fog (OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR) ;
             gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor) ;
-            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.001f) ;
+            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.05f) ;
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ*3) ;
-            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ*50) ;
-
-			gl.LoadIdentity();
+            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ*60) ;
+            
+            gl.LoadIdentity();
 			gl.Translate( 0, 0, - _zCamera) ;
-			gl.Enable(OpenGL.GL_BLEND);
-			gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+			gl.Disable(OpenGL.GL_LIGHTING) ;
+			gl.Disable(OpenGL.GL_DEPTH ) ;
 			
-			gl.Color( col ) ;
-			gl.MatrixMode(OpenGL.GL_MODELVIEW);
-			foreach (Flocon o in _flocons)
-			{
-				gl.PushMatrix() ;
-				gl.Translate( o.x, o.y, o.z ) ;
-				gl.Rotate(o.ax, o.ay, o.az ) ;
-				gl.Begin(OpenGL.GL_TRIANGLE_FAN);
-				gl.Color( col ) ;
-				gl.Vertex(0,0,TAILLE_FLOCON*0.1f);
-				gl.Color(col[0],col[1],col[2],ALPHA_BORD) ;
-				
-				for (int i = 0; i < NB_SOMMETS_DESSIN; i++)
-				{
-					float taille = (i%2 == 0) ? TAILLE_FLOCON : TAILLE_FLOCON * o.r ;
-					gl.Vertex(taille*_coordPoint[i].X, taille*_coordPoint[i].Y, 0);
-				}
-				gl.Vertex(TAILLE_FLOCON*_coordPoint[0].X,TAILLE_FLOCON* _coordPoint[0].Y, 0);
-				
-				gl.End();
-				gl.PopMatrix() ;
-				
-			}
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Color(col);
+                           
+            
+            int derniereTexture = -1;
 
+			foreach (Flocon o in _flocons)
+            {
+                if (derniereTexture != o.type)
+                {
+                    texture[o.type].Bind(gl);
+                    derniereTexture = o.type;
+                }
+                gl.PushMatrix();
+                gl.Translate(o.x, o.y, o.z);
+                gl.Rotate(o.ax, o.ay, o.az);
+                gl.Begin(OpenGL.GL_QUADS);
+                {
+                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(-TAILLE_FLOCON, -TAILLE_FLOCON, 0);
+                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(-TAILLE_FLOCON, TAILLE_FLOCON, 0);
+                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(TAILLE_FLOCON, TAILLE_FLOCON, 0);
+                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(TAILLE_FLOCON, -TAILLE_FLOCON, 0);
+                }
+                gl.End();
+                /*gl.Begin(OpenGL.GL_TRIANGLE_FAN);
+                gl.Color( col ) ;
+                gl.Vertex(0,0,TAILLE_FLOCON*0.1f);
+                gl.Color(col[0],col[1],col[2],ALPHA_BORD) ;
+				
+                for (int i = 0; i < NB_SOMMETS_DESSIN; i++)
+                {
+                    float taille = (i%2 == 0) ? TAILLE_FLOCON : TAILLE_FLOCON * o.r ;
+                    gl.Vertex(taille*_coordPoint[i].X, taille*_coordPoint[i].Y, 0);
+                }
+                gl.Vertex(TAILLE_FLOCON*_coordPoint[0].X,TAILLE_FLOCON* _coordPoint[0].Y, 0);
+				
+                gl.End();*/
+                gl.PopMatrix();
+
+            }
+            
 			#if TRACER
 			RenderStop(CHRONO_TYPE.RENDER) ;
 			#endif
@@ -198,7 +226,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			// Deplace les flocons
 			for (int i = 0; i < NB_FLOCONS; i++)
 			{
-				if (_flocons[i].y < -VIEWPORT_Y * 16)
+				if (_flocons[i].y < -VIEWPORT_Y * 12)
 				{
 					NouveauFlocon( ref _flocons[i] ) ;
 					trier = true ;

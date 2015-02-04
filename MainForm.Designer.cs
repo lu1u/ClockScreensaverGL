@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL
             // 
             this.openGLControl.BackColor = System.Drawing.Color.Black;
             this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.openGLControl.DrawFPS = true;
+            this.openGLControl.DrawFPS = false;
             this.openGLControl.FrameRate = 30;
             this.openGLControl.Location = new System.Drawing.Point(0, 0);
             this.openGLControl.Name = "openGLControl";

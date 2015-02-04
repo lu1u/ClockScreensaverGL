@@ -15,7 +15,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 	/// <summary>
 	/// Description of Neige.
 	/// </summary>
-	public class Neige : TroisD
+	public class NeigeGDI : TroisDGDI
 	{
 		public const string CAT = "Neige.GDI" ;
 		
@@ -40,7 +40,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 		static float	_xRotation ;
 		static DateTime derniereCreation = DateTime.Now ;
 		static DateTime debut = DateTime.Now ;
-		public Neige( int Cx, int Cy )
+		public NeigeGDI( int Cx, int Cy )
 		{
 			_largeur = Cx ;
 			_hauteur = Cy ;

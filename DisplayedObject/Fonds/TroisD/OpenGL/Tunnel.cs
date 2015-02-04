@@ -29,12 +29,12 @@ using GLushort = System.UInt16;
 using GLvoid = System.IntPtr;
 
 
-namespace ClockScreenSaverGL.Fonds.TroisD
+namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 {
 	/// <summary>
 	/// Description of Tunnel.
 	/// </summary>
-	public class Tunnel : TroisD
+	public class TunnelOpenGL : TroisD
 	{
         protected const string CAT = "Tunnel.OpenGL";
 		protected static readonly int TAILLE_ANNEAU = conf.getParametre(CAT, "NbFacettes", 16 ) ;
@@ -45,7 +45,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		protected static readonly float VITESSE_ROTATION = 0.2f;//conf.getParametre(CAT, "VitesseRotation", 100.0f ) ;
 		protected static readonly float BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", TAILLE_ANNEAU + 1 ) ;
 		protected static readonly float RATIO_DEPLACEMENT = conf.getParametre(CAT, "DeplacementTunnel", 0.5f ) ;
-		protected static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 10f ;
+		protected static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f ;
         protected static readonly GLfloat PERIODE_DEP_X = 5;//conf.getParametre(CAT, "PeriodeDEcalageX", 1.3f);
         protected static readonly GLfloat PERIODE_DEP_Y = 7f;//conf.getParametre(CAT, "PeriodeDEcalageY", 1.7f);
 		
@@ -61,8 +61,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 2f;
         GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.75f, 0.5f, 2 };
-		//GLfloat[] 	global_ambient = { 0.01f, 0.01f, 0.01f, 0.01f };
-        public Tunnel()
+        
+		public TunnelOpenGL(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
 		{
 			_anneaux = new Vecteur3D[NB_ANNEAUX,TAILLE_ANNEAU] ;
@@ -103,14 +103,16 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
 			gl.LoadIdentity();
 			gl.Translate( 0,0, - _zCamera) ;
-			
-			gl.Enable(OpenGL.GL_LIGHTING); 	// Active l'éclairage
+
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_FOG);
+            gl.Enable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_LIGHTING); 	// Active l'éclairage
 			gl.Enable(OpenGL.GL_LIGHT0); 	// Allume la lumière n°1
 			gl.Light( OpenGL.GL_LIGHT0,OpenGL.GL_POSITION,LightPos);
-			//gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);
 			gl.Enable( OpenGL.GL_COLOR_MATERIAL ) ;
 			
-			//gl.Rotate(0,0,rotation ) ;
+			gl.Rotate(0,0,rotation ) ;
 			float [] col = { couleur.R/512.0f, couleur.G/512.0f,couleur.B/512.0f, 1.0f } ;
 			gl.Color( col ) ;
 			

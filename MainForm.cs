@@ -44,6 +44,7 @@ namespace ClockScreenSaverGL
         DateTime _debut = DateTime.Now;
         Temps _temps;
 
+        #region Fonds
         const int TYPE_FOND_ESPACE = 0;
         const int TYPE_FOND_NUAGES = 1;
         const int TYPE_FOND_NOIR = 2;
@@ -56,7 +57,14 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_TUNNEL = 9;
         const int TYPE_FOND_NEIGE = 10;
         const int NB_FONDS = 11;
+        #endregion
 
+        #region Render Modes
+        const int RENDERMODE_DIBSECTION = 0;
+        const int RENDERMODE_FBO = 1;
+        const int RENDERMODE_NATIVE = 2;
+
+        #endregion
         enum SAISON { HIVER, PRINTEMPS, ETE, AUTOMNE } ;
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
@@ -150,9 +158,9 @@ namespace ClockScreenSaverGL
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
                         if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
-                                return new Fonds.TroisD.Neige() ;
+                            return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
                         else
-                                return new Fonds.TroisD.GDI.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                                return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
 
                     case SAISON.PRINTEMPS: break; // TODO:
                     case SAISON.ETE: break; // TODO
@@ -169,20 +177,24 @@ namespace ClockScreenSaverGL
                 case TYPE_FOND_COULEUR: return new Fonds.Couleur(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_ESPACE:
                     if (conf.getParametre(CAT, "Espace.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Espace(gl);
+                        return new Fonds.TroisD.Opengl.EspaceOpenGL(gl);
                     else
-                        return new Fonds.TroisD.GDI.Espace(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Fonds.TroisD.GDI.EspaceGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_TUNNEL:
                     if (conf.getParametre(CAT, "Tunnel.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Tunnel();
+                        return new Fonds.TroisD.Opengl.TunnelOpenGL(gl);
                     else
-                        return new Fonds.TroisD.GDI.Tunnel(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Fonds.TroisD.GDI.TunnelGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_NUAGES:
                     if (conf.getParametre(CAT, "Nuages.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Nuages(gl);
+                        return new Fonds.TroisD.Opengl.NuagesOpenGL(gl);
                     else
-                        return new Fonds.TroisD.GDI.Nuages(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_NEIGE: return new Fonds.TroisD.Neige();
+                        return new Fonds.TroisD.GDI.NuagesGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_NEIGE:
+                    if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
+                    return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
+                    else
+                        return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 default:
                     return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
@@ -227,6 +239,12 @@ namespace ClockScreenSaverGL
             try
             {
                 UpdateStyles();
+                switch( conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
+                {
+                    case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection ; break ;
+                    case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
+                    case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
+                }
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
                 timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;

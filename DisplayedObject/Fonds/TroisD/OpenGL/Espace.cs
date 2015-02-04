@@ -2,26 +2,29 @@
 
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.Fonds.TroisD
+
+using GLfloat = System.Single;
+using GLuint = System.UInt32;
+namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 	
 {
 	/// <summary>
 	/// Description of Neige.
 	/// </summary>
-	public class Espace : TroisD
+	public class EspaceOpenGL : TroisD
 	{
 		#region Parametres
 		public const string CAT = "Espace.OpenGL" ;
 
         protected static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)10);
         protected static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
-        protected static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 10000);
+        protected static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 2000);
         protected static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
         protected static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
         protected static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 50f);
         protected static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
-		protected static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 1f ) ;
-		protected static readonly int NB_SOMMETS_DESSIN = conf.getParametre(CAT, "NbSommets", 12 ) ;
+		protected static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 8f ) ;
+		protected static readonly int NB_SOMMETS_DESSIN = 0 ;
 		#endregion
 		const float VIEWPORT_X = 5f ;
         const float VIEWPORT_Y = 5f;
@@ -35,12 +38,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		private readonly Etoile [] _etoiles ;
 		private DateTime _dernierDeplacement = DateTime.Now ;
 		private DateTime _debutAnimation = DateTime.Now ;
+        SharpGL.SceneGraph.Assets.Texture text = new SharpGL.SceneGraph.Assets.Texture();
 		
-		public Espace(OpenGL gl) :  base( VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100, NB_SOMMETS_DESSIN, TAILLE_ETOILE )
+		public EspaceOpenGL(OpenGL gl) :  base( VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100, NB_SOMMETS_DESSIN, TAILLE_ETOILE )
 		{
 			_etoiles = new Etoile[NB_ETOILES] ;
-			
-			// Precalcul des sommets des particules
+            text.Create(gl, Resources.particleTexture);
 			
 			// Initialiser les etoiles
 			for (int i = 0; i < NB_ETOILES; i++)
@@ -60,9 +63,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 				f = new Etoile() ;
 			
 			f.aSupprimer = false ;
-			f.x = FloatRandom( - _tailleCubeX*8, _tailleCubeX*8 ) ;
+			f.x = FloatRandom( - _tailleCubeX*6, _tailleCubeX*6 ) ;
 			f.z = - _tailleCubeZ ;
-			f.y = FloatRandom( - _tailleCubeY*8, _tailleCubeY*8 ) ;
+			f.y = FloatRandom( - _tailleCubeY*6, _tailleCubeY*6 ) ;
 			}
 		
 		/// <summary>
@@ -83,33 +86,36 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 			gl.ClearColor(0, 0, 0, 1) ;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
             gl.LoadIdentity();
-            gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_COLOR_MATERIAL);
             gl.Disable(OpenGL.GL_DEPTH);
-            gl.Disable(OpenGL.GL_FOG);
             gl.Disable(OpenGL.GL_DEPTH);
 
+            GLfloat[] fogcolor ={ couleur.R / 4096.0f, couleur.G / 4096.0f, couleur.B / 4096.0f, 1f };
+            gl.Enable(OpenGL.GL_FOG);
+            gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);
+            gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
+            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.1f);
+            gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ * 1);
+            gl.Fog(OpenGL.GL_FOG_END, _zCamera);
+            
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-        
-			gl.Translate( 0, 0, - _zCamera) ;
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Translate(0, 0, -_zCamera);
             gl.Rotate(0, 0, vitesseCamera);
             
             float [] col = { couleur.R/512.0f, couleur.G/512.0f,couleur.B/512.0f, 1 } ;
-			
+            text.Bind(gl);
+            gl.Color(col);
+            gl.Begin(OpenGL.GL_QUADS);
 			foreach (Etoile o in _etoiles)
 			{
-				gl.Begin(OpenGL.GL_TRIANGLE_FAN);
-				gl.Color( col ) ;
-				gl.Vertex(o.x, o.y, o.z);
-				gl.Color(col[0],col[1],col[2],0.01f) ;
-				for (int i = 0; i < NB_SOMMETS_DESSIN; i++)
-					gl.Vertex(o.x + _coordPoint[i].X, o.y + _coordPoint[i].Y, o.z);
-				gl.Vertex(o.x + _coordPoint[0].X, o.y + _coordPoint[0].Y, o.z);
-				gl.End();
+				gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
+                gl.TexCoord(1.0f, 0.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
 			}
-			
+            gl.End();			
 			#if TRACER
 			RenderStop(CHRONO_TYPE.RENDER) ;
 			#endif
@@ -172,5 +178,13 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 		{
 		
 		}
+
+#if TRACER
+        public override String DumpRender()
+        {
+            return base.DumpRender() + " NbParticules:" + NB_ETOILES;
+        }
+
+#endif
 	}
 }

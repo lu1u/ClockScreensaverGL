@@ -236,5 +236,14 @@
   <ItemGroup>
     <None Include="Resources\flocon2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\tunnel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\tunnel2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\flocon3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

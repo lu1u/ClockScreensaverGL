@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 	/// <summary>
 	/// Description of Nuage.
 	/// </summary>
-	public class Nuages : TroisD
+	public class NuagesGDI : TroisDGDI
 	{
         const string CAT = "Nuages.GDI";
 		readonly byte ALPHA = conf.getParametre( CAT, "Alpha", (byte)20 ) ;
@@ -46,7 +46,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 		private Nuage[] _nuages  ;
 		static protected DateTime _DernierDeplacement = DateTime.Now ;
 		
-		public Nuages( int Cx, int Cy)
+		public NuagesGDI( int Cx, int Cy)
 		{
 			_nuages = new Nuage[NB_NUAGES] ;
 			_largeur = Cx ;

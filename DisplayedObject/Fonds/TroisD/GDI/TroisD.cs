@@ -14,7 +14,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 	/// <summary>
 	/// Description of _3d.
 	/// </summary>
-	public abstract class TroisD : Fond
+	public abstract class TroisDGDI : Fond
 	{
 		protected int _largeur, _hauteur ;
 		protected float _centreX, _centreY ;

@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 	/// <summary>
 	/// Description of Neige.
 	/// </summary>
-	public class Espace : TroisD
+	public class EspaceGDI : TroisDGDI
 	{
 		#region Parametres
 		public const string CAT = "Espace.GDI" ;
@@ -25,11 +25,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 		protected readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)30 ) ;
 		protected readonly float TAILLE_ETOILE_MIN = conf.getParametre(CAT, "TailleMin", 256f) ;
 		protected readonly float TAILLE_ETOILE_MAX = conf.getParametre(CAT, "TailleMax", 512f) ;
-		protected readonly int NB_etoiles = 10000 ; //conf.getParametre(CAT, "NbEtoiles", 2000 ) ;
-		protected readonly float _periodeTranslation = conf.getParametre(CAT, "PeriodeTranslation", 13.0f ) ;
-		protected readonly float _periodeRotation = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
-		protected readonly float _vitesseRotation = conf.getParametre(CAT, "VitesseRotation", 0.2f ) ;
-		protected readonly float _vitesseTranslation = conf.getParametre(CAT, "VitesseTranslation", 1000f ) ;
+		protected readonly int NB_ETOILES = 2000 ; //conf.getParametre(CAT, "NbEtoiles", 2000 ) ;
+		protected readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f ) ;
+		protected readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
+		protected readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f ) ;
+		protected readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 1000f ) ;
 		protected static readonly float _vitesse = - conf.getParametre(CAT, "Vitesse", 20000f ) ;
 		#endregion
 		
@@ -38,7 +38,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 		protected readonly Bitmap _bmp = Resources.particleTexture ;
 		
 		static DateTime debut = DateTime.Now ;
-		public Espace( int Cx, int Cy )
+		public EspaceGDI( int Cx, int Cy )
 		{
 			_largeur = Cx ;
 			_hauteur = Cy ;
@@ -53,9 +53,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 			_zEcran	 = -_tailleCubeZ ;
 			_zCamera = _zEcran * 1.75f ;
 			
-			_etoiles = new Objet3D[NB_etoiles] ;
+			_etoiles = new Objet3D[NB_ETOILES] ;
 			
-			for (int i = 0; i < NB_etoiles; i++)
+			for (int i = 0; i < NB_ETOILES; i++)
 			{
 				NouvelleEtoile( ref _etoiles[i] ) ;
 				_etoiles[i].z = FloatRandom( _zCamera/2,_tailleCubeZ*100) ;
@@ -91,13 +91,13 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 			#if DEBUG
 			RenderStart(CHRONO_TYPE.RENDER) ;
 			#endif
-			
+            g.Clear(Color.Black);
 			TimeSpan diff = maintenant._temps.Subtract(_DernierDeplacement);
 			float X, Y, X2, Y2;
 			
 			using ( Bitmap bmp = BitmapNuance(g, _bmp, getCouleurAvecAlpha( couleur, ALPHA) ))
 				//using ( Brush br = new SolidBrush( getCouleurAvecAlpha( couleur, ALPHA) ))
-				for (int i = 0; i < NB_etoiles; i++)
+				for (int i = 0; i < NB_ETOILES; i++)
 			{
 				if ( ! _etoiles[i].aSupprimer )
 					if ( _etoiles[i].z > _zCamera )
@@ -151,14 +151,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 		public override void Deplace( Temps maintenant, Rectangle tailleEcran )
 		{
 			float depuisdebut = (float)(debut.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);
-			float vitesseCamera = (float)Math.Sin(depuisdebut / _periodeRotation) * _vitesseRotation ;
-			float xWind = (float)Math.Cos(depuisdebut / _periodeTranslation) * _vitesseTranslation ;
+			float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION ;
+			float xWind = (float)Math.Cos(depuisdebut / PERIODE_TRANSLATION) * VITESSE_TRANSLATION ;
 			float CosTheta = (float) Math.Cos(vitesseCamera * maintenant._intervalle) ;
 			float SinTheta = (float) Math.Sin(vitesseCamera * maintenant._intervalle) ;
 			float px, py ;
 			
 			// Deplace les flocons
-			for (int i = 0; i < NB_etoiles; i++)
+			for (int i = 0; i < NB_ETOILES; i++)
 			{
 				if ( _etoiles[i].aSupprimer)
 				{
@@ -193,6 +193,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 			_DernierDeplacement = maintenant._temps ;
 		}
 
+#if TRACER
+        public override String DumpRender()
+        {
+            return base.DumpRender() + " Nb Etoiles:" + NB_ETOILES ;
+        }
 
+#endif
 	}
 }

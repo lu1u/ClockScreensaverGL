@@ -41,12 +41,10 @@ namespace ClockScreenSaverGL.Metaballes
 		
 		protected override void ConstruitMetaballes()
 		{
-			
 			TailleMax = conf.getParametre(CAT, "TailleMax", 30f) ;
 			TailleMin =conf.getParametre(CAT, "TailleMin", 20f ) ;
 			IntensiteMax = conf.getParametre(CAT, "IntensiteMax", 1.0f) ;
 			IntensiteMin = IntensiteMax / 2.0f ;
-			
 			
 			for ( int i = 0; i < NbMetaballes; i++)
 			{
@@ -58,7 +56,7 @@ namespace ClockScreenSaverGL.Metaballes
 
 		}
 		
-	/// <summary>
+	    /// <summary>
 		/// Changer l'image
 		/// </summary>
 		/// <param name="maintenant"></param>
@@ -76,8 +74,7 @@ namespace ClockScreenSaverGL.Metaballes
 			
 			_metaballes[Indice]._Vx = FloatRandom(-5,5) ;
 			_metaballes[Indice]._Vy = FloatRandom(-5,5) ;
-			
-			
+						
 			UnSur = 0 ;
 			}
 		}
