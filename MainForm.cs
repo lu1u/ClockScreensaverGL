@@ -55,8 +55,9 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_ENCRE = 7;
         const int TYPE_FOND_LIFE = 8;
         const int TYPE_FOND_TUNNEL = 9;
-        const int TYPE_FOND_NEIGE = 10;
-        const int NB_FONDS = 11;
+        const int TYPE_FOND_NEIGE = 11;
+        const int TYPE_FOND_TERRE = 10;
+        const int NB_FONDS = 12;
         #endregion
 
         #region Render Modes
@@ -151,7 +152,7 @@ namespace ClockScreenSaverGL
         private Fonds.Fond createBackgroundObject(int Type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
-            if (_fondDeSaison && initial)
+           if (_fondDeSaison && initial)
             {
                 switch (Saison())
                 {
@@ -195,9 +196,14 @@ namespace ClockScreenSaverGL
                     return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
                     else
                         return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+
+                case TYPE_FOND_TERRE:
+                    return new Fonds.TroisD.Opengl.TerreOpenGL(gl);
+
                 default:
                     return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
+
         }
 
 
@@ -379,8 +385,11 @@ namespace ClockScreenSaverGL
 
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
+            {
+                gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
                 b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
-
+                gl.PopAttrib();
+            }
 
             gl.End(); // Done Drawing The Q
             gl.Flush();
@@ -421,7 +430,6 @@ namespace ClockScreenSaverGL
             _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
             _listeObjets.Add(createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
-
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
                 _listeObjets.Add(new Textes.TexteCopyright(-4, 100));

@@ -152,6 +152,7 @@
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Objet3D.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Tunnel.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />
@@ -244,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\flocon3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\earth.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

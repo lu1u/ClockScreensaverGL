@@ -171,7 +171,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 1 };
+            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             DessineCiel(gl, col);
 
             gl.Enable(OpenGL.GL_BLEND);

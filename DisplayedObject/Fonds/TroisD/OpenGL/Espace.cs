@@ -88,8 +88,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
-            gl.Disable(OpenGL.GL_DEPTH);
-
+           
             GLfloat[] fogcolor ={ couleur.R / 4096.0f, couleur.G / 4096.0f, couleur.B / 4096.0f, 1f };
             gl.Enable(OpenGL.GL_FOG);
             gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);

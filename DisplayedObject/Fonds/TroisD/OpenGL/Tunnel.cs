@@ -60,7 +60,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 		const float VIEWPORT_X = 2f ;
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 2f;
-        GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.75f, 0.5f, 2 };
+        GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.8f, -RAYON_ANNEAU * 0.8f, 1 };
         
 		public TunnelOpenGL(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
@@ -98,6 +98,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			#endif
 			float depuisdebut = (float)(debut.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);
 			float rotation = (float)Math.Cos(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION ;
+            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1.0f };
 			
 			gl.ClearColor(0, 0, 0, 1) ;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT); 
@@ -111,9 +112,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			gl.Enable(OpenGL.GL_LIGHT0); 	// Allume la lumière n°1
 			gl.Light( OpenGL.GL_LIGHT0,OpenGL.GL_POSITION,LightPos);
 			gl.Enable( OpenGL.GL_COLOR_MATERIAL ) ;
-			
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, col);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, 128);
+            gl.ColorMaterial(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT_AND_DIFFUSE);
+            
 			gl.Rotate(0,0,rotation ) ;
-			float [] col = { couleur.R/512.0f, couleur.G/512.0f,couleur.B/512.0f, 1.0f } ;
 			gl.Color( col ) ;
 			
 			for ( int i = 0; i < NB_ANNEAUX-1; i++)
