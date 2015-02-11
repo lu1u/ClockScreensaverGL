@@ -46,10 +46,10 @@ namespace ClockScreenSaverGL
 
         #region Fonds
         const int TYPE_FOND_ESPACE = 0;
-        const int TYPE_FOND_NUAGES = 1;
-        const int TYPE_FOND_NOIR = 2;
-        const int TYPE_FOND_COULEUR = 3;
-        const int TYPE_FOND_METABALLES = 4;
+        const int TYPE_FOND_NOIR = 1;
+        const int TYPE_FOND_COULEUR = 2;
+        const int TYPE_FOND_METABALLES = 3;
+        const int TYPE_FOND_NUAGES = 4;
         const int TYPE_FOND_BACTERIES = 5;
         const int TYPE_FOND_NEIGE_META = 6;
         const int TYPE_FOND_ENCRE = 7;
@@ -64,8 +64,8 @@ namespace ClockScreenSaverGL
         const int RENDERMODE_DIBSECTION = 0;
         const int RENDERMODE_FBO = 1;
         const int RENDERMODE_NATIVE = 2;
-
         #endregion
+
         enum SAISON { HIVER, PRINTEMPS, ETE, AUTOMNE } ;
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
@@ -421,7 +421,7 @@ namespace ClockScreenSaverGL
             int CentreX = Bounds.Width / 2;
             int CentreY = Bounds.Height / 2;
 
-            int TailleHorloge = conf.getParametre(CAT, "TailleCadran", 500);
+            int TailleHorloge = conf.getParametre(CAT, "TailleCadran", 400);
             if (IsPreviewMode)
             {
                 TailleHorloge = 100;

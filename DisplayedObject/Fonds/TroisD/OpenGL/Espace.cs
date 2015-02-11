@@ -49,15 +49,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			for (int i = 0; i < NB_ETOILES; i++)
 			{
 				NouvelleEtoile( ref _etoiles[i] ) ;
+                // Au debut, on varie la distance des etoiles
 				_etoiles[i].z = FloatRandom( - _tailleCubeZ, _zCamera ) ;
 			}
         }
 
-        private void InitGL(OpenGL gl)
-        {
-        }
-		
-		private void NouvelleEtoile( ref Etoile f )
+       private void NouvelleEtoile( ref Etoile f )
 		{
 			if ( f == null )
 				f = new Etoile() ;
@@ -96,7 +93,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.1f);
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ * 1);
             gl.Fog(OpenGL.GL_FOG_END, _zCamera);
-            
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+           
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);

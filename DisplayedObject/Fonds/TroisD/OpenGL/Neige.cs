@@ -148,6 +148,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.05f) ;
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ*3) ;
             gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ*60) ;
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
             
             gl.LoadIdentity();
 			gl.Translate( 0, 0, - _zCamera) ;

@@ -1,32 +1,12 @@
 ﻿/*
- * Crée par SharpDevelop.
- * Utilisateur: lucien
- * Date: 18/01/2015
- * Heure: 16:41
+ * Un tunnel infini et mouvant
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
 using System;
 using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using SharpGL ;
-using SharpGL.SceneGraph ;
-using GLbitfield = System.UInt32;
-using GLboolean = System.Boolean;
-using GLbyte = System.SByte;
-using GLclampf = System.Single;
-using GLdouble = System.Double;
-using GLenum = System.UInt32;
+using SharpGL;
 using GLfloat = System.Single;
-using GLint = System.Int32;
-using GLshort = System.Int16;
-using GLsizei = System.Int32;
-using GLubyte = System.Byte;
-using GLuint = System.UInt32;
-using GLushort = System.UInt16;
-using GLvoid = System.IntPtr;
 
 
 namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
@@ -42,12 +22,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 		protected static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f ) ;
 		protected static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f ) ;
 		protected static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
-		protected static readonly float VITESSE_ROTATION = 0.2f;//conf.getParametre(CAT, "VitesseRotation", 100.0f ) ;
+		protected static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation",0.2f ) ;
 		protected static readonly float BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", TAILLE_ANNEAU + 1 ) ;
 		protected static readonly float RATIO_DEPLACEMENT = conf.getParametre(CAT, "DeplacementTunnel", 0.5f ) ;
 		protected static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f ;
-        protected static readonly GLfloat PERIODE_DEP_X = 5;//conf.getParametre(CAT, "PeriodeDEcalageX", 1.3f);
-        protected static readonly GLfloat PERIODE_DEP_Y = 7f;//conf.getParametre(CAT, "PeriodeDEcalageY", 1.7f);
+        protected static readonly GLfloat PERIODE_DEP_X = conf.getParametre(CAT, "PeriodeDEcalageX", 5f);
+        protected static readonly GLfloat PERIODE_DEP_Y = conf.getParametre(CAT, "PeriodeDEcalageY", 7f);
 		
 		float _CentreAnneauX ;
 		float _CentreAnneauY ;
@@ -62,6 +42,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         const float VIEWPORT_Z = 2f;
         GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.8f, -RAYON_ANNEAU * 0.8f, 1 };
         
+        /// <summary>
+        /// Constructeur: initialiser les anneaux
+        /// </summary>
+        /// <param name="gl"></param>
 		public TunnelOpenGL(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
 		{
@@ -74,6 +58,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 				PlaceAnneau( i ) ;
 		}
 		
+        /// <summary>
+        /// Placer un anneau
+        /// </summary>
+        /// <param name="i"></param>
 		void PlaceAnneau(int i)
 		{
 			float profondeur = _tailleCubeZ * 50f ;
@@ -91,6 +79,13 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			
 		}
 		
+        /// <summary>
+        /// Affichage
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
+        /// <param name="couleur"></param>
 		public override void AfficheOpenGL( OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur )
 		{
 			#if TRACER
@@ -108,9 +103,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_FOG);
             gl.Enable(OpenGL.GL_DEPTH);
-            gl.Enable(OpenGL.GL_LIGHTING); 	// Active l'éclairage
-			gl.Enable(OpenGL.GL_LIGHT0); 	// Allume la lumière n°1
-			gl.Light( OpenGL.GL_LIGHT0,OpenGL.GL_POSITION,LightPos);
+
+            // Lumiere
+            gl.Enable(OpenGL.GL_LIGHTING); 	
+			gl.Enable(OpenGL.GL_LIGHT0); 	
+            gl.Light( OpenGL.GL_LIGHT0,OpenGL.GL_POSITION,LightPos);
 			gl.Enable( OpenGL.GL_COLOR_MATERIAL ) ;
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, col);
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, 128);
@@ -119,6 +116,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			gl.Rotate(0,0,rotation ) ;
 			gl.Color( col ) ;
 			
+            // Tracer les anneaux
 			for ( int i = 0; i < NB_ANNEAUX-1; i++)
 			{
 				gl.Begin( OpenGL.GL_QUADS) ;

@@ -37,6 +37,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         const float VIEWPORT_Y = 1f;
         const float VIEWPORT_Z = 10f;
         readonly int NBPARTICULES_MAX;
+
+        // Une des parties elementaires du nuage
         private class Particule : IComparable
         {
             public float x, y, z, taille, alpha;
@@ -50,10 +52,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     if (z < O2.z) return -1;
                 }
                 return 0;
-
             }
         }
 
+        // Un nuage
         private class Nuage
         {
             public float x, y, z;
@@ -178,6 +180,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Begin(OpenGL.GL_QUADS);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+           
             int derniereTexture = -1;
             for (int i = 0; i < _NbParticules; i++)
             {
@@ -232,6 +237,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             }
             else
             {
+                // Ciel uni
                 gl.ClearColor(col[0] / 4, col[1] / 4, col[2] / 4, col[3]);
                 gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
                 gl.LoadIdentity();
@@ -296,7 +302,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     _particules[_NbParticules++] = p;
 
             //Array.Sort(_particules, 0, _NbParticules);
-
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -338,7 +343,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         }
 
 #endif
-
     }
 
 }
