@@ -34,8 +34,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 			float pz = SinTheta * (x-axeX) + CosTheta * (z-axeZ) + axeZ ;
 			x = px ;
 			z = pz ;
-			
-			
 		}
 		
 		static public void RotateAxeZ( ref float x, ref float y, ref float z, float Theta, float axeX, float axeY  )
@@ -126,7 +124,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 				yScreen = MAX_COORD ;
 			else if ( yScreen < MIN_COORD)
 				yScreen = MIN_COORD ;
-			
 		}
 		
 		
@@ -147,9 +144,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 			else if ( yScreen < MIN_COORD)
 				yScreen = MIN_COORD ;
 		}
-		
-		
-		
 		
 		// Calcule la hauteur Y 3D necessaire pour qu'un point en zWorld soit sur le pixel zScreen a l'ecran
 		protected float Coord3DFrom2D( float xScreen, float zWorld, float tailleScreen )

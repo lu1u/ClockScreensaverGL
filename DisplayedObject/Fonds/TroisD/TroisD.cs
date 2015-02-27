@@ -21,27 +21,13 @@ namespace ClockScreenSaverGL.Fonds.TroisD
         protected float _tailleCubeX, _tailleCubeY, _tailleCubeZ;
         public const float MAX_COORD = Int32.MaxValue;
         public const float MIN_COORD = Int32.MinValue;
-        readonly protected PointF[] _coordPoint;
-        readonly protected int _nbSommetParticules;
-        readonly protected float _tailleParticules;
-
-        public TroisD(float vpX, float vpY, float vpZ, float zCam, int SommetsPartic = 0, float TaillePartic = 1.0f)
+        
+        public TroisD(float vpX, float vpY, float vpZ, float zCam)
         {
             _tailleCubeX = vpX;
             _tailleCubeY = vpY;
             _tailleCubeZ = vpZ;
             _zCamera = zCam;
-
-            if (SommetsPartic > 0)
-            {
-                _nbSommetParticules = SommetsPartic;
-                _tailleParticules = TaillePartic;
-                _coordPoint = new PointF[_nbSommetParticules];
-                for (int i = 0; i < _nbSommetParticules; i++)
-                    _coordPoint[i] = new PointF((float)(_tailleParticules * Math.Sin(i * (Math.PI * 2.0) / _nbSommetParticules)),
-                                                (float)(_tailleParticules * Math.Cos(i * (Math.PI * 2.0) / _nbSommetParticules)));
-
-            }
         }
         static public void RotateAxeY(ref float x, ref float y, ref float z, float Theta, float axeX, float axeZ)
         {
@@ -154,54 +140,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             gl.End();
         }
 
-        /*
-        protected void Coord2DFrom3D( float x, float y, float z, out float xScreen, out float yScreen )
-        {
-            xScreen = _centreX + (x*(_zEcran-_zCamera)/(z-_zCamera)) ;
-            yScreen = _centreY + (y*(_zEcran-_zCamera)/(z-_zCamera)) ;
-			
-            if ( xScreen > MAX_COORD)
-                xScreen = MAX_COORD ;
-            else
-                if ( xScreen < MIN_COORD )
-                    xScreen = MIN_COORD ;
-			
-			
-            if ( yScreen > MAX_COORD )
-                yScreen = MAX_COORD ;
-            else if ( yScreen < MIN_COORD)
-                yScreen = MIN_COORD ;
-			
-        }
-		
-		
-        protected void Coord2DFrom3D( Vecteur3D v, out float xScreen, out float yScreen )
-        {
-            xScreen = _centreX + (v.x*(_zEcran-_zCamera)/(v.z-_zCamera)) ;
-            yScreen = _centreY + (v.y*(_zEcran-_zCamera)/(v.z-_zCamera)) ;
-			
-            if ( xScreen > MAX_COORD)
-                xScreen = MAX_COORD ;
-            else
-                if ( xScreen < MIN_COORD )
-                    xScreen = MIN_COORD ;
-			
-			
-            if ( yScreen > MAX_COORD )
-                yScreen = MAX_COORD ;
-            else if ( yScreen < MIN_COORD)
-                yScreen = MIN_COORD ;
-        }
-		
-		
-		
-		
-        // Calcule la hauteur Y 3D necessaire pour qu'un point en zWorld soit sur le pixel zScreen a l'ecran
-        protected float Coord3DFrom2D( float xScreen, float zWorld, float tailleScreen )
-        {
-            return (xScreen * ((zWorld-_zCamera) / (_zEcran-_zCamera)))  - tailleScreen/2 ;
-        }
-        */
+        
         protected Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
             Vecteur3D v = new Vecteur3D();

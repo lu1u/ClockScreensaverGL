@@ -141,6 +141,12 @@
     <Compile Include="DisplayedObject\Fonds\Metaballes\Metaballes.cs" />
     <Compile Include="DisplayedObject\Fonds\Metaballes\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\Noir.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Feuille.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Printemps.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Branch.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Leaf.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Tree.cs" />
+    <Compile Include="DisplayedObject\Fonds\Printemps\Vector2.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Espace.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Nuages.cs" />
@@ -251,6 +257,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\terre.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\etoile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\feuille.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\feuille1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\flocon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\feuille2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\feuille3.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

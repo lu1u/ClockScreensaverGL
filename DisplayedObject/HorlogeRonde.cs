@@ -53,7 +53,7 @@ namespace ClockScreenSaverGL
         private Lune lune = new Lune();
         public HorlogeRonde(int d, float Px, float Py)
         {
-            _trajectoire = new TrajectoireDiagonale(Px, Py, conf.getParametre(CAT, "VX", 30), conf.getParametre(CAT, "VY", -31));
+            _trajectoire = new TrajectoireDiagonale(Px, Py, conf.getParametre(CAT, "VX", 35), conf.getParametre(CAT, "VY", -34));
             _diametre = (d + 1) / 2 * 2;
             _rayon = _diametre / 2.0f;
             _taille = new SizeF(_diametre, _diametre);

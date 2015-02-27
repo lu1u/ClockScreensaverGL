@@ -47,17 +47,16 @@ namespace ClockScreenSaverGL
         #region Fonds
         const int TYPE_FOND_ESPACE = 0;
         const int TYPE_FOND_NOIR = 1;
-        const int TYPE_FOND_COULEUR = 2;
-        const int TYPE_FOND_METABALLES = 3;
-        const int TYPE_FOND_NUAGES = 4;
+        const int TYPE_FOND_METABALLES = 2;
+        const int TYPE_FOND_NUAGES = 3;
+        const int TYPE_FOND_COULEUR = 4;
         const int TYPE_FOND_BACTERIES = 5;
-        const int TYPE_FOND_NEIGE_META = 6;
-        const int TYPE_FOND_ENCRE = 7;
-        const int TYPE_FOND_LIFE = 8;
-        const int TYPE_FOND_TUNNEL = 9;
-        const int TYPE_FOND_NEIGE = 11;
+        const int TYPE_FOND_ENCRE = 6;
+        const int TYPE_FOND_TUNNEL = 7;
+        const int TYPE_FOND_NEIGE_META = 8;
+        const int TYPE_FOND_LIFE = 9;
         const int TYPE_FOND_TERRE = 10;
-        const int NB_FONDS = 12;
+        const int NB_FONDS = 11;
         #endregion
 
         #region Render Modes
@@ -152,8 +151,10 @@ namespace ClockScreenSaverGL
         private Fonds.Fond createBackgroundObject(int Type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
-           if (_fondDeSaison && initial)
+            if (_fondDeSaison && initial)
             {
+                // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
+                // Note: il n'apparaissent plus dans le cycle de changement du fond
                 switch (Saison())
                 {
                     case SAISON.HIVER:
@@ -161,9 +162,10 @@ namespace ClockScreenSaverGL
                         if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
                             return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
                         else
-                                return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                            return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
 
-                    case SAISON.PRINTEMPS: break; // TODO:
+                    case SAISON.PRINTEMPS:
+                        return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE: break; // TODO
                     case SAISON.AUTOMNE: break; // TODO
                 }
@@ -191,24 +193,17 @@ namespace ClockScreenSaverGL
                         return new Fonds.TroisD.Opengl.NuagesOpenGL(gl);
                     else
                         return new Fonds.TroisD.GDI.NuagesGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_NEIGE:
-                    if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
-                    return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
-                    else
-                        return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-
                 case TYPE_FOND_TERRE:
                     return new Fonds.TroisD.Opengl.TerreOpenGL(gl);
 
                 default:
                     return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
-
         }
 
 
         /// <summary>
-        /// Retourne la saison, calcul approximatif
+        /// Retourne la saison, calcul tres approximatif
         /// </summary>
         /// <returns></returns>
         private SAISON Saison()
@@ -245,9 +240,9 @@ namespace ClockScreenSaverGL
             try
             {
                 UpdateStyles();
-                switch( conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
+                switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
                 {
-                    case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection ; break ;
+                    case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection; break;
                     case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
                     case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
                 }
@@ -330,7 +325,7 @@ namespace ClockScreenSaverGL
 
                 double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
 #if DEBUG
-					s.Append("Version DEBUG " ) ;
+                s.Append("Version DEBUG ");
 #else
                 s.Append("Version RELEASE ");
 #endif
@@ -433,7 +428,6 @@ namespace ClockScreenSaverGL
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
                 _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
-
 
             // citations
             if (conf.getParametre(CAT, "Citation", true))

@@ -16,12 +16,14 @@ namespace ClockScreenSaverGL.Textes
     /// <summary>
     /// Description of Citations.
     /// </summary>
-    public partial class Citations : Texte, IDisposable
+    public sealed partial class Citations : Texte, IDisposable
     {
+        #region Parametres
         const string CAT = "Citation";
 
-        private static int DELAI_CHANGEMENT = 1000 * 60 * conf.getParametre(CAT, "DelaiChange", 3);	// x minutes entre les changements de citation
-        readonly int TailleMax = conf.getParametre(CAT, "TailleMax", 48);
+        private static readonly int DELAI_CHANGEMENT = 1000 * 60 * conf.getParametre(CAT, "DelaiChange", 1);	// x minutes entre les changements de citation
+        private static readonly int TailleMax = conf.getParametre(CAT, "TailleMax", 48);
+        #endregion
         private String _citation;
         private String _auteur;
         private DateTime _changement;
@@ -31,8 +33,8 @@ namespace ClockScreenSaverGL.Textes
 
         public Citations(Form f, int Px, int Py)
             : base(Px, Py,
-                   conf.getParametre(CAT, "VX", -13),
-                   conf.getParametre(CAT, "VY", 10),
+                   conf.getParametre(CAT, "VX", -15),
+                   conf.getParametre(CAT, "VY", 12),
                    10,
                    conf.getParametre(CAT, "Alpha", (byte)150))
         {

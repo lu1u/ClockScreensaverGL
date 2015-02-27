@@ -13,7 +13,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 	/// <summary>
 	/// Description of Flocon.
 	/// </summary>
-	public class Objet3D
+	public sealed class Objet3D
 	{
 		public float x, y, z;			// Position
 		public int type ;				// Type (= bitmap)

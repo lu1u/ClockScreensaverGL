@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
     /// <summary>
     /// Description of Nuage.
     /// </summary>
-    public class NuagesOpenGL : TroisD
+    public sealed class NuagesOpenGL : TroisD
     {
         #region PARAMETRES
         const string CAT = "Nuages.OpenGL";
@@ -56,7 +56,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         }
 
         // Un nuage
-        private class Nuage
+        private sealed class Nuage
         {
             public float x, y, z;
             public List<Particule> _particules;
@@ -74,7 +74,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="gl"></param>
         public NuagesOpenGL(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 0, 0, 1.0f)
+            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 0)
         {
             _nuages = new Nuage[NB_NUAGES];
             texture[0] = new Texture();
@@ -182,7 +182,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.Begin(OpenGL.GL_QUADS);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-           
+
             int derniereTexture = -1;
             for (int i = 0; i < _NbParticules; i++)
             {
@@ -322,9 +322,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                 conf.setParametre(CAT, "EnHaut", _positionNuage > 0 ? true : false);
 
                 for (int i = 0; i < NB_NUAGES; i++)
-                {
                     creerNuage(ref _nuages[i], true);
-                }
                 return true;
             }
             else

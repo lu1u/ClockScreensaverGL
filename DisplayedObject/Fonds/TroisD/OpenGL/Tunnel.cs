@@ -14,25 +14,25 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 	/// <summary>
 	/// Description of Tunnel.
 	/// </summary>
-	public class TunnelOpenGL : TroisD
+    public sealed class TunnelOpenGL : TroisD
 	{
-        protected const string CAT = "Tunnel.OpenGL";
-		protected static readonly int TAILLE_ANNEAU = conf.getParametre(CAT, "NbFacettes", 16 ) ;
-		protected static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 500 ) ;
-		protected static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f ) ;
-		protected static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f ) ;
-		protected static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
-		protected static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation",0.2f ) ;
-		protected static readonly float BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", TAILLE_ANNEAU + 1 ) ;
-		protected static readonly float RATIO_DEPLACEMENT = conf.getParametre(CAT, "DeplacementTunnel", 0.5f ) ;
-		protected static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f ;
-        protected static readonly GLfloat PERIODE_DEP_X = conf.getParametre(CAT, "PeriodeDEcalageX", 5f);
-        protected static readonly GLfloat PERIODE_DEP_Y = conf.getParametre(CAT, "PeriodeDEcalageY", 7f);
+        private const string CAT = "Tunnel.OpenGL";
+		private static readonly int TAILLE_ANNEAU = conf.getParametre(CAT, "NbFacettes", 16 ) ;
+		private static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 500 ) ;
+		private static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f ) ;
+		private static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f ) ;
+		private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
+		private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation",0.2f ) ;
+		private static readonly float BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", TAILLE_ANNEAU + 1 ) ;
+		private static readonly float RATIO_DEPLACEMENT = conf.getParametre(CAT, "DeplacementTunnel", 0.5f ) ;
+		private static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f ;
+        private static readonly GLfloat PERIODE_DEP_X = conf.getParametre(CAT, "PeriodeDEcalageX", 5f);
+        private static readonly GLfloat PERIODE_DEP_Y = conf.getParametre(CAT, "PeriodeDEcalageY", 7f);
 		
 		float _CentreAnneauX ;
 		float _CentreAnneauY ;
 		
-		static protected DateTime _DernierDeplacement = DateTime.Now ;
+		static private DateTime _DernierDeplacement = DateTime.Now ;
 		static DateTime debut = DateTime.Now ;
 		
 		Vecteur3D[,] _anneaux ;
@@ -75,8 +75,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 				                              _CentreAnneauY + (float)(RAYON_ANNEAU * Math.Sin(angle)),
 				                              z) ;
 			}
-			
-			
 		}
 		
         /// <summary>
@@ -135,11 +133,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 							gl.Vertex( _anneaux[i,jPlusUn].x, _anneaux[i,jPlusUn].y, _anneaux[i,jPlusUn].z ) ;
 							gl.Vertex( _anneaux[iPlusUn,jPlusUn].x, _anneaux[iPlusUn,jPlusUn].y, _anneaux[iPlusUn,jPlusUn].z ) ;
 							gl.Vertex( _anneaux[iPlusUn,j].x, _anneaux[iPlusUn,j].y, _anneaux[iPlusUn,j].z ) ;
-						}
-						
+						}						
 					}
 				}
-				
 				gl.End() ;
 			}
 
@@ -168,7 +164,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			{
 				_anneaux[i,j].z += dZ ;
 
-                    // Tourner autour de l'axe Z
+                // Tourner autour de l'axe Z
                 px = (CosTheta * (_anneaux[i, j].x)) - (SinTheta * _anneaux[i, j].y);
                 py = (SinTheta * (_anneaux[i, j].x)) + (CosTheta * _anneaux[i, j].y);
 
