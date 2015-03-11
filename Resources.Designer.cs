@@ -121,26 +121,6 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap feuille2 {
-            get {
-                object obj = ResourceManager.GetObject("feuille2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap feuille3 {
-            get {
-                object obj = ResourceManager.GetObject("feuille3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap flocon1 {
             get {
                 object obj = ResourceManager.GetObject("flocon1", resourceCulture);

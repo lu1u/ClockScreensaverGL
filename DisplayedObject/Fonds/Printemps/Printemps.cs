@@ -15,21 +15,23 @@ namespace ClockScreenSaverGL.Fonds.Printemps
     {
         #region PARAMETRES
         const String CAT = "Tree.GDI" ;
-        public static readonly int DELAI_RECOMMENCE = conf.getParametre(CAT, "Delai nouvel arbre", 10) * 1000;
+        public static readonly int DELAI_RECOMMENCE = 20000;//conf.getParametre(CAT, "Delai nouvel arbre", 10) * 1000;
         public static readonly float LARGEUR_TRONC = conf.getParametre(CAT, "Largeur Tronc", 10);
-        public static readonly int LARGEUR_ARBRE = conf.getParametre(CAT, "Largeur Arbre", 1200);
-        public static readonly int HAUTEUR_ARBRE = conf.getParametre(CAT, "Hauteur Arbre", 400);
+        public static readonly int HAUTEUR_TRONC = 200;//conf.getParametre(CAT, "Hauteur Tronc", 200);
+        public static readonly int LARGEUR_ARBRE = 1300;//conf.getParametre(CAT, "Largeur Arbre", 1200);
+        public static readonly int HAUTEUR_ARBRE = 500;//conf.getParametre(CAT, "Hauteur Arbre", 400);
         public static readonly int LONGUEUR_BRANCHE = conf.getParametre(CAT, "Longueur Branche", 5);
         public static readonly int DISTANCE_MIN= conf.getParametre(CAT, "Distance Min", 5);
-        public static readonly int DISTANCE_MAX = conf.getParametre(CAT, "Distance Max", 100);
+        public static readonly int DISTANCE_MAX = 200;//conf.getParametre(CAT, "Distance Max", 100);
+        public static readonly int NB_CIBLES = 100;//conf.getParametre(CAT, "Nb Cibles", 1000);
         float _oscillation = 0;
         #endregion
-        DateTime finGrowing;
+        DateTime _finCroissance;
+        Tree _tree;
 
-        Tree tree;
         public Printemps(int LargeurEcran, int HauteurEcran)
         {
-            tree = new Tree(LargeurEcran, HauteurEcran * 0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX);
+            _tree = new Tree(LargeurEcran, HauteurEcran * 0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC );
         }
 
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
@@ -38,7 +40,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             g.Clear(getCouleurOpaqueAvecAlpha(couleur, 64));
-            tree.Draw(g);
+            _tree.Draw(g);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -51,18 +53,19 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            if (tree.DoneGrowing)
+            if (_tree.DoneGrowing)
             {
-                if (maintenant._temps.Subtract(finGrowing).TotalMilliseconds > DELAI_RECOMMENCE)
-                    tree = new Tree(tailleEcran.Width, tailleEcran.Height *0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX);
+                if (maintenant._temps.Subtract(_finCroissance).TotalMilliseconds > DELAI_RECOMMENCE)
+                    _tree = new Tree(tailleEcran.Width, tailleEcran.Height * 0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
             }
             else
-                finGrowing = maintenant._temps;
+                _finCroissance = maintenant._temps;
 
-            tree.Grow();
+            if ( UneFrameSur(2))
+                _tree.Grow();
 
             _oscillation += maintenant._intervalle * 1.5f;
-            tree.Oscillation((float)Math.Sin(_oscillation) * 0.02f);
+            _tree.Oscillation((float)Math.Sin(_oscillation) * 0.02f);
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif

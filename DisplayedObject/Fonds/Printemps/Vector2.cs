@@ -7,15 +7,15 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 {
     public class Vector2
     {
-        public static readonly Vector2 Zero = new Vector2(0, 0,0);
+        public static readonly Vector2 Zero = new Vector2(0, 0/*,0*/);
         public float X;
         public float Y;
-        public float Z;
-        public Vector2(float x, float y, float z )
+        //public float Z;
+        public Vector2(float x, float y, float z = 0 )
         {
             this.X = x;
             this.Y = y;
-            this.Z = z;
+            //this.Z = z;
         }
 
         public void Normalize()
@@ -23,42 +23,42 @@ namespace ClockScreenSaverGL.Fonds.Printemps
             float l = Length();
             X /= l;
             Y /= l;
-            Z /= l;
+            //Z /= l;
         }
         
         public static Vector2 operator +(Vector2 v1, Vector2 v2)
         {
-            return new Vector2(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
+            return new Vector2(v1.X + v2.X, v1.Y + v2.Y/*, v1.Z + v2.Z*/);
         }
 
         public static Vector2 operator -(Vector2 v1, Vector2 v2)
         {
-            return new Vector2(v1.X - v2.X, v1.Y - v2.Y, v1.Z +- v2.Z);
+            return new Vector2(v1.X - v2.X, v1.Y - v2.Y/*, v1.Z +- v2.Z*/);
         }
 
         public static Vector2 operator *(Vector2 v1, float m)
         {
-            return new Vector2(v1.X * m, v1.Y * m, v1.Z * m);
+            return new Vector2(v1.X * m, v1.Y * m/*, v1.Z * m*/);
         }
 
         public static float operator *(Vector2 v1, Vector2 v2)
         {
-            return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
+            return v1.X * v2.X + v1.Y * v2.Y/* + v1.Z * v2.Z*/;
         }
 
         public static Vector2 operator /(Vector2 v1, float m)
         {
-            return new Vector2(v1.X / m, v1.Y / m, v1.Z / m);
+            return new Vector2(v1.X / m, v1.Y / m/*, v1.Z / m*/);
         }
         
         public static float Distance(Vector2 v1, Vector2 v2)
         {
-            return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2));
+            return (float)Math.Sqrt(Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2)/* + Math.Pow(v1.Z - v2.Z, 2)*/);
         }
 
         public float Length()
         {
-            return (float)Math.Sqrt(X * X + Y * Y + Z*Z);
+            return (float)Math.Sqrt(X * X + Y * Y /*+ Z*Z*/);
         }
         
         public PointF Point()

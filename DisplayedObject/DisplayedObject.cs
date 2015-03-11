@@ -36,7 +36,8 @@ namespace ClockScreenSaverGL
 		
 		// Cette fonction sera appelee quand un changement de date sera detecte
 		public virtual void DateChangee(Graphics g, Temps maintenant ) {}
-		
+        private int _noFrame = 0;
+
 		/// <summary>
 		/// Retourne une couleur correspondant a la teinte donnee avec la transparence donnee
 		/// </summary>
@@ -48,6 +49,14 @@ namespace ClockScreenSaverGL
 			return Color.FromArgb(alpha, color.R, color.G, color.B ) ;
 		}
 		
+        /***
+         * Pour les operations qu'on ne veut pas faire à toutes les frames
+         */
+        protected bool UneFrameSur( int NbFrames)
+        {
+            _noFrame++;
+            return (_noFrame % NbFrames == 0);
+        }
 		protected static Color getCouleurOpaqueAvecAlpha( Color color, byte alpha )
 		{
 			float a = (float)alpha / 255.0f ;

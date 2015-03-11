@@ -32,6 +32,10 @@ namespace ClockScreenSaverGL
         const string PARAM_FONDDESAISON = "FondDeSaison";
         const string PARAM_TYPEFOND = "TypeFond";
         private static Config conf = Config.getInstance();
+        static readonly int PRINTEMPS = conf.getParametre( CAT, "Printemps", 80 ) ;
+        static readonly int ETE = conf.getParametre(CAT, "Ete", 172) ;
+        static readonly int AUTOMNE = conf.getParametre(CAT, "Automne",266) ;
+        static readonly int HIVER = conf.getParametre(CAT, "Hiver",356) ;
         #endregion
 
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
@@ -155,7 +159,7 @@ namespace ClockScreenSaverGL
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
                 // Note: il n'apparaissent plus dans le cycle de changement du fond
-                switch (Saison())
+                switch (getSaison())
                 {
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
@@ -206,25 +210,25 @@ namespace ClockScreenSaverGL
         /// Retourne la saison, calcul tres approximatif
         /// </summary>
         /// <returns></returns>
-        private SAISON Saison()
+        private SAISON getSaison()
         {
             DateTime date = DateTime.Now;
 
             int quantieme = date.DayOfYear;
             // Hiver : jusqu'a l'equinoxe de printemps
-            if (quantieme < 80)
+            if (quantieme < PRINTEMPS)
                 return SAISON.HIVER;
 
             // Printemps: jusqu'au solstice d'ete
-            if (quantieme < 202)
+            if (quantieme < ETE)
                 return SAISON.PRINTEMPS;
 
             // Ete: jusqu'a l'equinoxe d'automne
-            if (quantieme < 266)
+            if (quantieme < AUTOMNE)
                 return SAISON.ETE;
 
             // Automne : jusqu'au solstice d'hiver
-            if (quantieme < 356)
+            if (quantieme < HIVER)
                 return SAISON.AUTOMNE;
 
             return SAISON.HIVER;
