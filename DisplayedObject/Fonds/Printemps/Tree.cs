@@ -93,6 +93,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
             }
         }
 
+        /*
         static public void RotateAxeY(ref float x, ref float y, ref float z, float Theta, float axeX, float axeZ)
         {
             float CosTheta = (float)Math.Cos(Theta);
@@ -103,7 +104,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
             x = px;
             z = pz;
         }
-
+        */
         public void Grow()
         {
             if (DoneGrowing) return;
