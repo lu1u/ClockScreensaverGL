@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL
         const int RENDERMODE_NATIVE = 2;
         #endregion
 
-        enum SAISON { HIVER, PRINTEMPS, ETE, AUTOMNE } ;
+        enum SAISON { HIVER=0, PRINTEMPS=1, ETE=2, AUTOMNE=3 } ;
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
         DateTime lastFrame = DateTime.Now;
@@ -212,6 +212,10 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private SAISON getSaison()
         {
+            int forceSaison = conf.getParametre(CAT, "Force saison", -1);
+            if (forceSaison != -1)
+                return (SAISON)forceSaison;
+
             DateTime date = DateTime.Now;
 
             int quantieme = date.DayOfYear;
@@ -220,7 +224,7 @@ namespace ClockScreenSaverGL
                 return SAISON.HIVER;
 
             // Printemps: jusqu'au solstice d'ete
-            if (quantieme < ETE)
+            if (quantieme <= ETE)
                 return SAISON.PRINTEMPS;
 
             // Ete: jusqu'a l'equinoxe d'automne
