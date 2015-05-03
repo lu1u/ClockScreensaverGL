@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL.Meteo
                     day = Resources.Lundi;
                 else
                     if (d.Equals("Tue"))
-                        day = Resources.Lundi;
+                        day = Resources.Mardi;
                     else
                         if (d.Equals("Wed"))
                             day = Resources.Mercredi;

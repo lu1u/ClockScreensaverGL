@@ -32,10 +32,10 @@ namespace ClockScreenSaverGL
         const string PARAM_FONDDESAISON = "FondDeSaison";
         const string PARAM_TYPEFOND = "TypeFond";
         private static Config conf = Config.getInstance();
-        static readonly int PRINTEMPS = conf.getParametre( CAT, "Printemps", 80 ) ;
-        static readonly int ETE = conf.getParametre(CAT, "Ete", 172) ;
-        static readonly int AUTOMNE = conf.getParametre(CAT, "Automne",266) ;
-        static readonly int HIVER = conf.getParametre(CAT, "Hiver",356) ;
+        static readonly int PRINTEMPS = conf.getParametre(CAT, "Printemps", 80);
+        static readonly int ETE = conf.getParametre(CAT, "Ete", 172);
+        static readonly int AUTOMNE = conf.getParametre(CAT, "Automne", 266);
+        static readonly int HIVER = conf.getParametre(CAT, "Hiver", 356);
         #endregion
 
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL
         const int RENDERMODE_NATIVE = 2;
         #endregion
 
-        enum SAISON { HIVER=0, PRINTEMPS=1, ETE=2, AUTOMNE=3 } ;
+        enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 } ;
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
         DateTime lastFrame = DateTime.Now;
@@ -155,7 +155,7 @@ namespace ClockScreenSaverGL
         private Fonds.Fond createBackgroundObject(int Type, bool initial)
         {
             //return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
-            
+
             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
@@ -293,7 +293,7 @@ namespace ClockScreenSaverGL
                 g.CompositingQuality = CompositingQuality.HighQuality;
 
                 Color Couleur = _couleur.GetRGB();
-                
+
                 // Afficher tous les objets
                 foreach (DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
@@ -437,26 +437,25 @@ namespace ClockScreenSaverGL
             _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
             _listeObjets.Add(createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
+
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
                 _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
+            
             // Heure et date numeriques
             if (conf.getParametre(CAT, "Date", true))
                 _listeObjets.Add(new Textes.DateTexte(0, 0));
             if (conf.getParametre(CAT, "Heure", true))
                 _listeObjets.Add(new Textes.HeureTexte(100, CentreY));
 
-
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
                 _listeObjets.Add(new Meteo.Meteo());
+
             // citations
             if (conf.getParametre(CAT, "Citation", true))
                 _listeObjets.Add(new Textes.Citations(this, 200, 200));
 
-
-
-            
             // Horloge ronde
             if (conf.getParametre(CAT, "HorlogeRonde", true))
                 _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));

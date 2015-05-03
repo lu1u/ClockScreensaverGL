@@ -33,14 +33,14 @@ namespace ClockScreenSaverGL
 		{
 			_Px += (_Vx * maintenant._intervalle) ;
 			
-			if ((_Px < 0) && (_Vx < 0))
+			if ((_Px < Bounds.Left) && (_Vx < 0))
 				_Vx = Math.Abs(_Vx) ;
 			else
 				if ( ((_Px + Taille.Width) > Bounds.Right ) && (_Vx > 0))
 					_Vx = - Math.Abs(_Vx ) ;
 
             _Py += (_Vy * maintenant._intervalle);
-			if ((_Py < 0) && (_Vy < 0))
+			if ((_Py < Bounds.Top) && (_Vy < 0))
 				_Vy = Math.Abs(_Vy) ;
 			else
 				if (( (_Py + Taille.Height) > Bounds.Bottom ) && (_Vy >0))
@@ -56,14 +56,14 @@ namespace ClockScreenSaverGL
 
             _Px += (_Vx * maintenant._intervalle);
 			
-			if ((_Px < 0) && (_Vx < 0))
+			if ((_Px < Bounds.Left) && (_Vx < 0))
 				_Vx = Math.Abs(_Vx) ;
 			else
 				if ( ((_Px + Taille.Width) > Bounds.Right ) && (_Vx > 0))
 					_Vx = - Math.Abs(_Vx ) ;
 
             _Py += (_Vy * maintenant._intervalle);
-			if ((_Py < 0) && (_Vy < 0))
+			if ((_Py < Bounds.Top) && (_Vy < 0))
 				_Vy = Math.Abs(_Vy) ;
 			else
 				if (( (_Py + Taille.Height) > Bounds.Bottom ) && (_Vy >0))
