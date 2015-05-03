@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL
 		private const string TYPE_BYTE = "byte" ;
 		private const char CAT_SEPARATOR = '|' ;
 		private const char VALUE_SEPARATOR = '=' ;
-		private const char KEY_SEPARATOR = ':' ;
+		private const char KEY_SEPARATOR = '.' ;
 		
 		private class Parameter
 		{
@@ -94,9 +94,9 @@ namespace ClockScreenSaverGL
                         foreach (String key in categorie._valeurs.Keys)
                         {
                             Parameter p = categorie._valeurs[key];
-                            tw.WriteLine(key + ':' + toLigneType(p));
-                            tw.WriteLine(key + ':' + toLigneValue(p));
-                            tw.WriteLine(key + ':' + toLigneDefaut(p));
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneType(p));
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
                         }
                         tw.Close();
                         categorie._propre = true;
@@ -111,17 +111,17 @@ namespace ClockScreenSaverGL
 			switch( p._type )
 			{
 				case TYPE_PARAMETRE.T_INT :
-					return "type="  + TYPE_INT;
+					return "type" + VALUE_SEPARATOR   + TYPE_INT;
 				case TYPE_PARAMETRE.T_FLOAT :
-					return "type=" + TYPE_FLOAT ;
+					return "type" + VALUE_SEPARATOR  + TYPE_FLOAT ;
 				case TYPE_PARAMETRE.T_DOUBLE :
-					return "type=" + TYPE_DOUBLE  ;
+					return "type" + VALUE_SEPARATOR  + TYPE_DOUBLE  ;
 				case TYPE_PARAMETRE.T_BOOL :
-					return "type=" + TYPE_BOOL  ;
+					return "type" + VALUE_SEPARATOR  + TYPE_BOOL  ;
 				case TYPE_PARAMETRE.T_STRING :
-					return "type=" + TYPE_STRING ;
+					return "type" + VALUE_SEPARATOR  + TYPE_STRING ;
 				case TYPE_PARAMETRE.T_BYTE :
-					return "type=" + TYPE_BYTE ;
+					return "type" + VALUE_SEPARATOR  + TYPE_BYTE ;
 					
 				default:
 					return null ;
@@ -133,17 +133,17 @@ namespace ClockScreenSaverGL
 			switch( p._type )
 			{
 				case TYPE_PARAMETRE.T_INT :
-					return "value=" + ((int)p._value)   ;
+					return "value" + VALUE_SEPARATOR  + ((int)p._value)   ;
 				case TYPE_PARAMETRE.T_FLOAT :
-					return "value=" + ((float)p._value)   ;
+					return "value" + VALUE_SEPARATOR  + ((float)p._value)   ;
 				case TYPE_PARAMETRE.T_DOUBLE :
-					return "value=" + ((double)p._value)   ;
+					return "value" + VALUE_SEPARATOR  + ((double)p._value)   ;
 				case TYPE_PARAMETRE.T_BOOL :
-					return "value=" + (stringFromBool((bool)p._value))   ;
+					return "value" + VALUE_SEPARATOR  + (stringFromBool((bool)p._value))   ;
 				case TYPE_PARAMETRE.T_STRING :
-					return "value=" + ((string)p._value)  ;
+					return "value" + VALUE_SEPARATOR  + ((string)p._value)  ;
 				case TYPE_PARAMETRE.T_BYTE :
-					return "value=" + ((byte)p._value)  ;
+					return "value" + VALUE_SEPARATOR  + ((byte)p._value)  ;
 					
 				default:
 					return null ;
@@ -154,17 +154,17 @@ namespace ClockScreenSaverGL
 			switch( p._type )
 			{
 				case TYPE_PARAMETRE.T_INT :
-					return "default=" + ((int)p._default)  ;
+					return "default" + VALUE_SEPARATOR  + ((int)p._default)  ;
 				case TYPE_PARAMETRE.T_FLOAT :
-					return "default=" + ((float)p._default)  ;
+					return "default" + VALUE_SEPARATOR  + ((float)p._default)  ;
 				case TYPE_PARAMETRE.T_DOUBLE :
-					return "default=" + ((double)p._default)  ;
+					return "default" + VALUE_SEPARATOR  + ((double)p._default)  ;
 				case TYPE_PARAMETRE.T_BOOL :
-					return "default=" + (stringFromBool((bool)p._default))  ;
+					return "default" + VALUE_SEPARATOR  + (stringFromBool((bool)p._default))  ;
 				case TYPE_PARAMETRE.T_STRING :
-					return "default=" + ((string)p._default)  ;
+					return "default" + VALUE_SEPARATOR  + ((string)p._default)  ;
 				case TYPE_PARAMETRE.T_BYTE :
-					return "default=" + ((byte)p._default)  ;
+					return "default" + VALUE_SEPARATOR  + ((byte)p._default)  ;
 					
 				default:
 					return null ;
@@ -213,7 +213,7 @@ namespace ClockScreenSaverGL
 						else if ( type.Equals(TYPE_INT))
                             setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, (int)Int64.Parse(valeur), (int)Int64.Parse(defaut));
 						else if ( type.Equals(TYPE_STRING))
-                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, valeur, defaut);
+                            setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_STRING, valeur, defaut);
 						else if ( type.Equals(TYPE_BYTE))
                             setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, (byte)Int64.Parse(valeur), (byte)Int64.Parse(defaut));
 					}
@@ -344,8 +344,6 @@ namespace ClockScreenSaverGL
 		/// <returns></returns>
 		private Object getParametre( string cat, string name, TYPE_PARAMETRE type, Object defaut )
 		{
-			SortedList list = new SortedList() ;
-			
 			Categorie categorie ;
 			_categories.TryGetValue( cat, out categorie ) ;
 			if ( categorie == null )

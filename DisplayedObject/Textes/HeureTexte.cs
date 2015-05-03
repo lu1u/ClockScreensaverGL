@@ -6,9 +6,8 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
-using System;
 using System.Drawing;
-
+using System.Windows.Forms;
 namespace ClockScreenSaverGL.Textes
 {
 	/// <summary>
@@ -19,7 +18,7 @@ namespace ClockScreenSaverGL.Textes
 		const string CAT = "HeureTexte" ;
 		static string _texte; 
        public HeureTexte(int Px, int Py)
-       	: base( Px, Py, conf.getParametre(CAT, "VX", 15), conf.getParametre(CAT, "VY", -16), conf.getParametre(CAT, "TailleFonte", 80), conf.getParametre(CAT, "Alpha", (byte)180) )
+            : base(Px, SystemInformation.VirtualScreen.Height-100, -conf.getParametre(CAT, "VX", 15), 0 /*conf.getParametre(CAT, "VY", -16)*/, conf.getParametre(CAT, "TailleFonte", 80), conf.getParametre(CAT, "Alpha", (byte)180))
 		{
 		}
 		

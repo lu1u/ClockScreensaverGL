@@ -189,8 +189,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
 				g.DrawString( ""+i, SystemFonts.DefaultFont,Brushes.Teal, X, _centreY + 50f ) ;
 			}
 		}
-		
-		public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
 		{
 			float depuisdebut = (float)(debut.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);
 			float vitesseCamera = (float)Math.Sin(depuisdebut / _periodeRotation) * _vitesseRotation ;

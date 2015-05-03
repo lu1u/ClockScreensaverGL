@@ -182,6 +182,7 @@ namespace ClockScreenSaverGL.Textes
             "Certains hommes ont pour seule fonction\nde transformer la nourriture en excréments.|Leonard de Vinci",
             "L'expérience prouve que celui qui n'a jamais confiance en personne\nne sera jamais déçu|Leonard de Vinci",
             "Savoir écouter, c'est posséder, outre le sien,\nle cerveau des autres|Leonard de Vinci",
+            "J'ai claqué beaucoup d'argent dans l'alcool et les filles\nle reste, je l'ai gaspillé|Georges Best",
             "*Tous le monde ne possède pas le muscle 'long palmaire'",
             "*La colonne vertébrale comporte:\n7 vertèbres cervicales\n12 vertèbres thoraciques\n5 vertèbres lombaires",
             "*La proprioception (ou sensibilité profonde)\nvous permet de ressentir la position des différentes\nparties de votre corps"

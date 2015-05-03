@@ -61,9 +61,9 @@ namespace ClockScreenSaverGL.Metaballes
 		/// </summary>
 		/// <param name="maintenant"></param>
 		/// <param name="tailleEcran"></param>
-		public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
 		{
-			base.Deplace(maintenant, tailleEcran ) ;
+            base.Deplace(maintenant, ref tailleEcran);
 			
 			UnSur ++ ;
 			

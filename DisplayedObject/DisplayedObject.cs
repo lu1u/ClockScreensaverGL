@@ -31,7 +31,7 @@ namespace ClockScreenSaverGL
 		public virtual void AfficheOpenGL( OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur ) {}
 		public virtual void AppendHelpText( StringBuilder s ) {}
 		
-		public abstract void Deplace( Temps maintenant, Rectangle tailleEcran ) ;
+		public abstract void Deplace( Temps maintenant, ref Rectangle tailleEcran ) ;
 		public virtual void OpenGLInitialized( OpenGL gl ) {}
 		
 		// Cette fonction sera appelee quand un changement de date sera detecte
@@ -98,7 +98,7 @@ namespace ClockScreenSaverGL
 		/// <param name="Min"></param>
 		/// <param name="Max"></param>
 		/// <returns></returns>
-		static protected float FloatRandom(float Min, float Max )
+		static public float FloatRandom(float Min, float Max )
 		{
             if (Min < Max)
                 return (float)r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;

@@ -71,7 +71,7 @@ namespace ClockScreenSaverGL.Fonds
 			#if TRACER
 			RenderStart(CHRONO_TYPE.RENDER) ;
 			#endif
-			g.Clear(  getCouleurOpaqueAvecAlpha( couleur, 25 )) ;
+			g.Clear(  Color.Black) ;//getCouleurOpaqueAvecAlpha( couleur, 25 )) ;
 			float Rx = (float)tailleEcran.Width / LARGEUR ;
 			float Ry = (float)tailleEcran.Height / HAUTEUR ;
 			
@@ -135,7 +135,7 @@ namespace ClockScreenSaverGL.Fonds
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-		public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
 		{
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;

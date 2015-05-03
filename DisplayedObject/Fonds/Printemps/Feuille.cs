@@ -8,6 +8,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
     {
         static Random r = new Random();
         const int NB_TYPES_FEUILLES = 3;
+        static readonly int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
 
         public Vector2 Position { get; set; }
         public float _taille;
@@ -17,7 +18,9 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         {
             Position = position;
             _taille = 20;
-            _feuille = RotateImage(Resources.feuille1,r.Next(-45, 90) );
+
+            Bitmap b = TYPE_FEUILLES == 0 ? Resources.feuille1 : Resources.feuille2;
+            _feuille = RotateImage(b,r.Next(-45, 90) );
         }
 
         public void Dispose()
@@ -32,7 +35,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         public void Grow(float intervalle)
         {
             if (_taille < 180)
-                _taille += intervalle * 1.2f;
+                _taille += intervalle * 1.5f;
         }
 
         /// <summary>

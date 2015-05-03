@@ -143,8 +143,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 			RenderStop(CHRONO_TYPE.RENDER) ;
 			#endif
 		}
-		
-	public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
 		{
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;

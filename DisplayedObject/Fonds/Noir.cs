@@ -49,14 +49,14 @@ namespace ClockScreenSaverGL.Fonds
 			
 				
 		}
-		public override void Deplace( Temps maintenant, Rectangle tailleEcran )
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
 		{
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;
 			#endif
 
 			foreach( DisplayedObject b in listeObjets)
-				b.Deplace( maintenant, tailleEcran) ;
+				b.Deplace( maintenant, ref tailleEcran) ;
 			
 			#if TRACER
 			RenderStop(CHRONO_TYPE.DEPLACE) ;

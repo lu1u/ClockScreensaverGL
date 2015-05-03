@@ -745,4 +745,178 @@ R: réinitialiser le fond</value>
   <data name="flocon11" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\flocon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="feuille2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\feuille2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_00" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\00.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_02" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\02.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_03" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\03.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_04" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\04.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_05" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\05.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_06" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\06.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_07" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\07.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_08" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\08.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_09" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\09.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\10.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_11" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\11.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_12" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\12.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_13" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\13.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_14" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\14.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_15" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\15.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_17" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\17.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_18" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\18.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_19" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\19.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_20" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\20.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_21" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\21.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_22" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\22.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_23" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\23.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_25" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\25.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_26" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\26.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_27" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\27.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_28" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\28.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_29" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\29.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_31" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\31.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_34" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\34.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_35" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\35.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_36" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\36.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_37" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\37.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_38" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\38.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_39" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\39.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_40" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_41" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\41.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_42" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\42.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_43" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\43.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_44" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\44.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_45" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\45.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_46" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\46.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_47" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\47.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Meteo\33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Meteo_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Dimanche" xml:space="preserve">
+    <value>Dimanche</value>
+  </data>
+  <data name="Jeudi" xml:space="preserve">
+    <value>Jeudi</value>
+  </data>
+  <data name="Lundi" xml:space="preserve">
+    <value>Lundi</value>
+  </data>
+  <data name="Mardi" xml:space="preserve">
+    <value>Mardi</value>
+  </data>
+  <data name="Mercredi" xml:space="preserve">
+    <value>Mercredi</value>
+  </data>
+  <data name="Samedi" xml:space="preserve">
+    <value>Samedi</value>
+  </data>
+  <data name="Vendredi" xml:space="preserve">
+    <value>Vendredi</value>
+  </data>
 </root>

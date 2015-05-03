@@ -178,7 +178,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
         {
             float intervalle = (float)(maintenant._temps.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);
             float depuisdebut = (float)(debut.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);

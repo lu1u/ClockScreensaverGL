@@ -149,7 +149,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

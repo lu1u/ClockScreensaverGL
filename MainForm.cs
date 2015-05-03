@@ -154,6 +154,8 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fonds.Fond createBackgroundObject(int Type, bool initial)
         {
+            //return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
+            
             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
@@ -207,13 +209,14 @@ namespace ClockScreenSaverGL
 
 
         /// <summary>
-        /// Retourne la saison, calcul tres approximatif
+        /// Retourne la saison, (calcul tres approximatif)
         /// </summary>
         /// <returns></returns>
         private SAISON getSaison()
         {
             int forceSaison = conf.getParametre(CAT, "Force saison", -1);
             if (forceSaison != -1)
+                // Forcage de la saison
                 return (SAISON)forceSaison;
 
             DateTime date = DateTime.Now;
@@ -290,7 +293,7 @@ namespace ClockScreenSaverGL
                 g.CompositingQuality = CompositingQuality.HighQuality;
 
                 Color Couleur = _couleur.GetRGB();
-
+                
                 // Afficher tous les objets
                 foreach (DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
@@ -364,8 +367,9 @@ namespace ClockScreenSaverGL
 
             _temps = new Temps(DateTime.Now, _derniereFrame);
 
+            Rectangle bnd = Bounds;
             foreach (DisplayedObject b in _listeObjets)
-                b.Deplace(_temps, Bounds);
+                b.Deplace(_temps, ref bnd);
 
             if (_jourActuel != _temps._JourDeLAnnee)
             {
@@ -436,20 +440,27 @@ namespace ClockScreenSaverGL
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
                 _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
-
-            // citations
-            if (conf.getParametre(CAT, "Citation", true))
-                _listeObjets.Add(new Textes.Citations(this, 200, 200));
-
             // Heure et date numeriques
             if (conf.getParametre(CAT, "Date", true))
                 _listeObjets.Add(new Textes.DateTexte(0, 0));
             if (conf.getParametre(CAT, "Heure", true))
-                _listeObjets.Add(new Textes.HeureTexte(0, CentreY));
+                _listeObjets.Add(new Textes.HeureTexte(100, CentreY));
 
+
+            // Meteo
+            if (conf.getParametre(CAT, "Meteo", true))
+                _listeObjets.Add(new Meteo.Meteo());
+            // citations
+            if (conf.getParametre(CAT, "Citation", true))
+                _listeObjets.Add(new Textes.Citations(this, 200, 200));
+
+
+
+            
             // Horloge ronde
             if (conf.getParametre(CAT, "HorlogeRonde", true))
                 _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+
         }
 
         void onTimerChangeBackground(object sender, EventArgs e)

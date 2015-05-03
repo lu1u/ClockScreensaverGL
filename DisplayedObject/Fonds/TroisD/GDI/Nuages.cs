@@ -199,7 +199,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.GDI
             }
         }
 
-        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
         {
             float vitesse = maintenant._intervalle * VITESSE;
             bool derriereCam;

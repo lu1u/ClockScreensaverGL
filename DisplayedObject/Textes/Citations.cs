@@ -143,7 +143,7 @@ namespace ClockScreenSaverGL.Textes
         private int calculeTailleTexte(Graphics g, String s)
         {
 
-            int LargeurEcran = (int)(SystemInformation.VirtualScreen.Width * conf.getParametre(CAT, "RatioTailleFonte", 0.7f));
+            int LargeurEcran = (int)(SystemInformation.VirtualScreen.Width * conf.getParametre(CAT, "RatioTailleFonte", 0.4f));
             int TailleFonte = 30;
 
             Font f = new Font(FontFamily.GenericSansSerif, TailleFonte, FontStyle.Regular, GraphicsUnit.Pixel);

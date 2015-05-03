@@ -133,6 +133,8 @@
     <Compile Include="DisplayedObject\Bandes\Temps.cs" />
     <Compile Include="DisplayedObject\DisplayedObject.cs" />
     <Compile Include="DisplayedObject\Fonds\Couleur.cs" />
+    <Compile Include="DisplayedObject\Fonds\Ete\Ete.cs" />
+    <Compile Include="DisplayedObject\Fonds\Ete\Herbe.cs" />
     <Compile Include="DisplayedObject\Fonds\Fond.cs" />
     <Compile Include="DisplayedObject\Fonds\Life.cs" />
     <Compile Include="DisplayedObject\Fonds\Metaballes\Bacteries.cs" />
@@ -164,6 +166,8 @@
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />
     <Compile Include="DisplayedObject\HorlogeRonde.cs" />
     <Compile Include="DisplayedObject\Lune.cs" />
+    <Compile Include="DisplayedObject\Meteo\Meteo.cs" />
+    <Compile Include="DisplayedObject\Meteo\MeteoInfo.cs" />
     <Compile Include="DisplayedObject\Textes\Citations.cs" />
     <Compile Include="DisplayedObject\Textes\Citations.Donnees.cs">
       <DependentUpon>Citations.cs</DependentUpon>
@@ -275,6 +279,159 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\feuille3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\00.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\02.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\03.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\04.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\05.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\06.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\07.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\08.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\09.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\10.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\12.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\13.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\14.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\15.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\17.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\18.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\19.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\21.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\22.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\23.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\25.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\26.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\27.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\28.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\30.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\31.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\33.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\34.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\35.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\36.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\37.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\38.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\39.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\41.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\42.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\43.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\44.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\45.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\46.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\47.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Meteo\na.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\33.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

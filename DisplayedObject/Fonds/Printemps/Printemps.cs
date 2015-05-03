@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         public static readonly int HAUTEUR_ARBRE = 500;//conf.getParametre(CAT, "Hauteur Arbre", 400);
         public static readonly int LONGUEUR_BRANCHE = conf.getParametre(CAT, "Longueur Branche", 5);
         public static readonly int DISTANCE_MIN= conf.getParametre(CAT, "Distance Min", 5);
-        public static readonly int DISTANCE_MAX = 200;//conf.getParametre(CAT, "Distance Max", 100);
+        public static readonly int DISTANCE_MAX = 300;//conf.getParametre(CAT, "Distance Max", 100);
         public static readonly int NB_CIBLES = 100;//conf.getParametre(CAT, "Nb Cibles", 1000);
         float _oscillation = 0;
         #endregion
@@ -48,7 +48,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         }
 
 
-        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
