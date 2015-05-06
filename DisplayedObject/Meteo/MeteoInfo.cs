@@ -17,12 +17,12 @@ namespace ClockScreenSaverGL.Meteo
         public class TInfo
         {
             public Bitmap bmp;
-            public int TMin;
-            public int TMax;
+            public string TMin;
+            public string TMax;
             public string text;
             public string day;
-            
-            public TInfo(Bitmap b, int min, int max, string t, string d)
+
+            public TInfo(Bitmap b, string min, string max, string t, string d)
             {
                 bmp = b;
                 TMin = min;
@@ -56,10 +56,11 @@ namespace ClockScreenSaverGL.Meteo
         public string coucher;
         public string _title;
         private DateTime _datePrevisions;
+        private DateTime _finPrevisions;
 
         public MeteoInfo(string url)
         {
-            
+
             // Create a new XmlDocument  
             XPathDocument doc = new XPathDocument(url);
 
@@ -70,41 +71,53 @@ namespace ClockScreenSaverGL.Meteo
             XmlNamespaceManager ns = new XmlNamespaceManager(navigator.NameTable);
             ns.AddNamespace("yweather", "http://xml.weather.yahoo.com/ns/rss/1.0");
 
-
             XPathNodeIterator nodes = navigator.Select("/rss/channel/title", ns);
-            nodes.MoveNext();
-            XPathNavigator l = nodes.Current;
-            _title = l.InnerXml;
-
-            nodes = navigator.Select("/rss/channel/yweather:location", ns);
-            nodes.MoveNext();
-            l = nodes.Current;
-            _location = l.GetAttribute("city", ns.DefaultNamespace);
-            // Get forecast with XPath  
-
-            nodes = navigator.Select("/rss/channel/yweather:astronomy", ns);
-            nodes.MoveNext();
-            l = nodes.Current; 
-            lever = TraduireHeure( l.GetAttribute("sunrise", ns.DefaultNamespace));
-            coucher = TraduireHeure(l.GetAttribute("sunset", ns.DefaultNamespace));
-            
-
-            nodes = navigator.Select("/rss/channel/item/yweather:forecast", ns);
-            while (nodes.MoveNext())
-            {
-
-                XPathNavigator node = nodes.Current;
-                TInfo info = new TInfo(getIcone(node.GetAttribute("code", ns.DefaultNamespace)),
-                                        Int32.Parse(node.GetAttribute("low", ns.DefaultNamespace)),
-                                        Int32.Parse(node.GetAttribute("high", ns.DefaultNamespace)),
-                                        node.GetAttribute("text", ns.DefaultNamespace),
-                                        node.GetAttribute("day", ns.DefaultNamespace)
-                                    );
-                _lignes.Add(info);
+            {   // Titre
+                nodes.MoveNext();
+                XPathNavigator l = nodes.Current;
+                _title = l.InnerXml;
             }
 
-            _datePrevisions = DateTime.Now;
-            
+            { // Duree de validite des previsions
+                _datePrevisions = DateTime.Now;
+
+                nodes = navigator.Select("/rss/channel/ttl", ns);
+                nodes.MoveNext();
+                XPathNavigator l = nodes.Current;
+                int duree = Int32.Parse(l.InnerXml);
+                _finPrevisions = _datePrevisions.AddMinutes(duree);
+            }
+
+            { // Localisation 
+                nodes = navigator.Select("/rss/channel/yweather:location", ns);
+                nodes.MoveNext();
+                XPathNavigator l = nodes.Current;
+                _location = l.GetAttribute("city", ns.DefaultNamespace);
+            }
+
+            { // Lever et coucher du soleil
+                nodes = navigator.Select("/rss/channel/yweather:astronomy", ns);
+                nodes.MoveNext();
+                XPathNavigator l = nodes.Current;
+                lever = TraduireHeure(l.GetAttribute("sunrise", ns.DefaultNamespace));
+                coucher = TraduireHeure(l.GetAttribute("sunset", ns.DefaultNamespace));
+            }
+
+            { // Lignes de prevision
+                nodes = navigator.Select("/rss/channel/item/yweather:forecast", ns);
+                while (nodes.MoveNext())
+                {
+
+                    XPathNavigator node = nodes.Current;
+                    TInfo info = new TInfo(getIcone(node.GetAttribute("code", ns.DefaultNamespace)),
+                                            node.GetAttribute("low", ns.DefaultNamespace),
+                                            node.GetAttribute("high", ns.DefaultNamespace),
+                                            node.GetAttribute("text", ns.DefaultNamespace),
+                                            node.GetAttribute("day", ns.DefaultNamespace)
+                                        );
+                    _lignes.Add(info);
+                }
+            }
         }
 
         /// <summary>
@@ -116,32 +129,42 @@ namespace ClockScreenSaverGL.Meteo
         {
             try
             {
-                string[] morceaux = p.Split( new Char[] { ':', ' '}, StringSplitOptions.RemoveEmptyEntries) ;
+                string[] morceaux = p.Split(new Char[] { ':', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (morceaux.Length < 3)
                     return p;
 
                 int heure = Int32.Parse(morceaux[0]);
                 int minute = Int32.Parse(morceaux[1]);
                 if (morceaux[2].ToLower().Equals("pm"))
-                    heure += 12 ;
+                    heure += 12;
 
-
-                return "" + heure + 'h' + minute ;
+                return heure + "h" + minute;
             }
             catch (Exception)
             {
-
-                return p ;
+                return p;
             }
+        }
+
+        /// <summary>
+        /// Retourne le pourcentage present de validite des previsions, en fonction de la longueur de
+        /// validite donnee avec la reponse de yahoo
+        /// </summary>
+        /// <returns></returns>
+        public float validitePassee()
+        {
+            DateTime now = DateTime.Now;
+            double dureeTotale = _finPrevisions.Subtract(_datePrevisions).TotalSeconds ;
+            double dureeActuelle = _finPrevisions.Subtract(now).TotalSeconds;
+
+            return (float)dureeActuelle / (float)dureeTotale;
         }
 
         public bool MustRefresh(Temps maintenant)
         {
-            if ( _datePrevisions.Subtract(maintenant._temps).TotalHours > DELAI_REFRESH)
-                return true ;
-
-            return false;
+            return DateTime.Now > _finPrevisions;
         }
+
         /***
          * Retrouve l'icone correspond au code de condition meteo
          */

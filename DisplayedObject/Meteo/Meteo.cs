@@ -23,10 +23,13 @@ namespace ClockScreenSaverGL.Meteo
         private static readonly int TAILLE_TEXTE_LEVER_COUCHER = conf.getParametre(CAT, "Taille Texte Lever", 24);
         #endregion PARAMETRES ;
 
-        //private TrajectoireDiagonale _trajectoire;
         private MeteoInfo _infos;
         private bool _droite;
         private float X = 0;
+
+        /// <summary>
+        /// Constructeur
+        /// </summary>
         public Meteo()
         {
             if (r.Next(0, 2) > 0)
@@ -34,12 +37,16 @@ namespace ClockScreenSaverGL.Meteo
             else
                 _droite = false;
 
-            //_trajectoire = new TrajectoireDiagonale(ORIGINE_X, ORIGINE_Y, VITESSE_X, VITESSE_Y);
             _infos = new MeteoInfo(METEO_URL);
-            //_taille = new SizeF(LARGEUR, HAUTEUR);
         }
 
-
+        /// <summary>
+        /// Affichage
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
+        /// <param name="couleur"></param>
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -51,8 +58,9 @@ namespace ClockScreenSaverGL.Meteo
                 float LargeurMax = _taille.Width;
                 float HauteurMax = _taille.Height;
                 float Y = tailleEcran.Top + 100;
-                float dx = (tailleEcran.Height - 200) / (2 + _infos._lignes.Count);
                 Color col = getCouleurAvecAlpha(couleur, ALPHA);
+
+                // Titre
                 using (Brush b = new SolidBrush(col))
                 {
                     using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold, GraphicsUnit.Pixel))
@@ -62,22 +70,21 @@ namespace ClockScreenSaverGL.Meteo
                     using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_TITRE, FontStyle.Regular, GraphicsUnit.Pixel))
                     {
                         g.DrawString(_infos._title, f, b, X, Y);
-                        Y += TAILLE_TEXTE_TITRE * 2 ;
+                        Y += TAILLE_TEXTE_TITRE * 2;
                     }
 
                     using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
                     {
-                        g.DrawString("Lever: " + _infos.lever, f, b, X, Y);
+                        g.DrawString(String.Format( Resources.Lever,_infos.lever), f, b, X, Y);
                         Y += TAILLE_TEXTE_LEVER_COUCHER;
-                        g.DrawString("Coucher: " + _infos.coucher, f, b, X, Y);
+                        g.DrawString(String.Format( Resources.Coucher,_infos.coucher), f, b, X, Y);
                         Y += TAILLE_TEXTE_LEVER_COUCHER * 2;
                     }
-
-
                 }
 
                 float falpha = ALPHA;
 
+                // Lignes de previsions
                 using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
                 using (Font fp = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_PETIT, FontStyle.Regular, GraphicsUnit.Pixel))
                     foreach (MeteoInfo.TInfo info in _infos._lignes)
@@ -86,8 +93,8 @@ namespace ClockScreenSaverGL.Meteo
                         using (Bitmap bmp = BitmapNuance(g, info.bmp, c))
                             g.DrawImage(bmp, X, Y, TAILLE_ICONE, TAILLE_ICONE);
 
-                        string text = info.day + " " + info.TMin + "°/" + info.TMax + "°";
-                        float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
+                        string text = String.Format(Resources.Temperatures, info.day, info.TMin, info.TMax);
+                        float tailleTexte = g.MeasureString(text,  f).Width + TAILLE_ICONE;
                         if (tailleTexte > LargeurMax)
                             LargeurMax = tailleTexte;
                         using (Brush b = new SolidBrush(c))
@@ -101,10 +108,14 @@ namespace ClockScreenSaverGL.Meteo
 
                 if (_taille.Width < LargeurMax || _taille.Height < HauteurMax)
                     _taille = new SizeF((float)Math.Max(_taille.Width, LargeurMax), (float)Math.Max(_taille.Height, HauteurMax));
-            }
 
-            
-            //g.FillRectangle(new SolidBrush(Color.FromArgb(128, 255, 0, 0)), tailleEcran);
+                // Jauge de duree de validite des previsions
+                float actuelle = _infos.validitePassee();
+                using (Pen p = new Pen(col, 4))
+                    g.DrawLine(p, X, Y, X + (_taille.Width * actuelle), Y);
+                using (Pen p = new Pen(getCouleurAvecAlpha(couleur, (byte)( ALPHA/4)), 4))
+                    g.DrawLine(p, X + _taille.Width, Y, X + _taille.Width - (_taille.Width * (1.0f - actuelle)), Y);
+            }
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -119,7 +130,6 @@ namespace ClockScreenSaverGL.Meteo
             if (_infos.MustRefresh(maintenant))
                 _infos = new MeteoInfo(METEO_URL);
 
-            //_trajectoire.Avance(tailleEcran, _taille, maintenant);
             if (_droite)
                 X = tailleEcran.Width - _taille.Width;
             else
@@ -133,13 +143,6 @@ namespace ClockScreenSaverGL.Meteo
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
-        }
-
-
-
-        private bool RaffraichirMeteo(Temps maintenant)
-        {
-            return false;
         }
     }
 }

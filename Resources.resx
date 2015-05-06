@@ -919,4 +919,13 @@ R: réinitialiser le fond</value>
   <data name="Vendredi" xml:space="preserve">
     <value>Vendredi</value>
   </data>
+  <data name="Coucher" xml:space="preserve">
+    <value>Coucher: {0}</value>
+  </data>
+  <data name="Lever" xml:space="preserve">
+    <value>Lever:  {0}</value>
+  </data>
+  <data name="Temperatures" xml:space="preserve">
+    <value>{0} {1}°/{2}°</value>
+  </data>
 </root>

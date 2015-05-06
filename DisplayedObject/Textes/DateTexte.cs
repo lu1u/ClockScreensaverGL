@@ -18,11 +18,17 @@ namespace ClockScreenSaverGL.Textes
 	{
 		const string CAT = "DateTexte" ;
 		static private string _date ; // Sera initialise dans OnDateChange
+
 		public DateTexte(int Px, int Py)
-			: base( Px, 0, conf.getParametre(CAT, "VX", -17), 0 /*conf.getParametre(CAT, "VY", 18)*/, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160) )
+			: base( Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160) )
 		{
 		}
 
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        {
+            base.Deplace(maintenant, ref tailleEcran);
+            tailleEcran = new Rectangle(tailleEcran.Left, tailleEcran.Top + (int)_taille.Height, tailleEcran.Width, tailleEcran.Height - (int)_taille.Height);
+        }
 		protected override string getTexte(Temps maintenant)
 		{
 			return _date ;

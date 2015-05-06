@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.Textes
 			base( Px, Py, conf.getParametre(CAT, "VX", 4), 
 			     		conf.getParametre(CAT, "VY", 4), 
 			     		conf.getParametre(CAT, "TailleFonte", 32),
-			     		10)//conf.getParametre(CAT, "Alpha", (byte)10))
+			     		conf.getParametre(CAT, "Alpha", (byte)10))
 		{
 		}
 		

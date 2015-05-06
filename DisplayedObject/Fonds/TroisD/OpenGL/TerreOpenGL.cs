@@ -138,8 +138,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     gl.Vertex(1.09f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                 }
                 gl.End();           
-            }
-                
+            }             
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);

@@ -119,6 +119,15 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coucher: {0}.
+        /// </summary>
+        internal static string Coucher {
+            get {
+                return ResourceManager.GetString("Coucher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dimanche.
         /// </summary>
         internal static string Dimanche {
@@ -212,6 +221,15 @@ namespace ClockScreenSaverGL {
         internal static string LeSaviezVous {
             get {
                 return ResourceManager.GetString("LeSaviezVous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lever:  {0}.
+        /// </summary>
+        internal static string Lever {
+            get {
+                return ResourceManager.GetString("Lever", resourceCulture);
             }
         }
         
@@ -1028,6 +1046,15 @@ namespace ClockScreenSaverGL {
         internal static string Samedi {
             get {
                 return ResourceManager.GetString("Samedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1}°/{2}°.
+        /// </summary>
+        internal static string Temperatures {
+            get {
+                return ResourceManager.GetString("Temperatures", resourceCulture);
             }
         }
         

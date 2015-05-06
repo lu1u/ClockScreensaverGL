@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
                 //dz = r.Next(0, Hauteur * 10) / 10.0f;
 
                 Leaves.Add(new Cible(new Vector2(X + (float)Math.Sin(angleX) * dx,
-                                    Y + (float)Math.Cos(angleX) * dy/*,                                    (float)Math.Sin(angleZ) * dz*/)));
+                                    Y + (float)Math.Cos(angleX) * dy/*,(float)Math.Sin(angleZ) * dz*/)));
             }
         }
 
@@ -93,18 +93,6 @@ namespace ClockScreenSaverGL.Fonds.Printemps
             }
         }
 
-        /*
-        static public void RotateAxeY(ref float x, ref float y, ref float z, float Theta, float axeX, float axeZ)
-        {
-            float CosTheta = (float)Math.Cos(Theta);
-            float SinTheta = (float)Math.Sin(Theta);
-
-            float px = CosTheta * (x - axeX) - SinTheta * (z - axeZ) + axeX;
-            float pz = SinTheta * (x - axeX) + CosTheta * (z - axeZ) + axeZ;
-            x = px;
-            z = pz;
-        }
-        */
         public void Grow()
         {
             if (DoneGrowing) return;
