@@ -71,25 +71,6 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ClockScreensaverGL (c) Lucien Pilloni 2014
-        ///
-        ///Aide:
-        ///-----
-        ///Page haut/Page bas: luminance
-        ///Début/Fin: Saturation
-        ///Inser/Suppr: Couleur
-        ///F: changer le fond
-        ///S: Commencer par le fond de saison (oui/non)
-        ///
-        ///.
-        /// </summary>
-        internal static string Aide {
-            get {
-                return ResourceManager.GetString("Aide", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to C: changer la citation.
         /// </summary>
         internal static string AideCitation {
@@ -115,6 +96,25 @@ namespace ClockScreenSaverGL {
         internal static string AideNuages {
             get {
                 return ResourceManager.GetString("AideNuages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ClockScreensaverGL (c) Lucien Pilloni 2014
+        ///
+        ///Aide:
+        ///-----
+        ///Page haut/Page bas: luminance
+        ///Début/Fin: Saturation
+        ///Inser/Suppr: Couleur
+        ///F: changer le fond
+        ///S: Commencer par le fond de saison (oui/non)
+        ///
+        ///.
+        /// </summary>
+        internal static string c {
+            get {
+                return ResourceManager.GetString("c", resourceCulture);
             }
         }
         

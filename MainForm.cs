@@ -305,7 +305,7 @@ namespace ClockScreenSaverGL
 
                 if (_afficherAide)
                 {
-                    StringBuilder s = new StringBuilder(Resources.Aide);
+                    StringBuilder s = new StringBuilder(Resources.c);
                     foreach (DisplayedObject b in _listeObjets)
                         b.AppendHelpText(s);
 

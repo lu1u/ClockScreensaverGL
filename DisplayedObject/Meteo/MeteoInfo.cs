@@ -9,11 +9,11 @@ using System.Text;
 using System.Xml.XPath;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading;
 namespace ClockScreenSaverGL.Meteo
 {
     class MeteoInfo
     {
-        const int DELAI_REFRESH = 12; // En heures: delai entre deux lecture des previsions meteo
         public class TInfo
         {
             public Bitmap bmp;
@@ -50,6 +50,9 @@ namespace ClockScreenSaverGL.Meteo
             }
         }   ;
 
+        public bool donneesPretes;
+        private string _url;
+           
         public List<TInfo> _lignes = new List<TInfo>();
         public string _location;
         public string lever;
@@ -57,12 +60,17 @@ namespace ClockScreenSaverGL.Meteo
         public string _title;
         private DateTime _datePrevisions;
         private DateTime _finPrevisions;
-
         public MeteoInfo(string url)
         {
+            donneesPretes = false;
+            _url = url ;
+            new Thread(new ThreadStart(ChargeDonnees)).Start();
+        }
 
+        public void ChargeDonnees()
+        {
             // Create a new XmlDocument  
-            XPathDocument doc = new XPathDocument(url);
+            XPathDocument doc = new XPathDocument(_url);
 
             // Create navigator  
             XPathNavigator navigator = doc.CreateNavigator();
@@ -118,6 +126,8 @@ namespace ClockScreenSaverGL.Meteo
                     _lignes.Add(info);
                 }
             }
+
+            donneesPretes = true;
         }
 
         /// <summary>
@@ -162,7 +172,10 @@ namespace ClockScreenSaverGL.Meteo
 
         public bool MustRefresh(Temps maintenant)
         {
-            return DateTime.Now > _finPrevisions;
+            if (!donneesPretes)
+                return false;
+
+            return maintenant._temps > _finPrevisions;
         }
 
         /***
