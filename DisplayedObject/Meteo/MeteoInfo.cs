@@ -14,52 +14,20 @@ namespace ClockScreenSaverGL.Meteo
 {
     class MeteoInfo
     {
-        public class TInfo
-        {
-            public Bitmap bmp;
-            public string TMin;
-            public string TMax;
-            public string text;
-            public string day;
-
-            public TInfo(Bitmap b, string min, string max, string t, string d)
-            {
-                bmp = b;
-                TMin = min;
-                TMax = max;
-                text = t;
-                if (d.Equals("Mon"))
-                    day = Resources.Lundi;
-                else
-                    if (d.Equals("Tue"))
-                        day = Resources.Mardi;
-                    else
-                        if (d.Equals("Wed"))
-                            day = Resources.Mercredi;
-                        else
-                            if (d.Equals("Thu"))
-                                day = Resources.Jeudi;
-                            else if (d.Equals("Fri"))
-                                day = Resources.Vendredi;
-                            else if (d.Equals("Sat"))
-                                day = Resources.Samedi;
-                            else if (d.Equals("Sun"))
-                                day = Resources.Dimanche;
-                            else
-                                day = d;
-            }
-        }   ;
-
+        #region MEMBRES_PUBLICS
         public bool donneesPretes;
-        private string _url;
            
-        public List<TInfo> _lignes = new List<TInfo>();
+        public List<LignePrevisionMeteo> _lignes = new List<LignePrevisionMeteo>();
         public string _location;
         public string lever;
         public string coucher;
         public string _title;
+        #endregion MEMBRES_PUBLICS
+
+        private string _url;
         private DateTime _datePrevisions;
         private DateTime _finPrevisions;
+
         public MeteoInfo(string url)
         {
             donneesPretes = false;
@@ -67,6 +35,9 @@ namespace ClockScreenSaverGL.Meteo
             new Thread(new ThreadStart(ChargeDonnees)).Start();
         }
 
+        /// <summary>
+        /// Lecture des previsions meteo en multithreading
+        /// </summary>
         public void ChargeDonnees()
         {
             // Create a new XmlDocument  
@@ -115,9 +86,8 @@ namespace ClockScreenSaverGL.Meteo
                 nodes = navigator.Select("/rss/channel/item/yweather:forecast", ns);
                 while (nodes.MoveNext())
                 {
-
                     XPathNavigator node = nodes.Current;
-                    TInfo info = new TInfo(getIcone(node.GetAttribute("code", ns.DefaultNamespace)),
+                    LignePrevisionMeteo info = new LignePrevisionMeteo(getIcone(node.GetAttribute("code", ns.DefaultNamespace)),
                                             node.GetAttribute("low", ns.DefaultNamespace),
                                             node.GetAttribute("high", ns.DefaultNamespace),
                                             node.GetAttribute("text", ns.DefaultNamespace),
@@ -179,8 +149,13 @@ namespace ClockScreenSaverGL.Meteo
         }
 
         /***
-         * Retrouve l'icone correspond au code de condition meteo
+         * 
          */
+        /// <summary>
+        /// Retrouve l'icone correspond au code de condition meteo
+        /// </summary>
+        /// <param name="p">Code Yahoo, voir </param>
+        /// <returns></returns>
         private Bitmap getIcone(string p)
         {
             int Code;

@@ -25,7 +25,8 @@ namespace ClockScreenSaverGL.Meteo
 
         private MeteoInfo _infos;
         private bool _droite;
-        private float X = 0;
+        private float _X = 0;
+        private float _Y = 0;
 
         /// <summary>
         /// Constructeur
@@ -53,32 +54,31 @@ namespace ClockScreenSaverGL.Meteo
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             Color col = getCouleurAvecAlpha(couleur, ALPHA);
-            float Y = tailleEcran.Top + 100;
+            float Y = _Y ;
 
-            using (Font fTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold, GraphicsUnit.Pixel)) 
-            using (Brush b = new SolidBrush(col))
-            using (Font fp = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_PETIT, FontStyle.Regular, GraphicsUnit.Pixel))
+            using (Font fonteTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold, GraphicsUnit.Pixel)) 
+            using (Brush brushTitre = new SolidBrush(col))
+            using (Font fonteSousTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_PETIT, FontStyle.Regular, GraphicsUnit.Pixel))
                 if (_infos != null && _infos.donneesPretes)
                 {
                     float LargeurMax = _taille.Width;
-                    float HauteurMax = _taille.Height;
 
                     // Titre
                     {
-                        g.DrawString(_infos._location, fTitre, b, X - 10, Y);
+                        g.DrawString(_infos._location, fonteTitre, brushTitre, _X - 10, Y);
                         Y += TAILLE_TITRE;
 
                         using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_TITRE, FontStyle.Regular, GraphicsUnit.Pixel))
                         {
-                            g.DrawString(_infos._title, f, b, X, Y);
+                            g.DrawString(_infos._title, f, brushTitre, _X, Y);
                             Y += TAILLE_TEXTE_TITRE * 2;
                         }
 
                         using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
                         {
-                            g.DrawString(String.Format(Resources.Lever, _infos.lever), f, b, X, Y);
+                            g.DrawString(String.Format(Resources.Lever, _infos.lever), f, brushTitre, _X, Y);
                             Y += TAILLE_TEXTE_LEVER_COUCHER;
-                            g.DrawString(String.Format(Resources.Coucher, _infos.coucher), f, b, X, Y);
+                            g.DrawString(String.Format(Resources.Coucher, _infos.coucher), f, brushTitre, _X, Y);
                             Y += TAILLE_TEXTE_LEVER_COUCHER * 2;
                         }
                     }
@@ -87,37 +87,45 @@ namespace ClockScreenSaverGL.Meteo
 
                     // Lignes de previsions
                     using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
-                        foreach (MeteoInfo.TInfo info in _infos._lignes)
+                        foreach (LignePrevisionMeteo ligne in _infos._lignes)
                         {
                             Color c = getCouleurAvecAlpha(couleur, (byte)falpha);
-                            using (Bitmap bmp = BitmapNuance(g, info.bmp, c))
-                                g.DrawImage(bmp, X, Y, TAILLE_ICONE, TAILLE_ICONE);
+                            using (Bitmap bmp = BitmapNuance(g, ligne.bmp, c))
+                                g.DrawImage(bmp, _X, Y, TAILLE_ICONE, TAILLE_ICONE);
 
-                            string text = String.Format(Resources.Temperatures, info.day, info.TMin, info.TMax);
+                            string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
                             float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
                             if (tailleTexte > LargeurMax)
                                 LargeurMax = tailleTexte;
                             using (Brush bLigne = new SolidBrush(c))
                             {
-                                g.DrawString(text, f, bLigne, X + TAILLE_ICONE, Y);
-                                g.DrawString(info.text, fp, bLigne, X + TAILLE_ICONE + TAILLE_TEXTE_PETIT, Y + TAILLE_TEXTE);
+                                g.DrawString(text, f, bLigne, _X + TAILLE_ICONE, Y);
+                                g.DrawString(ligne.text, fonteSousTitre, bLigne, _X + TAILLE_ICONE + TAILLE_TEXTE_PETIT, Y + TAILLE_TEXTE);
                             }
                             Y += TAILLE_ICONE * 1.5f;
                             falpha *= DELTA_ALPHA;
                         }
 
+                    float HauteurMax = Y - _Y;
                     if (_taille.Width < LargeurMax || _taille.Height < HauteurMax)
                         _taille = new SizeF((float)Math.Max(_taille.Width, LargeurMax), (float)Math.Max(_taille.Height, HauteurMax));
 
                     // Jauge de duree de validite des previsions
                     float actuelle = _infos.validitePassee();
                     using (Pen p = new Pen(col, 4))
-                        g.DrawLine(p, X, Y, X + (_taille.Width * actuelle), Y);
+                        g.DrawLine(p, _X, Y, _X + (_taille.Width * actuelle), Y);
                     using (Pen p = new Pen(getCouleurAvecAlpha(couleur, (byte)(ALPHA / 4)), 4))
-                        g.DrawLine(p, X + _taille.Width, Y, X + _taille.Width - (_taille.Width * (1.0f - actuelle)), Y);
+                        g.DrawLine(p, _X + _taille.Width, Y, _X + _taille.Width - (_taille.Width * (1.0f - actuelle)), Y);
                 }
                 else
-                    g.DrawString("Chargement\nmétéo", fTitre, b, X, Y);
+                {
+                    // Meteo pas encore chargee
+                    string t = "Chargement\nmétéo" ;
+                    SizeF s = g.MeasureString(t, fonteTitre);
+                    if (_taille.Width < s.Width || _taille.Height < s.Height)
+                        _taille = s ;
+                    g.DrawString(t, fonteTitre, brushTitre, _X, Y);
+                }
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -133,12 +141,14 @@ namespace ClockScreenSaverGL.Meteo
                 _infos = new MeteoInfo(METEO_URL);
 
             if (_droite)
-                X = tailleEcran.Width - _taille.Width;
+                _X = tailleEcran.Width - _taille.Width;
             else
-                X = 0;
+                _X = 0;
+
+            _Y = tailleEcran.Top + (tailleEcran.Height - _taille.Height) / 2;
 
             if (_droite)
-                tailleEcran = new Rectangle((int)tailleEcran.X, (int)tailleEcran.Y, (int)X, (int)tailleEcran.Height);
+                tailleEcran = new Rectangle((int)tailleEcran.X, (int)tailleEcran.Y, (int)_X, (int)tailleEcran.Height);
             else
                 tailleEcran = new Rectangle((int)_taille.Width, (int)tailleEcran.Y, (int)(tailleEcran.Width - _taille.Width), (int)tailleEcran.Height);
 
