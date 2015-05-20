@@ -10,11 +10,11 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         const int NB_TYPES_FEUILLES = 3;
         static readonly int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
 
-        public Vector2 Position { get; set; }
+        public Vector3 Position { get; set; }
         public float _taille;
         private Bitmap _feuille;
         
-        public Feuille(Vector2 position)
+        public Feuille(Vector3 position)
         {
             Position = position;
             _taille = 20;

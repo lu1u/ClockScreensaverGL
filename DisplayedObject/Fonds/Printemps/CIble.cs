@@ -7,10 +7,10 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 {
     public class Cible
     {
-        public Vector2 Position;
+        public Vector3 Position;
         public Branch ClosestBranch;
 
-        public Cible(Vector2 position)
+        public Cible(Vector3 position)
         {
             Position = position;
         }

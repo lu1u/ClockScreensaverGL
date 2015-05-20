@@ -154,8 +154,6 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fonds.Fond createBackgroundObject(int Type, bool initial)
         {
-            //return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
-
             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
@@ -172,7 +170,8 @@ namespace ClockScreenSaverGL
 
                     case SAISON.PRINTEMPS:
                         return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case SAISON.ETE: break; // TODO
+                    case SAISON.ETE: 
+                        return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
                     case SAISON.AUTOMNE: break; // TODO
                 }
             }

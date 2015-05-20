@@ -7,13 +7,13 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         readonly public static float LARGEUR_INITIALE = 2 ;
         
         public Branch Parent { get; private set; }
-        public Vector2 GrowDirection { get; set; }
-        public Vector2 OriginalGrowDirection { get; set; }
+        public Vector3 GrowDirection { get; set; }
+        public Vector3 OriginalGrowDirection { get; set; }
         public int GrowCount { get; set; }
-        public Vector2 Position { get; private set; }
+        public Vector3 Position { get; private set; }
         public float Size { get; set; }
 
-        public Branch(Branch parent, Vector2 position, Vector2 growDirection)
+        public Branch(Branch parent, Vector3 position, Vector3 growDirection)
         {
             Parent = parent;
             Position = position;

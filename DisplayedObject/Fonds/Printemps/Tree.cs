@@ -11,7 +11,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
     {
         public bool DoneGrowing = false;
 
-        Vector2 Position;
+        Vector3 Position;
 
         readonly int NB_CIBLES;
         readonly int LARGEUR_ARBRE;
@@ -25,14 +25,14 @@ namespace ClockScreenSaverGL.Fonds.Printemps
         readonly static float RATIO_TAILLE_PARENT = 1.01f;
         Branch _racineArbre;
         List<Cible> _ciblesBranches;
-        Dictionary<Vector2, Branch> _branches;
+        Dictionary<Vector3, Branch> _branches;
         List<Feuille> _feuilles;
         Random r = new Random();
         float _oscillation;
 
         public Tree(float X, float Y, float Z, float LargeurTronc, int LargeurArbre, int HauteurArbre, int LongueurBranche, int DistanceMin, int DistanceMax, int NbCibles, int HauteurTronc)
         {
-            Position = new Vector2(X, Y/*, Z*/);
+            Position = new Vector3(X, Y, Z);
             LARGEUR_TRONC = LargeurTronc;
             LARGEUR_ARBRE = LargeurArbre;
             HAUTEUR_ARBRE = HauteurArbre;
@@ -59,35 +59,35 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 
         private void GenereFeuilles(List<Cible> Leaves, float X, float Y, int Largeur, int Hauteur, int NbFeuilles)
         {
-            float angleX, dx, dy/*,angleZ, dz*/  ;
+            float angleX, dx, dy,angleZ, dz ;
             for (int i = 0; i < NbFeuilles; i++)
             {
                 angleX = r.Next(0, (int)(Math.PI * 400.0)) / 100.0f;
-                //angleZ = r.Next(0, (int)(Math.PI * 400.0)) / 100.0f;
+                angleZ = r.Next(0, (int)(Math.PI * 400.0)) / 100.0f;
                 dx = r.Next(0, Largeur * 10) / 10.0f;
                 dy = r.Next(0, Hauteur * 10) / 10.0f;
-                //dz = r.Next(0, Hauteur * 10) / 10.0f;
+                dz = r.Next(0, Hauteur * 10) / 10.0f;
 
-                Leaves.Add(new Cible(new Vector2(X + (float)Math.Sin(angleX) * dx,
-                                    Y + (float)Math.Cos(angleX) * dy/*,(float)Math.Sin(angleZ) * dz*/)));
+                Leaves.Add(new Cible(new Vector3(X + (float)Math.Sin(angleX) * dx,
+                                    Y + (float)Math.Cos(angleX) * dy,(float)Math.Sin(angleZ) * dz)));
             }
         }
 
         private void GenereTronc()
         {
-            _branches = new Dictionary<Vector2, Branch>();
+            _branches = new Dictionary<Vector3, Branch>();
 
-            _racineArbre = new Branch(null, Position, new Vector2(-1, 0, 0));
+            _racineArbre = new Branch(null, Position, new Vector3(-1, 0, 0));
             _racineArbre.Size = LARGEUR_TRONC;
             _branches.Add(_racineArbre.Position, _racineArbre);
 
-            Branch current = new Branch(_racineArbre, new Vector2(Position.X - LONGUEUR_BRANCHE, Position.Y, 0), new Vector2(-1, 0, 0));
+            Branch current = new Branch(_racineArbre, new Vector3(Position.X - LONGUEUR_BRANCHE, Position.Y, 0), new Vector3(-1, 0, 0));
             _branches.Add(current.Position, current);
 
             //Keep growing trunk upwards until we reach a leaf      
             while ((_racineArbre.Position - current.Position).Length() < HAUTEUR_TRONC)
             {
-                Branch trunk = new Branch(current, new Vector2(current.Position.X - LONGUEUR_BRANCHE, current.Position.Y, 0), new Vector2(-1, 0, 0));
+                Branch trunk = new Branch(current, new Vector3(current.Position.X - LONGUEUR_BRANCHE, current.Position.Y, 0), new Vector3(-1, 0, 0));
                 _branches.Add(trunk.Position, trunk);
                 current = trunk;
             }
@@ -107,7 +107,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
                 bool leafRemoved = false;
 
                 _ciblesBranches[i].ClosestBranch = null;
-                Vector2 direction = Vector2.Zero;
+                Vector3 direction = Vector3.Zero;
 
                 //Find the nearest branch for this leaf
                 foreach (Branch b in _branches.Values)
@@ -139,7 +139,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
                     //Set the grow parameters on all the closest branches that are in range
                     if (_ciblesBranches[i].ClosestBranch != null)
                     {
-                        Vector2 dir = _ciblesBranches[i].Position - _ciblesBranches[i].ClosestBranch.Position;
+                        Vector3 dir = _ciblesBranches[i].Position - _ciblesBranches[i].ClosestBranch.Position;
                         dir.Normalize();
                         _ciblesBranches[i].ClosestBranch.GrowDirection += dir;       //add to grow direction of branch
                         _ciblesBranches[i].ClosestBranch.GrowCount++;
@@ -147,7 +147,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 
                     _ciblesBranches[i].Position.X += r.Next(-1, 2);
                     _ciblesBranches[i].Position.Y += r.Next(-1, 2);
-                    //_ciblesBranches[i].Position.Z += r.Next(-1, 2);
+                    _ciblesBranches[i].Position.Z += r.Next(-1, 2);
                     DoneGrowing = false;
                 }
 
@@ -161,7 +161,7 @@ namespace ClockScreenSaverGL.Fonds.Printemps
 
                 if (b.GrowCount > 0)    //if at least one leaf is affecting the branch
                 {
-                    Vector2 avgDirection = b.GrowDirection / b.GrowCount;
+                    Vector3 avgDirection = b.GrowDirection / b.GrowCount;
                     avgDirection.Normalize();
 
                     Branch newBranch = new Branch(b, b.Position + avgDirection * LONGUEUR_BRANCHE, avgDirection);
