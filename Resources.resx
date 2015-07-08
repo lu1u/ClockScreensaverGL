@@ -748,9 +748,6 @@ R: réinitialiser le fond</value>
   <data name="feuille2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\feuille2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Meteo_00" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\Meteo\00.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -927,5 +924,23 @@ R: réinitialiser le fond</value>
   </data>
   <data name="Meteo_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\Meteo\33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="soleil" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\soleil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="fondEte" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\fond.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

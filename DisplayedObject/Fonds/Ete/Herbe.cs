@@ -7,9 +7,10 @@ namespace ClockScreenSaverGL.Fonds.Ete
     {
         const float ratioSegments = 0.75f;
         const float largeurInitiale =10;
-        const int NbSegments = 8;
+        const int NbSegments = 16;
 
-        float _x, _y;
+        readonly float  _x, _y;
+        readonly double _raideur;
         float[] _longueurSegments;
         double[] _anglesSegments;
         static Pen[] _pens;
@@ -21,13 +22,13 @@ namespace ClockScreenSaverGL.Fonds.Ete
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="longueurSegment"></param>
-        public Herbe( float x, float y, float longueurSegment )
+        public Herbe( float x, float y, float longueurSegment, float raideur )
         {
             if (_pens == null)
                 InitPens();
             _x = x;
             _y = y;
-
+            _raideur = raideur;
             _longueurSegments = new float[NbSegments];
             _anglesSegments = new double[NbSegments];
 
@@ -61,7 +62,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
             float X = _x;
             float Y = _y;
             float largeur = largeurInitiale;
-
+            vent *= _raideur;
             float XX, YY;
             for ( int i = 1; i < NbSegments; i++)
             {

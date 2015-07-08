@@ -83,15 +83,13 @@ namespace ClockScreenSaverGL.Meteo
                         }
                     }
 
-                    float falpha = ALPHA;
-
+                    Color c = getCouleurAvecAlpha(couleur, (byte)ALPHA);
+                            
                     // Lignes de previsions
                     using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
                         foreach (LignePrevisionMeteo ligne in _infos._lignes)
                         {
-                            Color c = getCouleurAvecAlpha(couleur, (byte)falpha);
-                            using (Bitmap bmp = BitmapNuance(g, ligne.bmp, c))
-                                g.DrawImage(bmp, _X, Y, TAILLE_ICONE, TAILLE_ICONE);
+                            DrawBitmapNuance(g, ligne.bmp, _X, Y, TAILLE_ICONE, TAILLE_ICONE, c);
 
                             string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
                             float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
@@ -103,7 +101,6 @@ namespace ClockScreenSaverGL.Meteo
                                 g.DrawString(ligne.text, fonteSousTitre, bLigne, _X + TAILLE_ICONE + TAILLE_TEXTE_PETIT, Y + TAILLE_TEXTE);
                             }
                             Y += TAILLE_ICONE * 1.5f;
-                            falpha *= DELTA_ALPHA;
                         }
 
                     float HauteurMax = Y - _Y;

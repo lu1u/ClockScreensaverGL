@@ -139,16 +139,6 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ete {
-            get {
-                object obj = ResourceManager.GetObject("ete", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap feuille1 {
             get {
                 object obj = ResourceManager.GetObject("feuille1", resourceCulture);
@@ -162,6 +152,46 @@ namespace ClockScreenSaverGL {
         internal static System.Drawing.Bitmap feuille2 {
             get {
                 object obj = ResourceManager.GetObject("feuille2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flare1 {
+            get {
+                object obj = ResourceManager.GetObject("flare1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flare2 {
+            get {
+                object obj = ResourceManager.GetObject("flare2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flare3 {
+            get {
+                object obj = ResourceManager.GetObject("flare3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap flare4 {
+            get {
+                object obj = ResourceManager.GetObject("flare4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -202,6 +232,16 @@ namespace ClockScreenSaverGL {
         internal static System.Drawing.Bitmap flocon3 {
             get {
                 object obj = ResourceManager.GetObject("flocon3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fondEte {
+            get {
+                object obj = ResourceManager.GetObject("fondEte", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1046,6 +1086,16 @@ namespace ClockScreenSaverGL {
         internal static string Samedi {
             get {
                 return ResourceManager.GetString("Samedi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap soleil {
+            get {
+                object obj = ResourceManager.GetObject("soleil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

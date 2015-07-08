@@ -135,6 +135,30 @@ namespace ClockScreenSaverGL
 			
 			return bp ;
 		}
+
+        static protected void DrawBitmapNuance(Graphics g, Bitmap bmp, float x, float y, float l, float h, Color couleur)
+        {
+            
+                float[][] ptsArray =
+				{
+					new float[] {couleur.R/255.0f, 0, 0, 0, 0},
+					new float[] {0, couleur.G/255.0f, 0, 0, 0},
+					new float[] {0, 0, couleur.B/255.0f, 0, 0},
+					new float[] {0, 0, 0, couleur.A/255.0f, 0},
+					new float[] {0, 0, 0, 0, 1}
+				};
+
+                ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+                ImageAttributes imgAttribs = new ImageAttributes();
+                imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
+
+
+                g.DrawImage(bmp, new Rectangle((int)x, (int)y, (int)l, (int)h),
+                               0, 0, bmp.Width, bmp.Height,
+                                
+                               GraphicsUnit.Pixel, imgAttribs);
+            
+        }
 		#region Chrono
 		#if TRACER
 		long	moyennedureeR = 0 ;

@@ -17,13 +17,15 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
     public sealed class TunnelOpenGL : TroisD
 	{
         private const string CAT = "Tunnel.OpenGL";
-		private static readonly int TAILLE_ANNEAU = conf.getParametre(CAT, "NbFacettes", 16 ) ;
-		private static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 500 ) ;
+		private static readonly int TAILLE_ANNEAU_MIN = conf.getParametre(CAT, "NbFacettesMin", 4 ) ;
+        private static readonly int TAILLE_ANNEAU_MAX = conf.getParametre(CAT, "NbFacettesMax", 16);
+        private readonly int TAILLE_ANNEAU;
+        private static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 500);
 		private static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f ) ;
 		private static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f ) ;
 		private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f ) ;
 		private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation",0.2f ) ;
-		private static readonly float BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", TAILLE_ANNEAU + 1 ) ;
+		private readonly int BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", 16 + 1 ) ;
 		private static readonly float RATIO_DEPLACEMENT = conf.getParametre(CAT, "DeplacementTunnel", 0.5f ) ;
 		private static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f ;
         private static readonly GLfloat PERIODE_DEP_X = conf.getParametre(CAT, "PeriodeDEcalageX", 5f);
@@ -49,6 +51,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 		public TunnelOpenGL(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
 		{
+            TAILLE_ANNEAU = r.Next(TAILLE_ANNEAU_MIN, TAILLE_ANNEAU_MAX + 1);
+            if (r.Next(0, 3) > 0)
+                BANDES_PLEINES = TAILLE_ANNEAU + 1;
+            else
+                BANDES_PLEINES = r.Next(1, BANDES_PLEINES + 1);
 			_anneaux = new Vecteur3D[NB_ANNEAUX,TAILLE_ANNEAU] ;
 			
 			_zMax = - _tailleCubeZ ;

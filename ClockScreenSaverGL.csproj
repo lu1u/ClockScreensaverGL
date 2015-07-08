@@ -434,5 +434,23 @@
   <ItemGroup>
     <None Include="Resources\33.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\soleil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\flare1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\flare2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\flare3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\flare4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ete\fond.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
