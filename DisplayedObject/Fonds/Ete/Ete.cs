@@ -55,7 +55,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
         {
             LARGEUR = LargeurEcran;
             HAUTEUR = HauteurEcran;
-            LARGEUR_TOUFFE = LARGEUR / 4;
+            LARGEUR_TOUFFE = LARGEUR ;
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
             NB_FLARES = r.Next(NB_FLARES - 2, NB_FLARES + 2);
@@ -101,7 +101,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
 
             int touffe = r.Next(0, LARGEUR - LARGEUR_TOUFFE);
             for (int i = 0; i < NB_HERBES; i++)
-                _herbes.Add(new Herbe(r.Next(touffe, touffe + LARGEUR_TOUFFE), HAUTEUR, r.Next(HAUTEUR_TOUFFE / 2, HAUTEUR_TOUFFE), FloatRandom(0.7f, 1.1f)));
+                _herbes.Add(new Herbe(r.Next(touffe, touffe + LARGEUR_TOUFFE), HAUTEUR, r.Next(HAUTEUR_TOUFFE / 2, HAUTEUR_TOUFFE*3/2), FloatRandom(0.7f, 1.1f)));
 
         }
 
@@ -113,10 +113,10 @@ namespace ClockScreenSaverGL.Fonds.Ete
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            g.Clear(getCouleurOpaqueAvecAlpha(couleur, 32));
+            g.Clear(getCouleurOpaqueAvecAlpha(couleur, 64));
 
             if ( AFFICHE_FOND)
-                g.DrawImage(_fond, 0, HAUTEUR - HAUTEUR_TOUFFE*2, LARGEUR, HAUTEUR_TOUFFE*2);
+                g.DrawImage(_fond, 0, HAUTEUR - HAUTEUR_TOUFFE*3, LARGEUR, HAUTEUR_TOUFFE*3);
             g.DrawImage(_soleil, _xSoleil - TAILLE_SOLEIL / 2, _ySoleil - TAILLE_SOLEIL / 2, TAILLE_SOLEIL, TAILLE_SOLEIL);
 
             //..            using ( Brush b = new SolidBrush(getCouleurOpaqueAvecAlpha( couleur, 255 )))
@@ -172,9 +172,9 @@ namespace ClockScreenSaverGL.Fonds.Ete
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            //Varie(ref _vent, -200f, 200f, 0.01f, maintenant._intervalle);
-            float depuisdebut = (float)(debut.Subtract(maintenant._temps).TotalMilliseconds / 1000.0);
-            _vent = (float)Math.Sin(depuisdebut / 10.0f) * 0.2f;
+            Varie(ref _vent, -300f, 300f, 0.02f, maintenant._intervalle);
+            //float depuisdebut = (float)(debut.Subtract(maintenant._temps).TotalMilliseconds / 1000.0);
+            //_vent = (float)Math.Sin(depuisdebut / 5.0f) * 0.5f;
 
             _xSoleil += VX_SOLEIL * maintenant._intervalle;
             _ySoleil += VY_SOLEIL * maintenant._intervalle;
