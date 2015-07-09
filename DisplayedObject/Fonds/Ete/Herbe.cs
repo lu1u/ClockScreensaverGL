@@ -5,12 +5,12 @@ namespace ClockScreenSaverGL.Fonds.Ete
 {
     class Herbe
     {
-        const float ratioSegments = 0.75f;
-        const float largeurInitiale =10;
+        const float ratioSegments = 0.8f;
+        const float largeurInitiale =15;
         const int NbSegments = 16;
 
         readonly float  _x, _y;
-        readonly double _raideur;
+        readonly float _raideur;
         float[] _longueurSegments;
         double[] _anglesSegments;
         static Pen[] _pens;
@@ -22,6 +22,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="longueurSegment"></param>
+ 
         public Herbe( float x, float y, float longueurSegment, float raideur )
         {
             if (_pens == null)

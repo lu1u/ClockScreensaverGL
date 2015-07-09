@@ -80,6 +80,16 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I: Afficher/cacher fond herbeux
+        ///R: réinitialiser le fond.
+        /// </summary>
+        internal static string AideEte {
+            get {
+                return ResourceManager.GetString("AideEte", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I: couleurs inversées
         ///N: négatif
         ///R: réinitialiser le fond.
