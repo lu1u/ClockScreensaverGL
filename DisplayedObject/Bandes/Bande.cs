@@ -61,19 +61,12 @@ namespace ClockScreenSaverGL
 
         }
 
-        ~Bande()
-        {
-            Dispose();
-        }
-
         public void Dispose()
         {
-            if (_fonte != null)
-            {
-                _fonte.Dispose();
-                _fonte = null;
-            }
-        }
+            Dispose();
+            _fonte?.Dispose();
 
+            GC.SuppressFinalize(this);
+        }
     }
 }

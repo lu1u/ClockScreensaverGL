@@ -38,8 +38,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             float pz = SinTheta * (x - axeX) + CosTheta * (z - axeZ) + axeZ;
             x = px;
             z = pz;
-
-
         }
 
         static public void RotateAxeZ(ref float x, ref float y, ref float z, float Theta, float axeX, float axeY)

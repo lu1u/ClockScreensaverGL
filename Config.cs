@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL
     /// </summary>
     public class Config
     {
-        enum TYPE_PARAMETRE { T_INT, T_FLOAT, T_DOUBLE, T_BOOL, T_STRING, T_BYTE } ;
+        enum TYPE_PARAMETRE { T_INT, T_FLOAT, T_DOUBLE, T_BOOL, T_STRING, T_BYTE };
         private const string TYPE_INT = "int";
         private const string TYPE_FLOAT = "float";
         private const string TYPE_DOUBLE = "double";
@@ -98,7 +98,6 @@ namespace ClockScreenSaverGL
                                 tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
                                 tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
                             }
-                            tw.Close();
                         }
                         categorie._propre = true;
                     }
@@ -219,8 +218,6 @@ namespace ClockScreenSaverGL
                             else if (type.Equals(TYPE_BYTE))
                                 setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, (byte)Int64.Parse(valeur), (byte)Int64.Parse(defaut));
                         }
-
-                        file.Close();
                     }
                     _categories.Add(categorieName, categorie);
                 }
@@ -233,9 +230,9 @@ namespace ClockScreenSaverGL
             {
                 // C'est normal: par encore de fichier de configuration (premier lancement)
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw ;
             }
 
         }

@@ -172,15 +172,16 @@ namespace ClockScreenSaverGL
                         return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE: 
                         return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
-                    case SAISON.AUTOMNE: break; // TODO
-                }
+                    case SAISON.AUTOMNE:
+                        return new Fonds.TroisD.Opengl.Automne(gl);
+               }
             }
             switch (Type)
             {
                 case TYPE_FOND_METABALLES: return new Metaballes.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_ENCRE: return new Metaballes.Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_BACTERIES: return new Metaballes.Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_LIFE: return new Fonds.Life();
+                case TYPE_FOND_LIFE: return new Fonds.Life(gl);
                 case TYPE_FOND_NOIR: return new Fonds.Noir(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_COULEUR: return new Fonds.Couleur(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_ESPACE:

@@ -141,7 +141,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
 
             CompositingQuality q = g.CompositingQuality;
             g.CompositingQuality = CompositingQuality.HighSpeed;
-
+            
             if (AFFICHE_FOND)
                 g.DrawImage(_fond, 0, HAUTEUR - HAUTEUR_TOUFFE * 4, LARGEUR, HAUTEUR_TOUFFE * 4);
 
@@ -205,7 +205,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            Varie(ref _vent, -300f, 300f, 0.015f, maintenant._intervalle);
+            Varie(ref _vent, -300f, 300f, 0.01f, maintenant._intervalle);
             
             _xSoleil += VX_SOLEIL * maintenant._intervalle;
             _ySoleil += VY_SOLEIL * maintenant._intervalle;

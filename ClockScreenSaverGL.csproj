@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <ProjectGuid>{EE2C855D-D170-4D51-8F40-4329E2B61780}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ClockScreenSaverGL</RootNamespace>
     <AssemblyName>ClockScreenSaverGL</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -83,6 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -92,6 +93,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpGL">
@@ -157,6 +159,7 @@
     <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Tunnel.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\GDI\Vecteur3D.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Automne.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Objet3D.cs" />
@@ -451,6 +454,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\ete\fond.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\automne\feuille1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\automne\feuille2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\automne\feuille3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\automne\feuille4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\automne\feuille5.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

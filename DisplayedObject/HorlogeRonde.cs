@@ -235,13 +235,19 @@ namespace ClockScreenSaverGL
 
             using (Brush b = new SolidBrush(getCouleurAvecAlpha(couleur, ALPHA)))
             {
-                CompositingQuality q = g.CompositingQuality;
+                SmoothingMode q = g.SmoothingMode;
+                CompositingQuality c = g.CompositingQuality;
+                InterpolationMode m = g.InterpolationMode;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
                 g.CompositingQuality = CompositingQuality.HighSpeed;
+                g.InterpolationMode = InterpolationMode.NearestNeighbor;
                 // NB: les infos journalieres sont dessinees dans CreateBitmapFond
 
                 // Fond de l'horloge
                 g.FillEllipse(b, CentreX - _rayon, CentreY - _rayon, _diametre, _diametre);
-                g.CompositingQuality = q;
+                g.SmoothingMode = q;
+                g.CompositingQuality = c;
+                g.InterpolationMode = m;
 
                 // Graduations
                 g.DrawImage(_bmpFondHorloge, CentreX - _rayon, CentreY - _rayon);

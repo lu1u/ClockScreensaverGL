@@ -11,11 +11,12 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Text;
-
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
 namespace ClockScreenSaverGL.Metaballes
 {
 
-    public class Metaballes : Fonds.Fond, IDisposable
+    public class Metaballes : Fonds.Fond
     {
         #region Parametres
         const string CAT = "Metaballes";
@@ -26,16 +27,14 @@ namespace ClockScreenSaverGL.Metaballes
         protected static bool _CouleursInverses = conf.getParametre(CAT, COULEURS_INVERSE, false);
         protected static bool _NegatifCouleurs = conf.getParametre(CAT, NEGATIF, false);
         #endregion
-        
+
         protected readonly int NiveauxCouleurs;
         protected readonly int[] _palette;
-        Bitmap _bmp;
-
+        
         Rectangle _rectBitmap;
         protected int NbMetaballes;
         protected MetaBalle[] _metaballes;
         protected readonly int Largeur, Hauteur;
-       
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -46,24 +45,10 @@ namespace ClockScreenSaverGL.Metaballes
             if (_metaballes == null)
                 _metaballes = new MetaBalle[NbMetaballes];
 
-            _bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
             _rectBitmap = new Rectangle(0, 0, Largeur, Hauteur);
             ConstruitMetaballes();
         }
 
-        ~Metaballes()
-        {
-            Dispose();
-        }
-
-        public void Dispose()
-        {
-            if (_bmp != null)
-            {
-                _bmp.Dispose();
-                _bmp = null;
-            }
-        }
         /// <summary>
         /// Lit les preferences a chaque version de metaballes
         /// </summary>
@@ -113,14 +98,14 @@ namespace ClockScreenSaverGL.Metaballes
                     _metaballes[i]._Vx = Math.Abs(_metaballes[i]._Vx);
                 else
                     if ((_metaballes[i]._Px > Largeur) && (_metaballes[i]._Vx > 0))
-                        _metaballes[i]._Vx = -Math.Abs(_metaballes[i]._Vx);
+                    _metaballes[i]._Vx = -Math.Abs(_metaballes[i]._Vx);
 
                 _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant._intervalle);
                 if ((_metaballes[i]._Py < 0) && (_metaballes[i]._Vy < 0))
                     _metaballes[i]._Vy = Math.Abs(_metaballes[i]._Vy);
                 else
                     if ((_metaballes[i]._Py > Hauteur) && (_metaballes[i]._Vy > 0))
-                        _metaballes[i]._Vy = -Math.Abs(_metaballes[i]._Vy);
+                    _metaballes[i]._Vy = -Math.Abs(_metaballes[i]._Vy);
             }
 
 #if TRACER
@@ -136,6 +121,8 @@ namespace ClockScreenSaverGL.Metaballes
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
         /// <param name="couleur"></param>
+        /// 
+        /*
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -148,25 +135,73 @@ namespace ClockScreenSaverGL.Metaballes
             BitmapData bmpd = _bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
             updateFrame(bmpd);
             _bmp.UnlockBits(bmpd);
-            /*
-            #if TRACER
-                        using (Graphics gMemGraphics = Graphics.FromImage(_bmp))
-                            for (int z = 0; z < NbMetaballes; z++)
-                                gMemGraphics.DrawRectangle(Pens.White, (float)(_metaballes[z]._Px - _metaballes[z]._Taille),
-                                                           (float)(_metaballes[z]._Py - _metaballes[z]._Taille),
-                                                           (float)(_metaballes[z]._Taille * 2.0f), (float)(_metaballes[z]._Taille * 2.0f));
-            #endif
-            */
             SmoothingMode q = g.SmoothingMode;
             CompositingQuality c = g.CompositingQuality;
             InterpolationMode m = g.InterpolationMode;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
             g.CompositingQuality = CompositingQuality.HighSpeed;
-            g.InterpolationMode = InterpolationMode.Default;
+            g.InterpolationMode = InterpolationMode.NearestNeighbor;
             g.DrawImage(_bmp, 0, 0, tailleEcran.Width, tailleEcran.Height);
             g.SmoothingMode = q;
             g.CompositingQuality = c;
             g.InterpolationMode = m;
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+        */
+
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PushMatrix();
+            gl.LoadIdentity();
+            gl.Ortho2D(0.0, 1.0, 0.0, 1.0); 
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            
+            updatePalette(couleur);
+
+            // Construire la bitmap
+            Bitmap bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
+            BitmapData bmpd = bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
+            updateFrame(bmpd);
+            bmp.UnlockBits(bmpd);
+
+            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
+            gl.Color(col);
+
+            Texture text = new Texture();
+
+            text.Create(gl, bmp);
+            text.Bind(gl);
+
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, 1);
+            gl.TexCoord(0.0f, 1.0f); gl.Vertex(0, 0);
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(1, 0);
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
+            gl.End();
+
+            uint[] textures = { text.TextureName };
+            gl.DeleteTextures(1, textures);
+            text.Destroy(gl);
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PopMatrix();
+gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.PopMatrix();
+            
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -251,7 +286,6 @@ namespace ClockScreenSaverGL.Metaballes
                         _palette[0] = 0;
                     }
 
-
             }
             catch (Exception ex)
             {
@@ -287,7 +321,7 @@ namespace ClockScreenSaverGL.Metaballes
                         Indice = NiveauxCouleurs - 1;
                     else
                         if (Indice < 0)
-                            Indice = 0;
+                        Indice = 0;
 
                     *pixels++ = _palette[Indice];
                 }
