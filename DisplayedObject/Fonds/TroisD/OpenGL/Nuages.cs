@@ -194,7 +194,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     derniereTexture = _particules[i].type;
                 }
 
-                gl.Color(col[0] * 1.2f, col[1] * 1.2f, col[2] * 1.2f, _particules[i].alpha);
+                gl.Color(col[0] * 1.3f, col[1] * 1.3f, col[2] * 1.3f, _particules[i].alpha);
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(_particules[i].x - taille, _particules[i].y - taille, _particules[i].z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(_particules[i].x - taille, _particules[i].y + taille, _particules[i].z);
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(_particules[i].x + taille, _particules[i].y + taille, _particules[i].z);

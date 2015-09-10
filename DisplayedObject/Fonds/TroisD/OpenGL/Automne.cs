@@ -127,10 +127,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 #endif
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, ALPHA };
             GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f };
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
             gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-
+            
             gl.Enable(OpenGL.GL_FOG);
             gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_EXP);
             gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
@@ -178,13 +182,17 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                 gl.PopMatrix();
             }
 
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PopMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.PopMatrix();
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
 
         /// <summary>
-        /// Deplacement de tous les objets: flocons, camera...
+        /// Deplacement de tous les objets: feuilles, camera...
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
@@ -230,7 +238,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     _feuilles[i].az += vitesseRot;
                 }
             }
-
 
             Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant._intervalle);
             Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant._intervalle);

@@ -32,14 +32,16 @@ namespace ClockScreenSaverGL.Fonds
 
         private byte[,] cellules;
         private byte[,] cellulestemp;
-        private static Bitmap bmp = Resources.particleTexture;
 
         private const byte MORT = 0;
         private const byte NORMAL = 1;
         private const byte NAISSANCE = 2;
         private int _colonneMin, _colonneMax, _largeurCalcul;
+#if  USE_GDI_PLUS_FOR_2D
+        private static Bitmap bmp = Resources.particleTexture;
+#else
         Texture textureCellule = new Texture();
-
+#endif
         public Life(OpenGL gl)
         {
             _largeurCalcul = LARGEUR / SKIP;
@@ -49,7 +51,9 @@ namespace ClockScreenSaverGL.Fonds
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
 
-            textureCellule.Create(gl, Resources.particleTexture);
+#if !USE_GDI_PLUS_FOR_2D
+            textureCellule.Create(gl, Resources.life);
+#endif
         }
 
 
@@ -63,7 +67,8 @@ namespace ClockScreenSaverGL.Fonds
                 for (int y = 0; y < HAUTEUR; y++)
                     cellules[x, y] = r.Next(10) > 4 ? MORT : NAISSANCE;
         }
-        /*
+
+#if USE_GDI_PLUS_FOR_2D
         /// <summary>
         /// Affichage des cellules
         /// </summary>
@@ -73,9 +78,9 @@ namespace ClockScreenSaverGL.Fonds
         /// <param name="couleur"></param>
 		public override void AfficheGDI( Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur )
 		{
-			#if TRACER
+#if TRACER
 			RenderStart(CHRONO_TYPE.RENDER) ;
-			#endif
+#endif
 			g.Clear(  Color.Black) ;//getCouleurOpaqueAvecAlpha( couleur, 25 )) ;
 			float Rx = (float)tailleEcran.Width / LARGEUR ;
 			float Ry = (float)tailleEcran.Height / HAUTEUR ;
@@ -99,76 +104,10 @@ namespace ClockScreenSaverGL.Fonds
 					}
 				}
 			}
-			#if TRACER
+#if TRACER
 			RenderStop(CHRONO_TYPE.RENDER) ;
-			#endif
-		}*/
-
-        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
-        {
-#if TRACER
-            RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-
-            gl.PushMatrix();
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PushMatrix();
-            gl.LoadIdentity();
-            gl.Ortho2D(0.0, 1.0, 0.0, 1.0);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Disable(OpenGL.GL_DEPTH);
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-
-            textureCellule.Bind(gl);
-
-            float rx = 1.0f / LARGEUR;
-            float ry = 1.0f / HAUTEUR;
-
-            Color Naissance = getCouleurOpaqueAvecAlpha(couleur, 128);
-            byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
-            Color Normal = getCouleurOpaqueAvecAlpha(couleur, 200);
-            byte[] cNormal = { Normal.R, Normal.G, Normal.B };
-
-            for (int x = 0; x < LARGEUR; x++)
-            {
-                float X = x * rx;
-                for (int y = 0; y < HAUTEUR; y++)
-                {
-                    float Y = y * ry;
-
-                    if (cellules[x, y] != MORT)
-                    {
-                        if (cellules[x, y] == NAISSANCE)
-                            gl.Color(cNaissance[0], cNaissance[1], cNaissance[2]);
-                        else
-                            gl.Color(cNormal[0], cNormal[1], cNormal[2]);
-
-                        gl.Begin(OpenGL.GL_QUADS);
-                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(X, Y + ry);
-                        gl.TexCoord(0.0f, 1.0f); gl.Vertex(X, Y);
-                        gl.TexCoord(1.0f, 1.0f); gl.Vertex(X + rx, Y);
-                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(X + rx, Y + ry);
-                        gl.End();
-                    }
-                }
-            }
-
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PopMatrix();
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-            gl.PopMatrix();
-
-#if TRACER
-            RenderStop(CHRONO_TYPE.RENDER);
-#endif
-        }
-
-
+		}
         private static Bitmap GetBitmap(Graphics g, Color couleur, float col, float Rx, float Ry)
         {
             float ratio = 255.0f / col;
@@ -197,6 +136,67 @@ namespace ClockScreenSaverGL.Fonds
 
             return bp;
         }
+#else
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+            gl.ClearColor(0, 0, 0, 0);
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PushMatrix();
+            gl.LoadIdentity();
+            gl.Ortho2D(0.0, LARGEUR, 0.0, HAUTEUR);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_BLEND);
+            textureCellule.Bind(gl);
+
+            Color Naissance = getCouleurOpaqueAvecAlpha(couleur, 70);
+            byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
+            Color Normal = getCouleurOpaqueAvecAlpha(couleur, 150);
+            byte[] cNormal = { Normal.R, Normal.G, Normal.B };
+
+            byte ancienType = MORT;
+            gl.Begin(OpenGL.GL_QUADS);
+            for (int x = 0; x < LARGEUR; x++)
+                for (int y = 0; y < HAUTEUR; y++)
+                {
+                    if (cellules[x, y] != MORT)
+                    {
+                        if (cellules[x, y] != ancienType)
+                        {
+                            if (cellules[x, y] == NAISSANCE)
+                                gl.Color(cNaissance[0], cNaissance[1], cNaissance[2]);
+                            else
+                                gl.Color(cNormal[0], cNormal[1], cNormal[2]);
+                            ancienType = cellules[x, y];
+                        }
+
+                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(x, y + 1);
+                        gl.TexCoord(0.0f, 1.0f); gl.Vertex(x, y);
+                        gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + 1, y);
+                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + 1, y + 1);
+                    }
+                }
+            gl.End();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PopMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.PopMatrix();
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+
+#endif
+
+
 
         /// <summary>
         /// Calcul des changements de cellules
@@ -231,10 +231,7 @@ namespace ClockScreenSaverGL.Fonds
                     switch (NbVoisines)
                     {
                         case 3:
-                            if (cellules[x, y] == MORT)
-                                cellulestemp[x, y] = NAISSANCE;
-                            else
-                                cellulestemp[x, y] = NORMAL;
+                            cellulestemp[x, y] = (cellules[x, y] == MORT) ? NAISSANCE : NORMAL;
                             break;
 
                         case 2:

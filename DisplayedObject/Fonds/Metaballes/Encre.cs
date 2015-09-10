@@ -123,7 +123,8 @@ namespace ClockScreenSaverGL.Metaballes
 			else
 				if ( xEmetteur > Largeur)
 					xEmetteur = Largeur ;
-			
+
+            updateFrame();
 			#if TRACER
 			RenderStop(CHRONO_TYPE.DEPLACE) ;
 			#endif

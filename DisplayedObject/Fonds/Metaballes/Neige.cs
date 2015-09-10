@@ -8,6 +8,8 @@
  */
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
+
 namespace ClockScreenSaverGL.Metaballes
 {
 	/// <summary>
@@ -112,9 +114,11 @@ namespace ClockScreenSaverGL.Metaballes
 				NbMetaballes++ ;
 				derniereCreation = maintenant._temps ;
 			}
-			
-			#if TRACER
-			RenderStop(CHRONO_TYPE.DEPLACE) ;
+
+            updateFrame();
+            
+#if TRACER
+            RenderStop(CHRONO_TYPE.DEPLACE) ;
 			#endif
 			
 		}

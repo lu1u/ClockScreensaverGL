@@ -30,11 +30,13 @@ namespace ClockScreenSaverGL.Metaballes
 
         protected readonly int NiveauxCouleurs;
         protected readonly int[] _palette;
-        
-        Rectangle _rectBitmap;
+
+        protected Rectangle _rectBitmap;
         protected int NbMetaballes;
         protected MetaBalle[] _metaballes;
         protected readonly int Largeur, Hauteur;
+        protected Bitmap _bmp;
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -108,6 +110,9 @@ namespace ClockScreenSaverGL.Metaballes
                     _metaballes[i]._Vy = -Math.Abs(_metaballes[i]._Vy);
             }
 
+            // Construire la bitmap
+            updateFrame();
+            
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -122,7 +127,7 @@ namespace ClockScreenSaverGL.Metaballes
         /// <param name="tailleEcran"></param>
         /// <param name="couleur"></param>
         /// 
-        /*
+#if USE_GDI_PLUS_FOR_2D
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -149,13 +154,16 @@ namespace ClockScreenSaverGL.Metaballes
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-        */
+#else
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
+            if (_bmp == null)
+                return;
+
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.PushMatrix();
@@ -173,18 +181,12 @@ namespace ClockScreenSaverGL.Metaballes
             
             updatePalette(couleur);
 
-            // Construire la bitmap
-            Bitmap bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
-            BitmapData bmpd = bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
-            updateFrame(bmpd);
-            bmp.UnlockBits(bmpd);
-
+            
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             gl.Color(col);
 
             Texture text = new Texture();
-
-            text.Create(gl, bmp);
+            text.Create(gl, _bmp);
             text.Bind(gl);
 
             gl.Begin(OpenGL.GL_QUADS);
@@ -206,6 +208,7 @@ gl.MatrixMode(OpenGL.GL_MODELVIEW);
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
+#endif
 
         /// <summary>
         /// Pression sur une touche, retourner true si l'objet a traite, false = fin de l'economiseur
@@ -297,8 +300,10 @@ gl.MatrixMode(OpenGL.GL_MODELVIEW);
         /// Rempli les pixels de la bitmap
         /// </summary>
         /// <param name="bmpd"></param>
-        unsafe void updateFrame(BitmapData bmpd)
+        protected unsafe void updateFrame()
         {
+            _bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
+            BitmapData bmpd = _bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
             double x, y;
             int z, Indice;
             double Champs;
@@ -326,11 +331,23 @@ gl.MatrixMode(OpenGL.GL_MODELVIEW);
                     *pixels++ = _palette[Indice];
                 }
             }
+            _bmp.UnlockBits(bmpd);
+
         }
 
         public override void AppendHelpText(StringBuilder s)
         {
             s.Append(Resources.AideMetaballes);
         }
+
+        public override string DumpRender()
+        {
+#if USE_GDI_PLUS_FOR_2D
+            return  base.DumpRender() = " (GDI)" ;
+#else
+            return base.DumpRender() + " (OpenGL)";
+#endif
+        }
+
     }
 }
