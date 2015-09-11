@@ -85,6 +85,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants>TRACE;DEBUG; TRACER</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -193,9 +194,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Temps.cs" />
     <Compile Include="Trajectoires\Trajectoire.cs" />
@@ -212,6 +213,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
@@ -250,10 +252,7 @@
     <None Include="Ressources\nuage1.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\flocon1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\flocon2.png" />
+    <None Include="Ressources\flocon2.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\tunnel.png" />
@@ -272,9 +271,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\etoile.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ressources\feuille.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\feuille1.png" />
@@ -439,7 +435,7 @@
     <None Include="Ressources\Meteo\na.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\33.png" />
+    <None Include="Ressources\33.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\ete\soleil.png" />
@@ -475,7 +471,8 @@
     <None Include="Ressources\automne\feuille5.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\life.png" />
+    <None Include="Ressources\life.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

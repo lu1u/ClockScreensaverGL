@@ -31,10 +31,20 @@ namespace ClockScreenSaverGL.Textes
 		{
 			return texte ;
 		}
-		
-		public override void DateChangee(Graphics g, Temps maintenant )
-		{
-			_taille = g.MeasureString( texte, _fonte ) ;
+
+#if USE_GDI_PLUS_FOR_2D
+        public override void DateChangee(Graphics g, Temps maintenant )
+        {
+            _taille = g.MeasureString( texte, _fonte ) ;
 		}
+#else
+        public override void DateChangee(SharpGL.OpenGL gl, Temps maintenant)
+        {
+            Bitmap bmp = new Bitmap(10, 10);
+            Graphics g = Graphics.FromImage(bmp);
+            _taille = g.MeasureString(texte, _fonte);
+        }
+#endif
+
 	}
 }

@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL
         const int RENDERMODE_NATIVE = 2;
         #endregion
 
-        enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 } ;
+        enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 };
 #if TRACER
         bool _afficheDebug = conf.getParametre(CAT, "Debug", true);
         DateTime lastFrame = DateTime.Now;
@@ -170,11 +170,11 @@ namespace ClockScreenSaverGL
 
                     case SAISON.PRINTEMPS:
                         return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    case SAISON.ETE: 
-                        return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height); 
+                    case SAISON.ETE:
+                        return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.AUTOMNE:
                         return new Fonds.TroisD.Opengl.Automne(gl);
-               }
+                }
             }
             switch (Type)
             {
@@ -313,9 +313,9 @@ namespace ClockScreenSaverGL
                 }
                 else
                     if (_temps._temps.Subtract(_debut).TotalMilliseconds < 10000)
-                    {
-                        g.DrawString("Pressez H pour de l'aide", _fontHelp, Brushes.White, 10, 10);
-                    }
+                {
+                    g.DrawString("Pressez H pour de l'aide", _fontHelp, Brushes.White, 10, 10);
+                }
             }
             catch (Exception ex)
             {
@@ -375,8 +375,14 @@ namespace ClockScreenSaverGL
             {
                 // Detection de changement de date, avertir les objets qui sont optimises pour ne changer
                 // qu'une fois par jour
-                foreach (DisplayedObject b in _listeObjets)
+#if USE_GDI_PLUS_FOR_2D
+    foreach (DisplayedObject b in _listeObjets)
                     b.DateChangee(g, _temps);
+#else
+                OpenGL gl = openGLControl.OpenGL;
+                foreach (DisplayedObject b in _listeObjets)
+                    b.DateChangee(gl, _temps);
+#endif
 
                 _jourActuel = _temps._JourDeLAnnee;
             }
@@ -441,7 +447,7 @@ namespace ClockScreenSaverGL
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
                 _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
-            
+
             // Heure et date numeriques
             if (conf.getParametre(CAT, "Date", true))
                 _listeObjets.Add(new Textes.DateTexte(0, 0));

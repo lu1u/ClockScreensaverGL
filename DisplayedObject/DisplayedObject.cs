@@ -35,7 +35,11 @@ namespace ClockScreenSaverGL
         public virtual void OpenGLInitialized(OpenGL gl) { }
 
         // Cette fonction sera appelee quand un changement de date sera detecte
+#if USE_GDI_PLUS_FOR_2D
         public virtual void DateChangee(Graphics g, Temps maintenant) { }
+#else
+        public virtual void DateChangee(OpenGL gl, Temps maintenant) { }
+#endif
         private int _noFrame = 0;
 
         /// <summary>
@@ -183,7 +187,7 @@ namespace ClockScreenSaverGL
             g.DrawImage(bmp, ppt, new RectangleF(0, 0, bmp.Width, bmp.Height), GraphicsUnit.Pixel, imgAttribs);
 
         }
-        #region Chrono
+#region Chrono
 #if TRACER
         long moyennedureeR = 0;
         long moyennedureeD = 0;
@@ -227,6 +231,6 @@ namespace ClockScreenSaverGL
         }
 
 #endif
-        #endregion
+#endregion
     }
 }

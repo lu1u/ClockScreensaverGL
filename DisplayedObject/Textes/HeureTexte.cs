@@ -51,7 +51,7 @@ namespace ClockScreenSaverGL.Textes
         /// <returns></returns>
         protected override SizeF getTailleTexte(Graphics g)
         {
-            if ( _taille == null)
+            if (_taille == null)
                 _taille = g.MeasureString(_texte, _fonte);
             return _taille;
         }
@@ -61,11 +61,21 @@ namespace ClockScreenSaverGL.Textes
         /// </summary>
         /// <param name="g"></param>
         /// <param name="maintenant"></param>
-        public override void DateChangee(Graphics g, Temps maintenant)
+#if USE_GDI_PLUS_FOR_2D
+        public override void DateChangee(Graphics g, Temps maintenant )
         {
             _texte = getTexte(maintenant);
             _taille = g.MeasureString(_texte, _fonte);
         }
+#else
+        public override void DateChangee(SharpGL.OpenGL gl, Temps maintenant)
+        {
+            Bitmap bmp = new Bitmap(10, 10);
+            Graphics g = Graphics.FromImage(bmp);
+            _taille = g.MeasureString(_texte, _fonte);
+        }
+#endif
+
 
     }
 }

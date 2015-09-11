@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.Meteo
 {
@@ -27,7 +26,7 @@ namespace ClockScreenSaverGL.Meteo
         private bool _droite;
         private float _X = 0;
         private float _Y = 0;
-
+        
         /// <summary>
         /// Constructeur
         /// </summary>

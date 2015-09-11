@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public class Lune : IDisposable
 	{
-		private Bitmap _bitmapLune = null ;
+		//private Bitmap _bitmapLune = null ;
 		private int _ageLune = -1 ;
 		DateTime _maintenant ;
 		
@@ -33,8 +33,8 @@ namespace ClockScreenSaverGL
 
         public void Dispose()
         {
-			if ( _bitmapLune != null)
-				_bitmapLune.Dispose() ;
+			//if ( _bitmapLune != null)
+			//	_bitmapLune.Dispose() ;
 		}
 		
 		private static int JulianDate(int d, int m, int y)
@@ -99,8 +99,11 @@ namespace ClockScreenSaverGL
 		{
 			_maintenant = maintenant ;
 			int lune = (int)Math.Round(CalcMoonAge(_maintenant) / 29.530588853 * 26) ;
-			
-			if  (lune != _ageLune)
+
+            //if ((lune == _ageLune) && (_bitmapLune != null))
+            //    return _bitmapLune;
+            /*
+            if  (lune != _ageLune)
 			{
 				_ageLune = lune ;
 				if  (_bitmapLune != null )
@@ -108,14 +111,9 @@ namespace ClockScreenSaverGL
 					// On va changer de lune
 					_bitmapLune.Dispose() ;
 					_bitmapLune = null ;
-				}
-				
+				}				
 			}
-			else			
-				if ( _bitmapLune != null )
-					// Retourner tjrs la meme
-					return _bitmapLune ;
-			
+			*/
 			Bitmap bmp ;
 			switch( lune )
 			{
@@ -147,10 +145,14 @@ namespace ClockScreenSaverGL
 					case 25: bmp = Resources.Lune25 ; break ;
 					default: bmp = Resources.Lune00 ; break ;
 			}
-			
-			// Rendre cette bitmap conforme à la transparence de l'horloge
-			_bitmapLune = new Bitmap( bmp.Width, bmp.Height, g ) ;
-			Graphics gMem = Graphics.FromImage(_bitmapLune);
+            Bitmap bmpRes;
+
+            // Rendre cette bitmap conforme à la transparence de l'horloge
+            if (g != null)
+                bmpRes = new Bitmap(bmp.Width, bmp.Height, g);
+            else
+                bmpRes = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppRgb);
+			Graphics gMem = Graphics.FromImage(bmpRes);
 			
 			float[][] ptsArray =
 			{
@@ -170,7 +172,7 @@ namespace ClockScreenSaverGL
 			               0, 0, bmp.Width, bmp.Height, 
 			               GraphicsUnit.Pixel, imgAttribs) ;
 			gMem.Dispose() ;
-			return _bitmapLune ;
+			return bmpRes;
 		}
 	}
 }

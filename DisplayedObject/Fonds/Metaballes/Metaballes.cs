@@ -137,9 +137,7 @@ namespace ClockScreenSaverGL.Metaballes
             updatePalette(couleur);
 
             // Construire la bitmap
-            BitmapData bmpd = _bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
-            updateFrame(bmpd);
-            _bmp.UnlockBits(bmpd);
+            updateFrame();
             SmoothingMode q = g.SmoothingMode;
             CompositingQuality c = g.CompositingQuality;
             InterpolationMode m = g.InterpolationMode;
@@ -343,7 +341,7 @@ gl.MatrixMode(OpenGL.GL_MODELVIEW);
         public override string DumpRender()
         {
 #if USE_GDI_PLUS_FOR_2D
-            return  base.DumpRender() = " (GDI)" ;
+            return  base.DumpRender() + " (GDI)" ;
 #else
             return base.DumpRender() + " (OpenGL)";
 #endif
