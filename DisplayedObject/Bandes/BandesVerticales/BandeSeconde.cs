@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using SharpGL;
 using System;
 namespace ClockScreenSaverGL.Bandes.BandeVerticale
 {
@@ -16,10 +17,11 @@ namespace ClockScreenSaverGL.Bandes.BandeVerticale
 	{
 
         
-		public BandeSeconde( float LargeurSeconde, float OrigineX, float Py, int largeur )
-			: base( 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre( CAT, "AlphaSeconde", (byte)100) )
+		public BandeSeconde( OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur )
+			: base( gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre( CAT, "AlphaSeconde", (byte)100) )
 		{
-		}
+            CreerTexture(gl, 0, 59, 5);
+        }
 
 		protected override void getValue( Temps maintenant, out float value, out float decalage  )
 		{

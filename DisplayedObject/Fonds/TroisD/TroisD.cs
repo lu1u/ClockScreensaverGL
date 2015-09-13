@@ -29,6 +29,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             _tailleCubeZ = vpZ;
             _zCamera = zCam;
         }
+        /*
         static public void RotateAxeY(ref float x, ref float y, ref float z, float Theta, float axeX, float axeZ)
         {
             float CosTheta = (float)Math.Cos(Theta);
@@ -61,7 +62,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             v.x = px;
             v.y = py;
         }
-
+        */
         /*
         protected void DessineCube( Graphics g )
         {
@@ -112,24 +113,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD
 
         }
         */
+        /*
         protected void DessineCube(OpenGL gl)
         {
-            /*gl.Begin(OpenGL.GL_LINES);
-            gl.LineWidth(2) ;
-            gl.Color(1,1,1) ;
-            gl.Vertex(-1, 1,-1);gl.Vertex(1, 1,-1);
-            gl.Vertex(-1,-1,-1);gl.Vertex(1,-1,-1);
-            gl.Vertex(-1, 1,-1);gl.Vertex(-1,-1,-1);
-            gl.Vertex( 1, 1,-1);gl.Vertex( 1,-1,-1);
-			
-            gl.Vertex(-1, 1, 1);gl.Vertex(1, 1, 1);
-            gl.Vertex(-1,-1, 1);gl.Vertex(1,-1, 1);
-            gl.Vertex(-1, 1, 1);gl.Vertex(-1,-1, 1);
-            gl.Vertex( 1, 1, 1);gl.Vertex( 1,-1, 1);
-			
-			
-            gl.End();
-            */
+
             gl.Begin(OpenGL.GL_LINES);
 
             gl.Vertex(0, 0); gl.Vertex(0, 1);
@@ -137,7 +124,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             gl.Vertex(0, 0); gl.Vertex(0, 0, 1);
             gl.End();
         }
-
+    */
         
         protected Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
@@ -148,11 +135,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD
             v.Normalize();
             return v;
         }
-
+        /*
         protected float AngleEntre(Vecteur3D v1, Vecteur3D v2)
         {
             float angle = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
             return (float)Math.Acos(angle);
-        }
+        }*/
     }
 }

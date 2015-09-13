@@ -112,7 +112,7 @@ namespace ClockScreenSaverGL.Metaballes
 
             // Construire la bitmap
             updateFrame();
-            
+
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -168,18 +168,18 @@ namespace ClockScreenSaverGL.Metaballes
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
             gl.LoadIdentity();
-            gl.Ortho2D(0.0, 1.0, 0.0, 1.0); 
+            gl.Ortho2D(0.0, 1.0, 0.0, 1.0);
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
-            
+
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-            
+
             updatePalette(couleur);
 
-            
+
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             gl.Color(col);
 
@@ -194,14 +194,14 @@ namespace ClockScreenSaverGL.Metaballes
             gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
             gl.End();
 
-            uint[] textures = { text.TextureName };
-            gl.DeleteTextures(1, textures);
-            text.Destroy(gl);
+            //uint[] textures = { text.TextureName };
+            //gl.DeleteTextures(1, textures);
+            //text.Destroy(gl);
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
-gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
             gl.PopMatrix();
-            
+
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif

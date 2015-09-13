@@ -7,51 +7,45 @@
  * Affiche un objet texte contenant la date du jour
  * Derive de Texte, se contente de fournir la date sous forme de texte
  */
+using SharpGL;
 using System;
-using System.Drawing ;
+using System.Drawing;
 namespace ClockScreenSaverGL.Textes
 {
-	/// <summary>
-	/// Description of Date.
-	/// </summary>
-	public class DateTexte: Texte
-	{
-		const string CAT = "DateTexte" ;
-		static private string _date ; // Sera initialise dans OnDateChange
+    /// <summary>
+    /// Description of Date.
+    /// </summary>
+    public class DateTexte : Texte
+    {
+        const string CAT = "DateTexte";
+        static private string _date; // Sera initialise dans OnDateChange
 
-		public DateTexte(int Px, int Py)
-			: base( Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160) )
-		{
-		}
+        public DateTexte(int Px, int Py)
+            : base(Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160))
+        {
+        }
 
         public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
         {
             base.Deplace(maintenant, ref tailleEcran);
             tailleEcran = new Rectangle(tailleEcran.Left, tailleEcran.Top + (int)_taille.Height, tailleEcran.Width, tailleEcran.Height - (int)_taille.Height);
         }
-		protected override string getTexte(Temps maintenant)
-		{
-			return _date ;
-		}
 
-#if USE_GDI_PLUS_FOR_2D       
-        public override void DateChangee(Graphics g, Temps maintenant )
-                {
-            _date = maintenant._temps.ToLongDateString() ;
-			_taille = g.MeasureString( _date, _fonte ) ;
-		}
-#else
-        public override void DateChangee(SharpGL.OpenGL gl, Temps maintenant)
-#endif
+        protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            Bitmap bmp = new Bitmap(10, 10);
-            Graphics g = Graphics.FromImage(bmp);
-            _date = maintenant._temps.ToLongDateString() ;
-			_taille = g.MeasureString( _date, _fonte ) ;
-		}		
-		protected override SizeF getTailleTexte( Graphics g )
-		{
-			return _taille ;
-		}
-	}
+            _date = maintenant._temps.ToLongDateString();
+            texte = _date;
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+                return g.MeasureString(_date, _fonte);
+        }
+
+
+        public override void DateChangee(OpenGL gl, Temps maintenant)
+        {
+            _date = maintenant._temps.ToLongDateString();
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+                _taille = g.MeasureString(_date, _fonte);
+        }
+
+    }
 }

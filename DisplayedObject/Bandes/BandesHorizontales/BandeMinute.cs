@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using SharpGL;
 using System;
 using System.Text;
 namespace ClockScreenSaverGL.Bandes.BandeHorizontale
@@ -15,8 +16,8 @@ namespace ClockScreenSaverGL.Bandes.BandeHorizontale
 	/// </summary>
 	public sealed class BandeMinute: BandeHorizontale
 	{
-		public BandeMinute( float LargeurSeconde, float OrigineX, float Py, int largeur )
-			: base( 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre( CAT, "AlphaMinute", (byte)60) )
+		public BandeMinute(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur )
+			: base( gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre( CAT, "AlphaMinute", (byte)60) )
 		{
 		}
 		

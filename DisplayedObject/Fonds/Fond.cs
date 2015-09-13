@@ -6,7 +6,9 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using SharpGL;
 using System;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.Fonds
 {
@@ -15,7 +17,10 @@ namespace ClockScreenSaverGL.Fonds
 	/// </summary>
 	public abstract class Fond : DisplayedObject
 	{
-		
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
 	}
 	
 

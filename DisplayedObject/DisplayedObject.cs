@@ -14,6 +14,7 @@ using System.Drawing.Imaging;
 using System.Text;
 using SharpGL;
 
+
 namespace ClockScreenSaverGL
 {
     /// <summary>
@@ -23,7 +24,7 @@ namespace ClockScreenSaverGL
     {
         const float PRECISION_RANDOM = 100000.0f;
         static public Random r = new Random();
-        static protected readonly Config conf = Config.getInstance();
+        static protected Config conf = Config.getInstance();
 
         protected SizeF _taille = new SizeF(-1, -1);
 
@@ -35,11 +36,10 @@ namespace ClockScreenSaverGL
         public virtual void OpenGLInitialized(OpenGL gl) { }
 
         // Cette fonction sera appelee quand un changement de date sera detecte
-#if USE_GDI_PLUS_FOR_2D
-        public virtual void DateChangee(Graphics g, Temps maintenant) { }
-#else
+
         public virtual void DateChangee(OpenGL gl, Temps maintenant) { }
-#endif
+        public virtual void ClearBackGround(OpenGL gl, Color c) { }
+
         private int _noFrame = 0;
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace ClockScreenSaverGL
                 return (float)r.Next((int)(Min * PRECISION_RANDOM), (int)(Max * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 if (Min > Max)
-                    return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
-                else
-                    return Min;
+                return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
+            else
+                return Min;
         }
 
         static protected Bitmap BitmapNuance(Graphics g, Bitmap bmp, Color couleur)
@@ -119,13 +119,13 @@ namespace ClockScreenSaverGL
             using (Graphics gMem = Graphics.FromImage(bp))
             {
                 float[][] ptsArray =
-				{
-					new float[] {couleur.R/255.0f, 0, 0, 0, 0},
-					new float[] {0, couleur.G/255.0f, 0, 0, 0},
-					new float[] {0, 0, couleur.B/255.0f, 0, 0},
-					new float[] {0, 0, 0, couleur.A/255.0f, 0},
-					new float[] {0, 0, 0, 0, 1}
-				};
+                {
+                    new float[] {couleur.R/255.0f, 0, 0, 0, 0},
+                    new float[] {0, couleur.G/255.0f, 0, 0, 0},
+                    new float[] {0, 0, couleur.B/255.0f, 0, 0},
+                    new float[] {0, 0, 0, couleur.A/255.0f, 0},
+                    new float[] {0, 0, 0, 0, 1}
+                };
 
                 ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
                 ImageAttributes imgAttribs = new ImageAttributes();
@@ -187,11 +187,11 @@ namespace ClockScreenSaverGL
             g.DrawImage(bmp, ppt, new RectangleF(0, 0, bmp.Width, bmp.Height), GraphicsUnit.Pixel, imgAttribs);
 
         }
-#region Chrono
+        #region Chrono
 #if TRACER
         long moyennedureeR = 0;
         long moyennedureeD = 0;
-        protected enum CHRONO_TYPE { RENDER, DEPLACE } ;
+        protected enum CHRONO_TYPE { RENDER, DEPLACE };
 
         private Stopwatch chronoRender = new Stopwatch();
         private Stopwatch chronoDeplace = new Stopwatch();
@@ -231,6 +231,6 @@ namespace ClockScreenSaverGL
         }
 
 #endif
-#endregion
+        #endregion
     }
 }

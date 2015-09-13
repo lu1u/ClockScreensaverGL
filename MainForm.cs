@@ -17,7 +17,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-
 namespace ClockScreenSaverGL
 {
 
@@ -26,6 +25,7 @@ namespace ClockScreenSaverGL
     /// </summary>
     public partial class MainForm : Form
     {
+        
         #region Parametres
         public const string CAT = "Main";
         const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
@@ -163,11 +163,8 @@ namespace ClockScreenSaverGL
                 {
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
-                        if (conf.getParametre(CAT, "Neige.PrefereOpenGL", true))
-                            return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
-                        else
-                            return new Fonds.TroisD.GDI.NeigeGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-
+                        return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
+                        
                     case SAISON.PRINTEMPS:
                         return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
@@ -182,25 +179,12 @@ namespace ClockScreenSaverGL
                 case TYPE_FOND_ENCRE: return new Metaballes.Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_BACTERIES: return new Metaballes.Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_LIFE: return new Fonds.Life(gl);
-                case TYPE_FOND_NOIR: return new Fonds.Noir(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_COULEUR: return new Fonds.Couleur(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ESPACE:
-                    if (conf.getParametre(CAT, "Espace.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Opengl.EspaceOpenGL(gl);
-                    else
-                        return new Fonds.TroisD.GDI.EspaceGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_TUNNEL:
-                    if (conf.getParametre(CAT, "Tunnel.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Opengl.TunnelOpenGL(gl);
-                    else
-                        return new Fonds.TroisD.GDI.TunnelGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_NUAGES:
-                    if (conf.getParametre(CAT, "Nuages.PrefereOpenGL", true))
-                        return new Fonds.TroisD.Opengl.NuagesOpenGL(gl);
-                    else
-                        return new Fonds.TroisD.GDI.NuagesGDI(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_TERRE:
-                    return new Fonds.TroisD.Opengl.TerreOpenGL(gl);
+                case TYPE_FOND_NOIR: return new Fonds.Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_COULEUR: return new Fonds.Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ESPACE: return new Fonds.TroisD.Opengl.EspaceOpenGL(gl);                    
+                case TYPE_FOND_TUNNEL:return new Fonds.TroisD.Opengl.TunnelOpenGL(gl);
+                case TYPE_FOND_NUAGES: return new Fonds.TroisD.Opengl.NuagesOpenGL(gl);
+                case TYPE_FOND_TERRE: return new Fonds.TroisD.Opengl.TerreOpenGL(gl);
 
                 default:
                     return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -276,6 +260,7 @@ namespace ClockScreenSaverGL
             }
         }
 
+        
         /// <summary>
         /// Partie GDI (2D) de l'affichage
         /// </summary>
@@ -284,7 +269,8 @@ namespace ClockScreenSaverGL
         void onGDIDraw(object sender, SharpGL.RenderEventArgs args)
         {
             Graphics g = args.Graphics;
-            moveAll(g);
+
+            //moveAll(g);
 
             try
             {
@@ -293,11 +279,11 @@ namespace ClockScreenSaverGL
                 g.CompositingQuality = CompositingQuality.HighQuality;
 
                 Color Couleur = _couleur.GetRGB();
-
+                /*
                 // Afficher tous les objets
                 foreach (DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
-
+                    */
 #if TRACER
                 if (_afficheDebug)
                     afficheDebug(g);
@@ -323,6 +309,7 @@ namespace ClockScreenSaverGL
                 Application.Exit();
             }
         }
+        
 
 #if TRACER
         /// <summary>
@@ -361,7 +348,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void moveAll(Graphics g)
+        void moveAll()
         {
             _couleur.AvanceCouleur();
 
@@ -375,14 +362,10 @@ namespace ClockScreenSaverGL
             {
                 // Detection de changement de date, avertir les objets qui sont optimises pour ne changer
                 // qu'une fois par jour
-#if USE_GDI_PLUS_FOR_2D
-    foreach (DisplayedObject b in _listeObjets)
-                    b.DateChangee(g, _temps);
-#else
+
                 OpenGL gl = openGLControl.OpenGL;
                 foreach (DisplayedObject b in _listeObjets)
                     b.DateChangee(gl, _temps);
-#endif
 
                 _jourActuel = _temps._JourDeLAnnee;
             }
@@ -392,19 +375,27 @@ namespace ClockScreenSaverGL
 
         void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
         {
+            moveAll();
+
             // Get the OpenGL object, just to clean up the code.
             OpenGL gl = openGLControl.OpenGL;
             Color Couleur = _couleur.GetRGB();
-
+            gl.Enable(OpenGL.GL_MULTISAMPLE);
+            // Deplacer et Afficher tous les objets
+            foreach (DisplayedObject b in _listeObjets)
+                b.ClearBackGround(gl, Couleur);
+            
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
             {
+                gl.PushMatrix();
                 gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
                 b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
                 gl.PopAttrib();
+                gl.PopMatrix();
             }
 
-            gl.End(); // Done Drawing The Q
+            gl.End();
             gl.Flush();
 
         }
@@ -431,6 +422,7 @@ namespace ClockScreenSaverGL
         /// </summary>
         private void createAllObjects()
         {
+            OpenGL gl = openGLControl.OpenGL;
             int CentreX = Bounds.Width / 2;
             int CentreY = Bounds.Height / 2;
 
@@ -452,7 +444,7 @@ namespace ClockScreenSaverGL
             if (conf.getParametre(CAT, "Date", true))
                 _listeObjets.Add(new Textes.DateTexte(0, 0));
             if (conf.getParametre(CAT, "Heure", true))
-                _listeObjets.Add(new Textes.HeureTexte(100, CentreY));
+                _listeObjets.Add(new Textes.HeureTexte(gl, 100, CentreY));
 
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))

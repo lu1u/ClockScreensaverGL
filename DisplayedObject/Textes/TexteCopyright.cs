@@ -1,8 +1,9 @@
 ﻿/*
  * Un objet graphique Texte qui contient un texte fixe de copyright
  */
+using SharpGL;
 using System;
-using System.Drawing ;
+using System.Drawing;
 
 namespace ClockScreenSaverGL.Textes
 {
@@ -12,7 +13,7 @@ namespace ClockScreenSaverGL.Textes
 	public class TexteCopyright: Texte
 	{
 		const string CAT = "TexteCopyright" ;
-		private const string texte = "Lucien Pilloni 2014" ;
+		private const string _texte = "Lucien Pilloni 2014" ;
 		
 		public TexteCopyright(int Px, int Py):
 			base( Px, Py, conf.getParametre(CAT, "VX", 4), 
@@ -20,31 +21,22 @@ namespace ClockScreenSaverGL.Textes
 			     		conf.getParametre(CAT, "TailleFonte", 32),
 			     		conf.getParametre(CAT, "Alpha", (byte)10))
 		{
-		}
-		
-		protected override SizeF getTailleTexte( Graphics g )
-		{
-			return _taille ;
-		}
-		
-		protected override string getTexte(Temps maintenant)
-		{
-			return texte ;
-		}
 
-#if USE_GDI_PLUS_FOR_2D
-        public override void DateChangee(Graphics g, Temps maintenant )
-        {
-            _taille = g.MeasureString( texte, _fonte ) ;
-		}
-#else
-        public override void DateChangee(SharpGL.OpenGL gl, Temps maintenant)
-        {
-            Bitmap bmp = new Bitmap(10, 10);
-            Graphics g = Graphics.FromImage(bmp);
-            _taille = g.MeasureString(texte, _fonte);
         }
-#endif
+		
 
+		
+		protected override SizeF getTexte(Temps maintenant, out string texte )
+		{
+			texte = _texte ;
+            //using (Bitmap bmp = new Bitmap(1, 1))
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+                return g.MeasureString(texte, _fonte);
+        }
+
+        public override void DateChangee(OpenGL gl, Temps maintenant)
+        {
+
+        }
 	}
 }

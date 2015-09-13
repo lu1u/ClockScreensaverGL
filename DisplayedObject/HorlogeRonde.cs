@@ -22,6 +22,8 @@ namespace ClockScreenSaverGL
     /// </summary>
     public sealed class HorlogeRonde : DisplayedObject, IDisposable
     {
+
+
         #region Parametres
         public const string CAT = "HorlogeRonde";
 
@@ -100,19 +102,7 @@ namespace ClockScreenSaverGL
             }
         }
 
-#if USE_GDI_PLUS_FOR_2D
-        /// <summary>
-        /// Date changee: changer l'image du fond de l'horloge qui contient
-        /// la date et la phase lunaire
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        public override void DateChangee(Graphics g, Temps maintenant)
-        {
 
-            CreerBitmapFond(g);
-        }
-#else
         /// <summary>
         /// Date changee: changer l'image du fond de l'horloge qui contient
         /// la date et la phase lunaire
@@ -124,9 +114,9 @@ namespace ClockScreenSaverGL
 
             CreerBitmapFond(gl);
         }
-#endif
-    
-#if USE_GDI_PLUS_FOR_2D
+
+
+
         /// <summary>
         /// Dessine l'horloge une fois pour toutes et la garde en memoire
         /// </summary>
@@ -149,7 +139,7 @@ namespace ClockScreenSaverGL
                 DessineFondHorloge(g, Centre, Centre);
             }
         }
-#else
+
         /// <summary>
         /// Dessine l'horloge une fois pour toutes et la garde en memoire
         /// </summary>
@@ -160,7 +150,6 @@ namespace ClockScreenSaverGL
                 _bmpFondHorloge.Dispose();
                 _bmpFondHorloge = null;
             }
-
             _bmpFondHorloge = new Bitmap(_diametre, _diametre, PixelFormat.Format32bppArgb);
 
             using (Graphics g = Graphics.FromImage(_bmpFondHorloge))
@@ -174,8 +163,9 @@ namespace ClockScreenSaverGL
 
             _textureFondHorloge = new Texture();
             _textureFondHorloge.Create(gl, _bmpFondHorloge);
+
         }
-#endif
+
         /// <summary>
         /// Dessine une des aiguilles de l'horloge
         /// </summary>
@@ -222,7 +212,7 @@ namespace ClockScreenSaverGL
             gl.PushMatrix();
             gl.Rotate(0, 0, Angle);
             gl.Color(0, 0, 0, 0.9);
-            gl.Enable(OpenGL.GL_MULTISAMPLE);
+            
             gl.Begin(OpenGL.GL_QUADS);
 
             {
@@ -381,7 +371,6 @@ namespace ClockScreenSaverGL
                 CreerBitmapFond(gl);
             CentreX = _trajectoire._Px + _rayon;
             CentreY = _trajectoire._Py + _rayon;
-            gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
@@ -412,15 +401,12 @@ namespace ClockScreenSaverGL
             //Minutes
             DessineAiguille(gl, maintenant._Minute + maintenant._Seconde / 60.0f, 60.0f, 0.7f, 0, EPAISSEUR_MINUTES / 2.0f);
             // Heure
-            DessineAiguille(gl, maintenant._Heure + maintenant._Minute / 60.0f, 12.0f, 0.7f, 0, EPAISSEUR_HEURES / 2.0f);
+            DessineAiguille(gl, maintenant._Heure + maintenant._Minute / 60.0f, 12.0f, 0.5f, 0, EPAISSEUR_HEURES / 2.0f);
 
             // Secondes continues
-            //CentreY += ((_diametre * RATIO_TROTTEUSE_CONTINUE) * 0.9f);
             gl.Translate(0, -((_diametre * RATIO_TROTTEUSE_CONTINUE) * 0.9f), 0);
             DessineAiguille(gl, maintenant._Millieme, 1000.0f, 0.12f, -0.02f, EPAISSEUR_TROTTEUSE_CONTINUE / 2.0f);
 
-
-            gl.DrawText(10, 10, 0, 1, 0, "Arial.ttf", 172, "texte");
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);

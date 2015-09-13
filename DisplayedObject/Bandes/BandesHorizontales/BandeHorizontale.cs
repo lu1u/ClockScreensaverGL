@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using SharpGL;
 using System;
 using System.Drawing;
 
@@ -17,17 +18,21 @@ namespace ClockScreenSaverGL.Bandes.BandeHorizontale
 	public abstract class BandeHorizontale: Bande
 	{
 		public const string CAT = "BandeHorizontale";
-		public static int TailleFonte = conf.getParametre( CAT, "TailleFonte", 30 ) ;
+		public readonly static int TailleFonte = conf.getParametre( CAT, "TailleFonte", 30 ) ;
 		
-		public BandeHorizontale( int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha )
-			:base( valMax, intervalle, largeurcase, TailleFonte, origineX, largeur, alpha )
+		public BandeHorizontale( OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha )
+			:base( gl, valMax, intervalle, largeurcase, TailleFonte, origineX, largeur, alpha )
 			
 		{
 			_trajectoire = new TrajectoireDiagonale( _origine, Py, 0.0f, conf.getParametre( CAT, "VY", 20f ));
 			_taillebande = new SizeF( largeur, _hauteurFonte*2) ;
 		}
-		
-		public override void AfficheGDI( Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleurGlobale)
+        protected override void CreerTexture(OpenGL gl, int Min, int Max, int Pas)
+        {
+
+        }
+        /*
+        public override void AfficheGDI( Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleurGlobale)
 		{
 			SizeF stringSize ;
 			String texte;
@@ -86,5 +91,6 @@ namespace ClockScreenSaverGL.Bandes.BandeHorizontale
 				#endif
 			}
 		}
+        */
 	}
 }

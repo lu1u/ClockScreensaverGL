@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
     {
         #region PARAMETRES
         const string CAT = "Nuages.OpenGL";
-        static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.1f);
+        static readonly float ALPHA = 0.05f;// conf.getParametre(CAT, "Alpha", 0.1f);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2f);
         static readonly float RAYON_MAX = 5;// conf.getParametre(CAT, "RayonMax", 8f);
         static readonly float RAYON_MIN = conf.getParametre(CAT, "RayonMin", 5f);
@@ -66,8 +66,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         private Particule[] _particules;			// Pour l'affichage
         private int _NbParticules;
 
-        const int NB_TEXTURES = 2;
-        private Texture[] texture = new Texture[2];
+        const int NB_TEXTURES = 3;
+        private Texture[] texture = new Texture[NB_TEXTURES];
 
         /// <summary>
         /// Constructeur
@@ -80,7 +80,9 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             texture[0] = new Texture();
             texture[0].Create(gl, Resources.nuage1);
             texture[1] = new Texture();
-            texture[1].Create(gl, Resources.nuage1);
+            texture[1].Create(gl, Resources.nuage2);
+            texture[2] = new Texture();
+            texture[2].Create(gl, Resources.nuage3);
 
             for (int i = 0; i < NB_NUAGES; i++)
                 creerNuage(ref _nuages[i], true);
@@ -179,21 +181,24 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Begin(OpenGL.GL_QUADS);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
 
+            texture[0].Create(gl, Resources.nuage1);
+            texture[1].Create(gl, Resources.nuage2);
+            texture[2].Create(gl, Resources.nuage3);
             int derniereTexture = -1;
+            gl.Begin(OpenGL.GL_QUADS);
             for (int i = 0; i < _NbParticules; i++)
             {
                 float taille = _particules[i].taille;
 
-                if (derniereTexture != _particules[i].type)
+               if (derniereTexture != _particules[i].type)
                 {
                     texture[_particules[i].type].Bind(gl);
                     derniereTexture = _particules[i].type;
                 }
-
+                
                 gl.Color(col[0] * 1.3f, col[1] * 1.3f, col[2] * 1.3f, _particules[i].alpha);
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(_particules[i].x - taille, _particules[i].y - taille, _particules[i].z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(_particules[i].x - taille, _particules[i].y + taille, _particules[i].z);
@@ -215,7 +220,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         {
             if (CIEL_DEGRADE)
             {
-                gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
                 gl.LoadIdentity();
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
                 gl.Disable(OpenGL.GL_LIGHTING);
@@ -239,7 +243,6 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             {
                 // Ciel uni
                 gl.ClearColor(col[0] / 4, col[1] / 4, col[2] / 4, col[3]);
-                gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
                 gl.LoadIdentity();
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
                 gl.Disable(OpenGL.GL_LIGHTING);

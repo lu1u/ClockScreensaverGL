@@ -6,8 +6,10 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using SharpGL;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
 namespace ClockScreenSaverGL.Textes
@@ -27,10 +29,10 @@ namespace ClockScreenSaverGL.Textes
         private String _citation;
         private String _auteur;
         private DateTime _changement;
-        private Font _fonteAuteur;
         private int _derniereCitation;
         private RectangleF _rectCitation, _rectAuteur;
-
+        private bool _citationChangee = false;
+        private int _tailleFonte, _tailleFonteAuteur;
         public Citations(Form f, int Px, int Py)
             : base(Px, Py,
                    conf.getParametre(CAT, "VX", -15),
@@ -44,10 +46,9 @@ namespace ClockScreenSaverGL.Textes
             ChoisitCitation(f);
         }
 
-        ~Citations()
-        {
-            Dispose();
-        }
+
+        protected override bool TexteChange() { return _citationChangee; }
+
 
         /// <summary>
         /// Choisit la prochaine citation
@@ -110,27 +111,23 @@ namespace ClockScreenSaverGL.Textes
 
             _citation.Replace("\\n", "\n");
             // Choisir une taille de texte adequate
-            int TailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
-            if (_fonte != null)
-                _fonte.Dispose();
-            _fonte = new Font(FontFamily.GenericSansSerif, TailleFonte, FontStyle.Regular, GraphicsUnit.Pixel);
-
-            if (_fonteAuteur != null)
-                _fonteAuteur.Dispose();
-
-            _fonteAuteur = new Font(FontFamily.GenericSansSerif, TailleFonte, FontStyle.Italic, GraphicsUnit.Pixel);
+            _tailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
+            _tailleFonteAuteur = _tailleFonte;
 
             // Calculer la taille du texte affiche
             SizeF stringSize = new SizeF();
-            stringSize = g.MeasureString(_citation, _fonte, SystemInformation.VirtualScreen.Width);
+            using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
+                stringSize = g.MeasureString(_citation, fonte, SystemInformation.VirtualScreen.Width);
             _rectCitation = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 
-            stringSize = g.MeasureString(_auteur, _fonteAuteur, SystemInformation.VirtualScreen.Width);
+            using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonteAuteur, FontStyle.Italic, GraphicsUnit.Pixel))
+                stringSize = g.MeasureString(_auteur, fonte, SystemInformation.VirtualScreen.Width);
             _rectAuteur = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 
-            _taille = new SizeF(_rectCitation.Width, (_rectCitation.Height + _rectAuteur.Height));
-
+            _taille = new SizeF(Math.Max(_rectCitation.Width, _rectAuteur.Width), (_rectCitation.Height + _rectAuteur.Height));
             _changement = DateTime.Now;
+
+            _citationChangee = true;
         }
 
         /// <summary>
@@ -166,22 +163,41 @@ namespace ClockScreenSaverGL.Textes
         /// </summary>
         /// <param name="maintenant"></param>
         /// <returns></returns>
-        protected override string getTexte(Temps maintenant)
+        protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            return _citation;
+            texte = _citation;
+            return _taille;
         }
 
         /// <summary>
-        /// Retourne la taille occupee par le texte,
-        /// en fonction des attributs de texte courants
+        /// Creer la bitmap contenant ce qu'on veut afficher
         /// </summary>
-        /// <param name="g">Graphics</param>
-        /// <returns>Largeur et hauteur</returns>
-        protected override SizeF getTailleTexte(Graphics g)
+        /// <param name="gl"></param>
+        /// <param name="maintenant"></param>
+        protected override void CreateBitmap(OpenGL gl, Temps maintenant)
         {
-            return new SizeF(_rectCitation.Width, _rectCitation.Height + _rectAuteur.Height);
-        }
+            _bitmap?.Dispose();
 
+            string texte;
+            _taille = getTexte(maintenant, out texte);
+
+            _bitmap = new Bitmap((int)_taille.Width, (int)_taille.Height, PixelFormat.Format32bppArgb);
+
+            using (Graphics g = Graphics.FromImage(_bitmap))
+            {
+                RectangleF rect = new RectangleF(0, 0, _rectCitation.Width, _rectCitation.Height);
+                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
+                    g.DrawString(_citation, fonte, Brushes.White, rect);
+
+                rect.Offset(0, _rectCitation.Height);
+                using (Font fonteAuteur = new Font(FontFamily.GenericSansSerif, _tailleFonteAuteur, FontStyle.Italic, GraphicsUnit.Pixel))
+                    g.DrawString(_auteur, fonteAuteur, Brushes.LightGray, rect.Left, rect.Top);
+            }
+
+            _texture.Create(gl, _bitmap);
+            _citationChangee = false;
+        }
+        /*
         /// <summary>
         /// Affiche cet objet
         /// </summary>
@@ -212,7 +228,7 @@ namespace ClockScreenSaverGL.Textes
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-
+        */
         /// <summary>
         /// Pression sur une touche, si c'est 'C' : changer de citation et signaler qu'on a utilise la touche
         /// </summary>
@@ -230,22 +246,20 @@ namespace ClockScreenSaverGL.Textes
             return false;
         }
 
-        public void Dispose()
-        {
-            if (_fonteAuteur != null)
-            {
-                _fonteAuteur.Dispose();
-                _fonteAuteur = null;
-            }
-        }
 
         /// <summary>
         /// Ajoute le message d'aide correspondant a cet objet graphique
         /// </summary>
         /// <param name="s"></param>
-        public override void AppendHelpText(StringBuilder s) 
+        public override void AppendHelpText(StringBuilder s)
         {
-        s.Append(Resources.AideCitation);
+            s.Append(Resources.AideCitation);
+        }
+
+        void IDisposable.Dispose()
+        {
+            _bitmap?.Dispose();
+
         }
     }
 }
