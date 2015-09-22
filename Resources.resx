@@ -883,9 +883,6 @@ R: réinitialiser le fond</value>
   <data name="Meteo_47" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\Meteo\47.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="_33" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\Meteo\33.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Dimanche" xml:space="preserve">
     <value>Dimanche</value>
   </data>

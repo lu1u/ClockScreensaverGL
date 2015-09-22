@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
         private readonly int NB_FEUILLES = conf.getParametre(CAT, "NbFeuilles", 10);
         private readonly float TAILLE_FEUILLE = conf.getParametre(CAT, "TailleFeuilles", 3.0f);
-        private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 4.0f);
+        private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 8.0f);
         private readonly float NB_FACES_FEUILLES = conf.getParametre(CAT, "Nb Faces", 4);
         #endregion
 
@@ -51,7 +51,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         const float VIEWPORT_X = 1f;
         const float VIEWPORT_Y = 1f;
         const float VIEWPORT_Z = 1f;
-        
+
         const int NB_TYPES_FEUILLES = 5;
         Texture[] texture = new Texture[NB_TYPES_FEUILLES];
 
@@ -96,7 +96,11 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         private void NouvelleFeuille(ref Feuille f)
         {
             if (f == null)
+            {
                 f = new Feuille();
+                f.type = r.Next(0, NB_TYPES_FEUILLES);
+                f.diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f);
+            }
 
             f.x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
             f.z = FloatRandom(-_tailleCubeZ * 2, _zCamera);
@@ -133,16 +137,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 
             gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            
+
             gl.Enable(OpenGL.GL_FOG);
             gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_EXP);
             gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.02f);
-            gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ );
-            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ * 60);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-
+            gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ);
+            gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ * 10);
+           
             gl.LoadIdentity();
             gl.Translate(0, 0, -_zCamera);
             gl.Disable(OpenGL.GL_LIGHTING);
@@ -152,7 +154,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Color(col);
-            
+
             int derniereTexture = -1;
 
             foreach (Feuille o in _feuilles)
@@ -164,17 +166,18 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                 }
 
                 gl.PushMatrix();
-                gl.Translate(o.x, o.y-1f, o.z);
+                gl.Translate(o.x, o.y, o.z);
                 gl.Rotate(o.ax, o.ay, o.az);
-                
+
                 gl.Begin(OpenGL.GL_QUAD_STRIP);
                 {
-                    for ( int i = 0; i <= NB_FACES_FEUILLES; i++)
+                    for (int i = 0; i <= NB_FACES_FEUILLES; i++)
                     {
-                        float f = i / (float)NB_FACES_FEUILLES;
+                        float f = (float)i / (float)NB_FACES_FEUILLES;
                         float d = o.diedre * (float)Math.Cos((double)f * Math.PI / 2.0);
-                        gl.TexCoord(f, 0.0f);   gl.Vertex(f*TAILLE_FEUILLE*2, -TAILLE_FEUILLE, d);
-                        gl.TexCoord(f, 1.0f );  gl.Vertex(f*TAILLE_FEUILLE*2, TAILLE_FEUILLE, d);
+
+                        gl.TexCoord(f, 0.0f); gl.Vertex(f * TAILLE_FEUILLE, d, -TAILLE_FEUILLE/2);
+                        gl.TexCoord(f, 1.0f); gl.Vertex(f * TAILLE_FEUILLE, d, TAILLE_FEUILLE/2);
                     }
                 }
                 gl.End();
@@ -211,10 +214,10 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             // Deplace les flocons
             for (int i = 0; i < NB_FEUILLES; i++)
             {
-                if (_feuilles[i].y < -VIEWPORT_Y * 12)
+                if (_feuilles[i].y < -VIEWPORT_Y * 20)
                 {
                     NouvelleFeuille(ref _feuilles[i]);
-                //    trier = true;
+                    //    trier = true;
                 }
                 else
                 {
@@ -242,12 +245,12 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant._intervalle);
 
             //if (trier)
-                Array.Sort(_feuilles, delegate(Feuille O1, Feuille O2)
-                {
-                    if (O1.z > O2.z) return 1;
-                    if (O1.z < O2.z) return -1;
-                    return 0;
-                });
+            Array.Sort(_feuilles, delegate (Feuille O1, Feuille O2)
+            {
+                if (O1.z > O2.z) return 1;
+                if (O1.z < O2.z) return -1;
+                return 0;
+            });
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif

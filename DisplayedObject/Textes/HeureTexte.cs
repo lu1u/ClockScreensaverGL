@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.Textes
     public class HeureTexte : Texte
     {
         const string CAT = "HeureTexte";
-
+        readonly float RATIO_FONTE = 0.75f;// conf.getParametre(CAT, "RatioFonte", 0.70f);
         const int NB_SYMBOLES = 11;
         Texture[] _symboles = new Texture[NB_SYMBOLES];
         readonly float _largeurChiffre;
@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL.Textes
                 using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 {
                     SizeF taille = g.MeasureString("0", fonte);
-                    _largeurChiffre = taille.Width * 0.75f;
+                    _largeurChiffre = taille.Width * RATIO_FONTE;
                     _hauteurChiffre = taille.Height;
                 }
 
@@ -87,7 +87,6 @@ namespace ClockScreenSaverGL.Textes
                 + maintenant._Minute.ToString("D2") + ":"
                 + maintenant._Seconde.ToString("D2") + ":"
                 + maintenant._Millieme.ToString("D3");
-            //using (Bitmap bmp = new Bitmap(1, 1))
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 return g.MeasureString(texte, _fonte);
         }

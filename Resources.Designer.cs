@@ -61,16 +61,6 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap _33 {
-            get {
-                object obj = ResourceManager.GetObject("_33", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à C: changer la citation.
         /// </summary>
         internal static string AideCitation {
