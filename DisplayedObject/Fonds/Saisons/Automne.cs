@@ -29,8 +29,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
         private readonly int NB_FEUILLES = conf.getParametre(CAT, "NbFeuilles", 10);
         private readonly float TAILLE_FEUILLE = conf.getParametre(CAT, "TailleFeuilles", 3.0f);
-        private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 8.0f);
-        private readonly float NB_FACES_FEUILLES = conf.getParametre(CAT, "Nb Faces", 4);
+        private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 0.25f);
+        private readonly float NB_FACES_FEUILLES = conf.getParametre(CAT, "Nb Faces", 3);
         #endregion
 
         sealed private class Feuille
@@ -174,7 +174,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
                     for (int i = 0; i <= NB_FACES_FEUILLES; i++)
                     {
                         float f = (float)i / (float)NB_FACES_FEUILLES;
-                        float d = o.diedre * (float)Math.Cos((double)f * Math.PI / 2.0);
+                        float d = o.diedre * (float)Math.Cos((double)f * Math.PI * 2.0);
 
                         gl.TexCoord(f, 0.0f); gl.Vertex(f * TAILLE_FEUILLE, d, -TAILLE_FEUILLE/2);
                         gl.TexCoord(f, 1.0f); gl.Vertex(f * TAILLE_FEUILLE, d, TAILLE_FEUILLE/2);

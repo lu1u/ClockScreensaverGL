@@ -6,20 +6,32 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace ClockScreenSaverGL
 {
-	partial class MainForm
+	partial class MainForm :Form
 	{
 		/// <summary>
 		/// Designer variable used to keep track of non-visual components.
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
-		
-		/// <summary>
-		/// Disposes resources used by the form.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
+        //This constructor is passed the bounds this form is to show in
+        //It is used when in normal mode
+        public MainForm(Rectangle Bounds)
+        {
+            InitializeComponent();
+            this.Bounds = Bounds;
+            //hide the cursor
+            Cursor.Hide();
+        }
+
+        /// <summary>
+        /// Disposes resources used by the form.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
 		{
 			if (disposing) {
 				if (components != null) {
@@ -48,8 +60,10 @@ namespace ClockScreenSaverGL
             // openGLControl
             // 
             this.openGLControl.BackColor = System.Drawing.Color.Black;
+            this.openGLControl.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGLControl.DrawFPS = false;
+            this.openGLControl.ForeColor = System.Drawing.Color.White;
             this.openGLControl.FrameRate = 40;
             this.openGLControl.Location = new System.Drawing.Point(0, 0);
             this.openGLControl.Name = "openGLControl";
