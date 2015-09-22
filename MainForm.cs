@@ -34,7 +34,7 @@ namespace ClockScreenSaverGL
         private static Config conf = Config.getInstance();
         static readonly int PRINTEMPS = conf.getParametre(CAT, "Printemps", 80);
         static readonly int ETE = conf.getParametre(CAT, "Ete", 172);
-        static readonly int AUTOMNE = conf.getParametre(CAT, "Automne", 266);
+        static readonly int AUTOMNE = conf.getParametre(CAT, "Automne", 265);
         static readonly int HIVER = conf.getParametre(CAT, "Hiver", 356);
         #endregion
 
@@ -168,7 +168,7 @@ namespace ClockScreenSaverGL
                     case SAISON.PRINTEMPS:
                         return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
-                        return new Fonds.Ete.Ete(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new ClockScreenSaverGL.Fonds.Saisons.Ete.Ete(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.AUTOMNE:
                         return new Fonds.TroisD.Opengl.Automne(gl);
                 }

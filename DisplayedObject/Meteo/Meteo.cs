@@ -205,6 +205,11 @@ namespace ClockScreenSaverGL.Meteo
 #endif
 
         }
+
+        /// <summary>
+        /// Creer une fois pour toutes la bitmap qui sera affichee
+        /// </summary>
+        /// <param name="gl"></param>
         private void CreerBitmap(OpenGL gl)
         {
             _bitmap?.Dispose();
@@ -221,7 +226,7 @@ namespace ClockScreenSaverGL.Meteo
                     float Y = MARGE_V;
                     using (Graphics g = Graphics.FromImage(_bitmap))
                     {
-                        g.Clear(Color.FromArgb(96, 0, 0, 0));
+                        g.Clear(Color.FromArgb(96, 64, 64, 64));
                         float LargeurMax = _taille.Width;
 
                         // Titre

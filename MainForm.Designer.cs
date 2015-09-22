@@ -47,13 +47,14 @@ namespace ClockScreenSaverGL
             // 
             // openGLControl
             // 
-            this.openGLControl.BackColor = System.Drawing.Color.DarkRed;
+            this.openGLControl.BackColor = System.Drawing.Color.Black;
             this.openGLControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.openGLControl.DrawFPS = false;
+            this.openGLControl.FrameRate = 40;
             this.openGLControl.Location = new System.Drawing.Point(0, 0);
             this.openGLControl.Name = "openGLControl";
             this.openGLControl.OpenGLVersion = SharpGL.Version.OpenGLVersion.OpenGL2_1;
-            this.openGLControl.RenderContextType = SharpGL.RenderContextType.FBO;
+            this.openGLControl.RenderContextType = SharpGL.RenderContextType.NativeWindow;
             this.openGLControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
             this.openGLControl.Size = new System.Drawing.Size(951, 652);
             this.openGLControl.TabIndex = 0;
@@ -77,6 +78,7 @@ namespace ClockScreenSaverGL
             this.ClientSize = new System.Drawing.Size(951, 652);
             this.ControlBox = false;
             this.Controls.Add(this.openGLControl);
+            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

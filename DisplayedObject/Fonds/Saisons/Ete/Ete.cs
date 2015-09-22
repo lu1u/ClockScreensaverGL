@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SharpGL;
+using SharpGL.SceneGraph.Assets;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.Fonds.Ete
+namespace ClockScreenSaverGL.Fonds.Saisons.Ete
 {
     class Ete : Fond
     {
@@ -34,46 +36,55 @@ namespace ClockScreenSaverGL.Fonds.Ete
         static DateTime debut = DateTime.Now;
 
         // Soleil
-        private Bitmap _soleil = Resources.soleil;
+        private Texture _textureSoleil;
         private float _xSoleil, _ySoleil;
-        
+
         // Herbes
         private float _vent = 0;
-        private Bitmap _fond = Resources.fondEte;
+        //private Bitmap _fond = Resources.fondEte;
         private List<Herbe> _herbes;
-                
+        private Texture _textureFond;
+
+
         // Lens Flares (reflets du soleil sur l'objectif
         private class Flare
         {
             public float _distance;
             public int _taille;
             public byte _alpha;
-            public Bitmap _bmp;
-        } ;
+            //public Bitmap _bmp;
+            public Texture _texture;
+        };
 
         private Flare[] _flares;
 
         /**
          * Constructeur
          */
-        public Ete(int LargeurEcran, int HauteurEcran)
+        public Ete(OpenGL gl, int LargeurEcran, int HauteurEcran)
         {
             LARGEUR = LargeurEcran;
             HAUTEUR = HauteurEcran;
-            LARGEUR_TOUFFE = LARGEUR /2 ;
+            LARGEUR_TOUFFE = LARGEUR / 2;
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
             NB_FLARES = r.Next(NB_FLARES - 2, NB_FLARES + 2);
-            Init();
+
+             _textureSoleil = new Texture();
+            _textureSoleil.Create(gl, Resources.soleil);
+           _textureFond = new Texture();
+            _textureFond.Create(gl, Resources.fondEte);
+
+            Init(gl);
         }
 
         /**
          * Initialisation du soleil, des lens flares et de l'herbe
          * */
-        void Init()
+        void Init(OpenGL gl)
         {
             _xSoleil = 0;
-            _ySoleil = CENTREY/2;
+            _ySoleil = CENTREY / 2;
 
             _flares = new Flare[NB_FLARES];
 
@@ -85,7 +96,9 @@ namespace ClockScreenSaverGL.Fonds.Ete
                 _flares[i]._distance = FloatRandom(DISTANCE_FLARE_MIN, DISTANCE_FLARE_MAX);
                 _flares[i]._taille = r.Next((int)(TAILLE_SOLEIL * RATIO_FLARE_MIN), (int)(TAILLE_SOLEIL * RATIO_FLARE_MAX));
                 _flares[i]._alpha = (byte)r.Next(ALPHA_FLARE_MIN, ALPHA_FLARE_MAX);
-                _flares[i]._bmp = RandomFlare();
+                //_flares[i]._bmp = RandomFlare();
+                _flares[i]._texture = new Texture();
+                _flares[i]._texture.Create(gl, RandomFlare());
             }
 
 
@@ -115,13 +128,14 @@ namespace ClockScreenSaverGL.Fonds.Ete
 
             int touffe = r.Next(0, LARGEUR - LARGEUR_TOUFFE);
             for (int i = 0; i < NB_HERBES; i++)
-                _herbes.Add(new Herbe(  r.Next(touffe, touffe + LARGEUR_TOUFFE), 
-                                        HAUTEUR, 
-                                        r.Next(HAUTEUR_TOUFFE / 2, HAUTEUR_TOUFFE * 4 / 3), 
+                _herbes.Add(new Herbe(r.Next(touffe, touffe + LARGEUR_TOUFFE),
+                                        HAUTEUR,
+                                        r.Next(HAUTEUR_TOUFFE / 2, HAUTEUR_TOUFFE * 4 / 3),
                                         FloatRandom(0.2f, 5.0f)));
 
         }
 
+        /*
         /// <summary>
         /// Affichage
         /// </summary>
@@ -165,7 +179,87 @@ namespace ClockScreenSaverGL.Fonds.Ete
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
+        */
 
+
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PushMatrix();
+            gl.LoadIdentity();
+            gl.Ortho2D(0.0, tailleEcran.Width, tailleEcran.Height, 0.0);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_BLEND);
+
+            couleur = getCouleurOpaqueAvecAlpha(couleur, ALPHA);
+            float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 1 };
+            gl.Color(col);
+
+            // Affichage du fond
+            if (AFFICHE_FOND)
+            {
+                _textureFond.Bind(gl);
+
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(tailleEcran.Left, tailleEcran.Bottom);
+                gl.TexCoord(0.0f, 0.01f); gl.Vertex(tailleEcran.Left, tailleEcran.Bottom - (HAUTEUR_TOUFFE * 4));
+                gl.TexCoord(1.0f, 0.01f); gl.Vertex(tailleEcran.Right, tailleEcran.Bottom - (HAUTEUR_TOUFFE * 4));
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(tailleEcran.Right, tailleEcran.Bottom);
+                gl.End();
+            }
+            
+            gl.Color(1.0f, 1.0f, 1.0f, 1.0f);
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
+            
+            _textureSoleil.Bind(gl);
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(0.0f, 1.0f); gl.Vertex(_xSoleil - TAILLE_SOLEIL / 2, _ySoleil - TAILLE_SOLEIL / 2);
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(_xSoleil - TAILLE_SOLEIL / 2, _ySoleil + TAILLE_SOLEIL / 2);
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(_xSoleil + TAILLE_SOLEIL / 2, _ySoleil + TAILLE_SOLEIL / 2);
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(_xSoleil + TAILLE_SOLEIL / 2, _ySoleil - TAILLE_SOLEIL / 2);
+            gl.End();
+
+            float dx = CENTREX - _xSoleil;
+            float dy = CENTREY - _ySoleil;
+            
+            gl.Color(col);
+
+            foreach (Flare f in _flares)
+            {
+                f._texture.Bind(gl);
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
+                gl.TexCoord(0.0f, 0.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
+                gl.TexCoord(1.0f, 0.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
+                gl.End();
+            }
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PopMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.PopMatrix();
+
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            c = getCouleurOpaqueAvecAlpha(c, ALPHA);
+           
+            gl.ClearColor(c.R/255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
+        }
         /// <summary>
         /// Pression sur une touche, retourner true si l'objet a traite, false = fin de l'economiseur
         /// </summary>
@@ -176,11 +270,12 @@ namespace ClockScreenSaverGL.Fonds.Ete
         {
             switch (k)
             {
-                case Keys.R:
+                /*case Keys.R:
                     {
                         Init();
                         return true;
                     }
+                    */
 
                 case Keys.I:
                     AFFICHE_FOND = !AFFICHE_FOND;
@@ -194,7 +289,7 @@ namespace ClockScreenSaverGL.Fonds.Ete
         {
             s.Append(Resources.AideEte);
         }
-       
+
         /// <summary>
         /// Deplacement
         /// </summary>
@@ -206,12 +301,12 @@ namespace ClockScreenSaverGL.Fonds.Ete
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
             Varie(ref _vent, -300f, 300f, 0.01f, maintenant._intervalle);
-            
+
             _xSoleil += VX_SOLEIL * maintenant._intervalle;
             _ySoleil += VY_SOLEIL * maintenant._intervalle;
 
-            if (_xSoleil > LARGEUR + TAILLE_SOLEIL || _ySoleil < -TAILLE_SOLEIL)
-                Init();
+            /*if (_xSoleil > LARGEUR + TAILLE_SOLEIL || _ySoleil < -TAILLE_SOLEIL)
+                Init();*/
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif

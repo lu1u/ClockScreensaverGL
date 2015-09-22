@@ -111,7 +111,8 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 
             // Lumiere
             gl.Enable(OpenGL.GL_LIGHTING); 	
-			gl.Enable(OpenGL.GL_LIGHT0); 	
+			gl.Enable(OpenGL.GL_LIGHT0);
+            gl.Disable(OpenGL.GL_AUTO_NORMAL);
             gl.Light( OpenGL.GL_LIGHT0,OpenGL.GL_POSITION,LightPos);
 			gl.Enable( OpenGL.GL_COLOR_MATERIAL ) ;
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, col);

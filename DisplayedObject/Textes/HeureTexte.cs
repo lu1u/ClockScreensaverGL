@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL.Textes
                 using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 {
                     SizeF taille = g.MeasureString("0", fonte);
-                    _largeurChiffre = taille.Width * 0.8f;
+                    _largeurChiffre = taille.Width * 0.75f;
                     _hauteurChiffre = taille.Height;
                 }
 

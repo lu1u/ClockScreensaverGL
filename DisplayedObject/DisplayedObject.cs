@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Text;
 using SharpGL;
-
+using SharpGL.SceneGraph.Assets;
 
 namespace ClockScreenSaverGL
 {

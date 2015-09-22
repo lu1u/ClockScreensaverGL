@@ -22,16 +22,15 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         #region Parametres
         public const string CAT = "Automne.OpenGL";
 
-        private static readonly float VITESSE_ROTATION = 0.5f;// conf.getParametre(CAT, "VitesseRotation", 0.2f);
-        private static readonly float PERIODE_ROTATION = 10.0f;// conf.getParametre(CAT, "PeriodeRotation", 20.0f);
-        private static readonly float VITESSE_Y = 8.0f;// conf.getParametre(CAT, "VitesseChute", 8);
+        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f);
+        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 20.0f);
+        private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseChute", 8.0f);
         private static readonly float VITESSE_DELTA_VENT = conf.getParametre(CAT, "VitesseDeltaVent", 1f);
         private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
-        private static readonly float ALPHA = 1.0f;// conf.getParametre(CAT, "Alpha", 0.9f);
-        private readonly int NB_FEUILLES = 100;// conf.getParametre(CAT, "NbFeuilles", 100);
-        private readonly float TAILLE_FEUILLE = 3;// conf.getParametre(CAT, "TailleFeuilles", 4.0f);
+        private readonly int NB_FEUILLES = conf.getParametre(CAT, "NbFeuilles", 10);
+        private readonly float TAILLE_FEUILLE = conf.getParametre(CAT, "TailleFeuilles", 3.0f);
         private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 4.0f);
-        private readonly float NB_FACES_FEUILLES = 4;// conf.getParametre(CAT, "Nb Faces", 4);
+        private readonly float NB_FACES_FEUILLES = conf.getParametre(CAT, "Nb Faces", 4);
         #endregion
 
         sealed private class Feuille
@@ -125,7 +124,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, ALPHA };
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f };
             GLfloat[] fogcolor = { couleur.R / 2048.0f, couleur.G / 2048.0f, couleur.B / 2048.0f, 0.5f };
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
@@ -208,14 +207,14 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             float CosTheta = (float)Math.Cos(vitesseCamera * maintenant._intervalle);
             float SinTheta = (float)Math.Sin(vitesseCamera * maintenant._intervalle);
             float px, pz;
-            bool trier = false;
+            //bool trier = false;
             // Deplace les flocons
             for (int i = 0; i < NB_FEUILLES; i++)
             {
                 if (_feuilles[i].y < -VIEWPORT_Y * 12)
                 {
                     NouvelleFeuille(ref _feuilles[i]);
-                    trier = true;
+                //    trier = true;
                 }
                 else
                 {
@@ -242,7 +241,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
             Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant._intervalle);
             Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant._intervalle);
 
-            if (trier)
+            //if (trier)
                 Array.Sort(_feuilles, delegate(Feuille O1, Feuille O2)
                 {
                     if (O1.z > O2.z) return 1;
