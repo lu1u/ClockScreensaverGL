@@ -10,7 +10,7 @@
 using SharpGL;
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.Textes
+namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
     /// <summary>
     /// Description of Date.

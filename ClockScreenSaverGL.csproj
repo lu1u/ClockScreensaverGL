@@ -158,7 +158,7 @@
     <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Vector2.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Automne.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Neige.cs" />
+    <Compile Include="DisplayedObject\Fonds\Saisons\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
@@ -176,6 +176,7 @@
     <Compile Include="DisplayedObject\Textes\DateTexte.cs" />
     <Compile Include="DisplayedObject\Textes\HeureTexte.cs" />
     <Compile Include="DisplayedObject\Textes\Texte.cs" />
+    <Compile Include="DisplayedObject\Textes\TexteBande.cs" />
     <Compile Include="DisplayedObject\Textes\TexteCopyright.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

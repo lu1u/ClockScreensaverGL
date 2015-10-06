@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
  * Crée par SharpDevelop.
@@ -27,12 +28,12 @@ using GLsizei = System.Int32;
 using GLubyte = System.Byte;
 using GLushort = System.UInt16;
 using GLvoid = System.IntPtr;*/
-namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObject.Saisons
 {
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class NeigeOpenGL : TroisD
+    public sealed class Hiver : TroisD
     {
         #region Parametres
         public const string CAT = "Neige.OpenGL";
@@ -69,7 +70,7 @@ namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
         const int NB_TYPES_FLOCONS = 3;
         Texture[] texture = new Texture[NB_TYPES_FLOCONS];
 
-        public NeigeOpenGL(OpenGL gl)
+        public Hiver(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _xRotation = _tailleCubeX * 0.75f;

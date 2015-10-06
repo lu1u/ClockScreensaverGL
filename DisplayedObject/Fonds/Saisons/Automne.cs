@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
  * Crée par SharpDevelop.
@@ -12,7 +13,7 @@ using System;
 using System.Drawing;
 using GLfloat = System.Single;
 
-namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObject.Saisons
 {
     /// <summary>
     /// Description of Neige.

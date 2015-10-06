@@ -1,4 +1,13 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.DisplayedObject;
+using ClockScreenSaverGL.DisplayedObject.Fonds;
+using ClockScreenSaverGL.DisplayedObject.Fonds.Printemps;
+using ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete;
+using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl;
+using ClockScreenSaverGL.DisplayedObject.Metaballes;
+using ClockScreenSaverGL.DisplayedObject.Meteo;
+using ClockScreenSaverGL.DisplayedObject.Saisons;
+using ClockScreenSaverGL.DisplayedObject.Textes;
+using SharpGL;
 /*
  * Crée par SharpDevelop.
  * Utilisateur: lucien
@@ -39,7 +48,7 @@ namespace ClockScreenSaverGL
         #endregion
 
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
-        private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
+        private List<DisplayedObject.DisplayedObject> _listeObjets = new List<DisplayedObject.DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
         private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
 
@@ -152,7 +161,7 @@ namespace ClockScreenSaverGL
         /// Creer l'objet qui anime le fond d'ecran
         /// </summary>
         /// <returns></returns>
-        private Fonds.Fond createBackgroundObject(int Type, bool initial)
+        private Fond createBackgroundObject(int Type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
@@ -163,31 +172,31 @@ namespace ClockScreenSaverGL
                 {
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
-                        return new Fonds.TroisD.Opengl.NeigeOpenGL(gl);
+                        return new Hiver(gl);
                         
                     case SAISON.PRINTEMPS:
-                        return new Fonds.Printemps.Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
-                        return new ClockScreenSaverGL.Fonds.Saisons.Ete.Ete(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Ete( gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.AUTOMNE:
-                        return new Fonds.TroisD.Opengl.Automne(gl);
+                        return new Automne(gl);
                 }
             }
             switch (Type)
             {
-                case TYPE_FOND_METABALLES: return new Metaballes.Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ENCRE: return new Metaballes.Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_BACTERIES: return new Metaballes.Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_LIFE: return new Fonds.Life(gl);
-                case TYPE_FOND_NOIR: return new Fonds.Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_COULEUR: return new Fonds.Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ESPACE: return new Fonds.TroisD.Opengl.EspaceOpenGL(gl);                    
-                case TYPE_FOND_TUNNEL:return new Fonds.TroisD.Opengl.TunnelOpenGL(gl);
-                case TYPE_FOND_NUAGES: return new Fonds.TroisD.Opengl.NuagesOpenGL(gl);
-                case TYPE_FOND_TERRE: return new Fonds.TroisD.Opengl.TerreOpenGL(gl);
+                case TYPE_FOND_METABALLES: return new Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ENCRE: return new Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_BACTERIES: return new Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_LIFE: return new Life(gl);
+                case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);                    
+                case TYPE_FOND_TUNNEL:return new TunnelOpenGL(gl);
+                case TYPE_FOND_NUAGES: return new NuagesOpenGL(gl);
+                case TYPE_FOND_TERRE: return new TerreOpenGL(gl);
 
                 default:
-                    return new Metaballes.Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    return new Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
         }
 
@@ -235,12 +244,12 @@ namespace ClockScreenSaverGL
             try
             {
                 UpdateStyles();
-                switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
+               /* switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
                 {
                     case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection; break;
                     case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
                     case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
-                }
+                }*/
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
                 timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
@@ -270,20 +279,18 @@ namespace ClockScreenSaverGL
         {
             Graphics g = args.Graphics;
 
-            //moveAll(g);
-
             try
             {
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.CompositingQuality = CompositingQuality.HighQuality;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+                g.TextRenderingHint = TextRenderingHint.SystemDefault;
+                g.CompositingQuality = CompositingQuality.HighSpeed;
 
                 Color Couleur = _couleur.GetRGB();
-                /*
+                
                 // Afficher tous les objets
-                foreach (DisplayedObject b in _listeObjets)
+                foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
-                    */
+                    
 #if TRACER
                 if (_afficheDebug)
                     afficheDebug(g);
@@ -292,7 +299,7 @@ namespace ClockScreenSaverGL
                 if (_afficherAide)
                 {
                     StringBuilder s = new StringBuilder(Resources.c);
-                    foreach (DisplayedObject b in _listeObjets)
+                    foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                         b.AppendHelpText(s);
 
                     g.DrawString(s.ToString(), _fontHelp, Brushes.White, 10, 10);
@@ -320,13 +327,14 @@ namespace ClockScreenSaverGL
         {
             {
                 StringBuilder s = new StringBuilder();
-
+                OpenGL gl = openGLControl.OpenGL;
                 double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
 #if DEBUG
                 s.Append("Version DEBUG ");
 #else
                 s.Append("Version RELEASE ");
 #endif
+
                 s.Append(Assembly.GetExecutingAssembly().GetName().Version).Append("\n\n");
 
                 s.Append((1000.0 / NbMillisec).ToString("0.0") + " FPS\n\n")
@@ -335,10 +343,10 @@ namespace ClockScreenSaverGL
                     .Append("Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n")
                     .Append("Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
 
-                foreach (DisplayedObject b in _listeObjets)
+                foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                     s.Append(b.DumpRender()).Append("\n");
 
-                g.DrawString(s.ToString(), SystemFonts.DefaultFont, Brushes.White, 0, 0);
+                g.DrawString(s.ToString(), SystemFonts.DefaultFont, Brushes.LightGray, 0, 10);
                 lastFrame = _temps._temps;
             }
         }
@@ -355,7 +363,7 @@ namespace ClockScreenSaverGL
             _temps = new Temps(DateTime.Now, _derniereFrame);
 
             Rectangle bnd = Bounds;
-            foreach (DisplayedObject b in _listeObjets)
+            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                 b.Deplace(_temps, ref bnd);
 
             if (_jourActuel != _temps._JourDeLAnnee)
@@ -364,7 +372,7 @@ namespace ClockScreenSaverGL
                 // qu'une fois par jour
 
                 OpenGL gl = openGLControl.OpenGL;
-                foreach (DisplayedObject b in _listeObjets)
+                foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                     b.DateChangee(gl, _temps);
 
                 _jourActuel = _temps._JourDeLAnnee;
@@ -380,13 +388,13 @@ namespace ClockScreenSaverGL
             // Get the OpenGL object, just to clean up the code.
             OpenGL gl = openGLControl.OpenGL;
             Color Couleur = _couleur.GetRGB();
-            gl.Enable(OpenGL.GL_MULTISAMPLE);
+            //gl.Enable(OpenGL.GL_MULTISAMPLE);
             // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject b in _listeObjets)
+            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
             
             // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject b in _listeObjets)
+            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
             {
                 gl.PushMatrix();
                 gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
@@ -410,10 +418,7 @@ namespace ClockScreenSaverGL
             createAllObjects();
 
             OpenGL gl = openGLControl.OpenGL;
-            gl.Clear(0);
-            // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject b in _listeObjets)
-                b.OpenGLInitialized(gl);
+            gl.Clear(0);            
         }
 
 
@@ -429,7 +434,9 @@ namespace ClockScreenSaverGL
             int TailleHorloge = conf.getParametre(CAT, "TailleCadran", 400);
             if (IsPreviewMode)
             {
-                TailleHorloge = 100;
+                TailleHorloge = 10;
+                _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+                return;
             }
 
             _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
@@ -438,21 +445,21 @@ namespace ClockScreenSaverGL
 
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
-                _listeObjets.Add(new Textes.TexteCopyright(-4, 100));
+                _listeObjets.Add(new TexteCopyright(-4, 100));
 
             // Heure et date numeriques
             if (conf.getParametre(CAT, "Date", true))
-                _listeObjets.Add(new Textes.DateTexte(0, 0));
+                _listeObjets.Add(new DateTexte(0, 0));
             if (conf.getParametre(CAT, "Heure", true))
-                _listeObjets.Add(new Textes.HeureTexte(gl, 100, CentreY));
+                _listeObjets.Add(new HeureTexte(gl, 100, CentreY));
 
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
-                _listeObjets.Add(new Meteo.Meteo());
+                _listeObjets.Add(new Meteo());
 
             // citations
             if (conf.getParametre(CAT, "Citation", true))
-                _listeObjets.Add(new Textes.Citations(this, 200, 200));
+                _listeObjets.Add(new Citations(this, 200, 200));
 
             // Horloge ronde
             if (conf.getParametre(CAT, "HorlogeRonde", true))
@@ -513,7 +520,7 @@ namespace ClockScreenSaverGL
                     default:
                         // Proposer la touche a chaque objet affiche
                         bool b = false;
-                        foreach (DisplayedObject o in _listeObjets)
+                        foreach (DisplayedObject.DisplayedObject o in _listeObjets)
                             if (o.KeyDown(this, (Keys)e.KeyValue))
                                 b = true;
 

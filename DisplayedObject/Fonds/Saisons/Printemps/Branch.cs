@@ -1,6 +1,7 @@
 ﻿
 using System.Drawing;
-namespace ClockScreenSaverGL.Fonds.Printemps
+
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
     public class Branch
     {

@@ -15,7 +15,7 @@ using System.Text;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 
-namespace ClockScreenSaverGL
+namespace ClockScreenSaverGL.DisplayedObject
 {
     /// <summary>
     /// Classe de base pour tous les objets affiches
@@ -33,10 +33,8 @@ namespace ClockScreenSaverGL
         public virtual void AppendHelpText(StringBuilder s) { }
 
         public abstract void Deplace(Temps maintenant, ref Rectangle tailleEcran);
-        public virtual void OpenGLInitialized(OpenGL gl) { }
 
         // Cette fonction sera appelee quand un changement de date sera detecte
-
         public virtual void DateChangee(OpenGL gl, Temps maintenant) { }
         public virtual void ClearBackGround(OpenGL gl, Color c) { }
 

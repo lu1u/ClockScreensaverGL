@@ -10,7 +10,7 @@ using System.Xml.XPath;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
-namespace ClockScreenSaverGL.Meteo
+namespace ClockScreenSaverGL.DisplayedObject.Meteo
 {
     class MeteoInfo
     {

@@ -1,15 +1,16 @@
-﻿using System;
+﻿using SharpGL;
+using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.Fonds.Saisons.Ete
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
 {
     class Herbe
     {
         const float ratioSegments = 0.8f;
-        const float largeurInitiale =15;
+        const float largeurInitiale = 15;
         const int NbSegments = 16;
 
-        readonly float  _x, _y;
+        readonly float _x, _y;
         readonly float _raideur;
         float[] _longueurSegments;
         double[] _anglesSegments;
@@ -22,8 +23,8 @@ namespace ClockScreenSaverGL.Fonds.Saisons.Ete
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="longueurSegment"></param>
- 
-        public Herbe( float x, float y, float longueurSegment, float raideur )
+
+        public Herbe(float x, float y, float longueurSegment, float raideur)
         {
             if (_pens == null)
                 InitPens();
@@ -37,7 +38,7 @@ namespace ClockScreenSaverGL.Fonds.Saisons.Ete
             float X = x;
             float Y = y;
             double angle = Math.PI;
-            for ( int i = 0; i < NbSegments; i++)
+            for (int i = 0; i < NbSegments; i++)
             {
                 _longueurSegments[i] = longueurSegment;
                 _anglesSegments[i] = angle;
@@ -49,8 +50,8 @@ namespace ClockScreenSaverGL.Fonds.Saisons.Ete
         private void InitPens()
         {
             _pens = new Pen[NbSegments];
-            float l = largeurInitiale ;
-            for ( int i = 0; i < NbSegments; i++)
+            float l = largeurInitiale;
+            for (int i = 0; i < NbSegments; i++)
             {
                 _pens[i] = new Pen(Color.Black, l);
                 l *= ratioSegments;
@@ -58,26 +59,52 @@ namespace ClockScreenSaverGL.Fonds.Saisons.Ete
         }
 
 
-        public void Affiche( Graphics g, double vent)
+        public void Affiche(Graphics g, double vent)
         {
             float X = _x;
             float Y = _y;
-            float largeur = largeurInitiale;
             vent *= _raideur;
             float XX, YY;
-            for ( int i = 1; i < NbSegments; i++)
+            for (int i = 1; i < NbSegments; i++)
             {
-                XX = X + _longueurSegments[i] * (float)Math.Sin(_anglesSegments[i]+vent*i);
-                YY = Y + _longueurSegments[i] * (float)Math.Cos(_anglesSegments[i]+vent*i);
+                XX = X + _longueurSegments[i] * (float)Math.Sin(_anglesSegments[i] + vent * i);
+                YY = Y + _longueurSegments[i] * (float)Math.Cos(_anglesSegments[i] + vent * i);
 
                 g.DrawLine(_pens[i], X, Y, XX, YY);
 
                 X = XX;
                 Y = YY;
-                largeur *= ratioSegments;
+
             }
         }
 
+
+        public void Affiche(OpenGL gl, double vent)
+        {
+            float X = _x;
+            float Y = _y;
+            float largeur = largeurInitiale * 0.75f;
+
+            vent *= _raideur;
+            gl.PushMatrix();
+            gl.Translate(_x, _y, 0);
+
+            for (int i = 1; i < NbSegments; i++)
+            {
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.Vertex(-largeur, 0);
+                gl.Vertex(-largeur, -_longueurSegments[i]);
+                gl.Vertex(largeur, -_longueurSegments[i]);
+                gl.Vertex(largeur, 0);
+                gl.End();
+                largeur = largeur * ratioSegments;
+
+                gl.Translate(0, -_longueurSegments[i], 0);
+                gl.Rotate(0, 0, (float)(_anglesSegments[i] + (vent * i)));
+            }
+
+            gl.PopMatrix();
+        }
         internal void Deplace(float vent)
         {
             for (int i = 0; i < NbSegments; i++)

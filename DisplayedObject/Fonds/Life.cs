@@ -12,7 +12,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.Fonds
+namespace ClockScreenSaverGL.DisplayedObject.Fonds
 {
     /// <summary>
     /// Description of Life.
@@ -37,11 +37,7 @@ namespace ClockScreenSaverGL.Fonds
         private const byte NORMAL = 1;
         private const byte NAISSANCE = 2;
         private int _colonneMin, _colonneMax, _largeurCalcul;
-#if  USE_GDI_PLUS_FOR_2D
-        private static Bitmap bmp = Resources.particleTexture;
-#else
         Texture textureCellule = new Texture();
-#endif
         public Life(OpenGL gl)
         {
             _largeurCalcul = LARGEUR / SKIP;
@@ -50,10 +46,7 @@ namespace ClockScreenSaverGL.Fonds
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-
-#if !USE_GDI_PLUS_FOR_2D
             textureCellule.Create(gl, Resources.life);
-#endif
         }
 
 
@@ -65,78 +58,9 @@ namespace ClockScreenSaverGL.Fonds
             Random r = new Random();
             for (int x = 0; x < LARGEUR; x++)
                 for (int y = 0; y < HAUTEUR; y++)
-                    cellules[x, y] = r.Next(10) > 4 ? MORT : NAISSANCE;
+                    cellules[x, y] = r.Next(11) > 5 ? MORT : NAISSANCE;
         }
 
-#if USE_GDI_PLUS_FOR_2D
-        /// <summary>
-        /// Affichage des cellules
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        /// <param name="couleur"></param>
-		public override void AfficheGDI( Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur )
-		{
-#if TRACER
-			RenderStart(CHRONO_TYPE.RENDER) ;
-#endif
-			g.Clear(  Color.Black) ;//getCouleurOpaqueAvecAlpha( couleur, 25 )) ;
-			float Rx = (float)tailleEcran.Width / LARGEUR ;
-			float Ry = (float)tailleEcran.Height / HAUTEUR ;
-			
-			using ( Bitmap bpNormal = GetBitmap( g, couleur, COULEUR_NORMAL, Rx, Ry ),
-			       bpNaissance  = GetBitmap( g, couleur, COULEUR_NAISSANCE, Rx, Ry ) )
-			{
-				for ( int x = 0; x < LARGEUR; x++)
-				{
-					int X = (int)(x * Rx) ;
-					for (int y = 0; y < HAUTEUR; y++)
-					{
-						float Y = y * Ry ;
-						
-						switch ( cellules[x,y])
-						{
-								case NAISSANCE	:	g.DrawImageUnscaled( bpNaissance, X, (int)Y ) ; break ;
-								case NORMAL		:	g.DrawImageUnscaled( bpNormal, X, (int)Y ) ; break ;
-								default: break ;
-						}
-					}
-				}
-			}
-#if TRACER
-			RenderStop(CHRONO_TYPE.RENDER) ;
-#endif
-		}
-        private static Bitmap GetBitmap(Graphics g, Color couleur, float col, float Rx, float Ry)
-        {
-            float ratio = 255.0f / col;
-            Bitmap bp = new Bitmap((int)Math.Round(Rx), (int)Math.Round(Ry), g);
-            using (Graphics gMem = Graphics.FromImage(bp))
-            {
-                float[][] ptsArray =
-                {
-                    new float[] {couleur.R/ratio, 0, 0, 0, 0},
-                    new float[] {0, couleur.G/ratio, 0, 0, 0},
-                    new float[] {0, 0, couleur.B/ratio, 0, 0},
-                    new float[] {0, 0, 0, 1, 0},
-                    new float[] {0, 0, 0, 0, 1}
-                };
-
-                ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
-                ImageAttributes imgAttribs = new ImageAttributes();
-                imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
-
-                int Bordure = 1;
-                gMem.DrawImage(bmp,
-                               new Rectangle(0, 0, (int)Math.Round(Rx), (int)Math.Round(Ry)),
-                               Bordure, Bordure, bmp.Width - Bordure * 2, bmp.Height - Bordure * 2,
-                               GraphicsUnit.Pixel, imgAttribs);
-            }
-
-            return bp;
-        }
-#else
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -194,10 +118,6 @@ namespace ClockScreenSaverGL.Fonds
 #endif
         }
 
-#endif
-
-
-
         /// <summary>
         /// Calcul des changements de cellules
         /// On ne calcule a chaque fois qu'une seule partie du tableau (voir parametre Skip)
@@ -247,7 +167,6 @@ namespace ClockScreenSaverGL.Fonds
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
-
         }
 
         /// <summary>

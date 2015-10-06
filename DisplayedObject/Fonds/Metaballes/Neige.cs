@@ -10,7 +10,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.Metaballes
+namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 {
 	/// <summary>
 	/// Description of Neige.

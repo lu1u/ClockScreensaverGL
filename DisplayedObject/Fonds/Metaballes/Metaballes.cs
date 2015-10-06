@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Text;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-namespace ClockScreenSaverGL.Metaballes
+namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 {
 
     public class Metaballes : Fonds.Fond
@@ -178,8 +178,7 @@ namespace ClockScreenSaverGL.Metaballes
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
             updatePalette(couleur);
-
-
+            
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             gl.Color(col);
 

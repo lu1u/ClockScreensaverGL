@@ -9,7 +9,7 @@
 using System;
 using System.Drawing;
 using SharpGL;
-namespace ClockScreenSaverGL.Fonds.TroisD
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD
 {
     /// <summary>
     /// Description of _3d.

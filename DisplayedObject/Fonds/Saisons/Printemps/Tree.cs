@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using ClockScreenSaverGL.Fonds.Printemps;
+using ClockScreenSaverGL.DisplayedObject.Fonds.Printemps;
 
-namespace ClockScreenSaverGL.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
     public class Tree
     {

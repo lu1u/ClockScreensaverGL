@@ -15,7 +15,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 
-namespace ClockScreenSaverGL
+namespace ClockScreenSaverGL.DisplayedObject
 {
     /// <summary>
     /// Description of HorlogeRonde.

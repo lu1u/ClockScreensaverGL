@@ -10,7 +10,7 @@ using SharpGL;
 using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.Fonds
+namespace ClockScreenSaverGL.DisplayedObject.Fonds
 {
 	/// <summary>
 	/// Description of Class1.

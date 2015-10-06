@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.Textes
+namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
 
     /// <summary>
@@ -57,7 +57,7 @@ namespace ClockScreenSaverGL.Textes
         private void ChoisitCitation(Form f)
         {
             Graphics g = f.CreateGraphics();
-            prochaineCitation(g);
+            prochaineCitation();
             g.Dispose();
         }
 
@@ -87,7 +87,7 @@ namespace ClockScreenSaverGL.Textes
         /// Calcule une taille de texte adequate pour l'afficher
         /// </summary>
         /// <param name="g"></param>
-        private void prochaineCitation(Graphics g)
+        private void prochaineCitation()
         {
             // Puisque les citations ont ete melangees, on prend la suivante dans la liste
             if (_derniereCitation < (_citations.Length - 1))
@@ -111,22 +111,26 @@ namespace ClockScreenSaverGL.Textes
 
             _citation.Replace("\\n", "\n");
             // Choisir une taille de texte adequate
-            _tailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
-            _tailleFonteAuteur = _tailleFonte;
 
-            // Calculer la taille du texte affiche
-            SizeF stringSize = new SizeF();
-            using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
-                stringSize = g.MeasureString(_citation, fonte, SystemInformation.VirtualScreen.Width);
-            _rectCitation = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 
-            using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonteAuteur, FontStyle.Italic, GraphicsUnit.Pixel))
-                stringSize = g.MeasureString(_auteur, fonte, SystemInformation.VirtualScreen.Width);
-            _rectAuteur = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                _tailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
+                _tailleFonteAuteur = _tailleFonte;
 
-            _taille = new SizeF(Math.Max(_rectCitation.Width, _rectAuteur.Width), (_rectCitation.Height + _rectAuteur.Height));
-            _changement = DateTime.Now;
+                // Calculer la taille du texte affiche
+                SizeF stringSize = new SizeF();
+                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
+                    stringSize = g.MeasureString(_citation, fonte, SystemInformation.VirtualScreen.Width);
+                _rectCitation = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 
+                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonteAuteur, FontStyle.Italic, GraphicsUnit.Pixel))
+                    stringSize = g.MeasureString(_auteur, fonte, SystemInformation.VirtualScreen.Width);
+                _rectAuteur = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
+
+                _taille = new SizeF(Math.Max(_rectCitation.Width, _rectAuteur.Width), (_rectCitation.Height + _rectAuteur.Height));
+                _changement = DateTime.Now;
+            }
             _citationChangee = true;
         }
 
@@ -237,7 +241,7 @@ namespace ClockScreenSaverGL.Textes
         /// <returns></returns>
         public override bool KeyDown(Form f, Keys k)
         {
-            if (k == Keys.C)
+            if (Keys.C == k)
             {
                 ChoisitCitation(f);
                 return true;
@@ -246,6 +250,13 @@ namespace ClockScreenSaverGL.Textes
             return false;
         }
 
+        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        {
+            base.Deplace(maintenant, ref tailleEcran);
+            // Changer la citation toutes les n minutes
+            if (DateTime.Now.Subtract(_changement).TotalMilliseconds > DELAI_CHANGEMENT)
+                prochaineCitation();
+        }
 
         /// <summary>
         /// Ajoute le message d'aide correspondant a cet objet graphique
@@ -259,7 +270,6 @@ namespace ClockScreenSaverGL.Textes
         void IDisposable.Dispose()
         {
             _bitmap?.Dispose();
-
         }
     }
 }

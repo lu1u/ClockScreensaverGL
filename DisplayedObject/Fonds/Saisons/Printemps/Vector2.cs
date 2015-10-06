@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace ClockScreenSaverGL.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
     public class Vector3
     {

@@ -12,7 +12,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.Textes
+namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
 
 

@@ -9,7 +9,7 @@ using SharpGL.SceneGraph.Assets;
 using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Evaluators;
 
-namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 {
     sealed class TerreOpenGL : TroisD
     {

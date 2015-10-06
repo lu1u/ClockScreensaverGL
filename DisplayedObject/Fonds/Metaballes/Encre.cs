@@ -8,7 +8,7 @@
  */
 using System;
 using System.Drawing ;
-namespace ClockScreenSaverGL.Metaballes
+namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 {
 	/// <summary>
 	/// Description of Fumee.

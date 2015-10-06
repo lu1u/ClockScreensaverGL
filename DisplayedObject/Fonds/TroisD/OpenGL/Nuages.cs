@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Text;
 using SharpGL.SceneGraph.Assets;
 using System.Collections.Generic;
-namespace ClockScreenSaverGL.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 {
     /// <summary>
     /// Description of Nuage.

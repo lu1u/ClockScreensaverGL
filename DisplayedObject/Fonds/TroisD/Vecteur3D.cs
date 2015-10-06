@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace ClockScreenSaverGL.Fonds.TroisD
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD
 {
 	/// <summary>
 	/// Description of Vecteur3D.

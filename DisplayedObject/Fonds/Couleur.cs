@@ -10,7 +10,8 @@ using SharpGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-namespace ClockScreenSaverGL.Fonds
+using ClockScreenSaverGL.DisplayedObject;
+namespace ClockScreenSaverGL.DisplayedObject.Fonds
 {
     /// <summary>
     /// Description of Couleur.
@@ -27,25 +28,25 @@ namespace ClockScreenSaverGL.Fonds
             int CentreX = Cx / 2;
             int CentreY = Cy / 2;
 
-            //listeObjets.Add(new Bandes.BandeHorizontale.BandeSeconde(gl, 50, CentreX, CentreY, Cx));
-            //listeObjets.Add(new Bandes.BandeHorizontale.BandeMinute(gl, 80, CentreX, CentreY + Bandes.BandeHorizontale.BandeHorizontale.TailleFonte * 2, Cx));
-            //listeObjets.Add(new Bandes.BandeHorizontale.BandeHeure(gl, 120, CentreX, CentreY + Bandes.BandeHorizontale.BandeHorizontale.TailleFonte * 4, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeSeconde( 50, CentreX, CentreY, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeMinute( 80, CentreX, CentreY + Bandes.BandeHorizontale.BandeHorizontale.TailleFonte * 2, Cx));
+            listeObjets.Add(new Bandes.BandeHorizontale.BandeHeure( 120, CentreX, CentreY + Bandes.BandeHorizontale.BandeHorizontale.TailleFonte * 4, Cx));
 
             // Bandes verticales
-            //listeObjets.Add(new Bandes.BandeVerticale.BandeHeure(gl, 120, CentreY, CentreX, Cx));
-            //listeObjets.Add(new Bandes.BandeVerticale.BandeMinute(gl, 80, CentreY, CentreX + Bandes.BandeVerticale.BandeVerticale.TailleFonte * 2, Cx));
-            //listeObjets.Add(new Bandes.BandeVerticale.BandeSeconde(gl, 50, CentreY, CentreX + Bandes.BandeVerticale.BandeVerticale.TailleFonte * 4, Cx));
-
+            listeObjets.Add(new Bandes.BandeVerticale.BandeHeure( 120, CentreY, CentreX, Cx));
+            listeObjets.Add(new Bandes.BandeVerticale.BandeMinute( 80, CentreY, CentreX + Bandes.BandeVerticale.BandeVerticale.TailleFonte * 2, Cx));
+            listeObjets.Add(new Bandes.BandeVerticale.BandeSeconde( 50, CentreY, CentreX + Bandes.BandeVerticale.BandeVerticale.TailleFonte * 4, Cx));
 
         }
-        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+
+        public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
 
             foreach (DisplayedObject b in listeObjets)
-                b.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+                b.AfficheGDI(g, maintenant, tailleEcran, couleur);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -71,8 +72,8 @@ namespace ClockScreenSaverGL.Fonds
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
 
-            //foreach (DisplayedObject b in listeObjets)
-              //  b.Deplace(maintenant, ref tailleEcran);
+            foreach (DisplayedObject b in listeObjets)
+                b.Deplace(maintenant, ref tailleEcran);
 
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);

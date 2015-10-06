@@ -11,7 +11,7 @@ using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.Textes
+namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
     public abstract class Texte : DisplayedObject
     {

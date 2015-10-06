@@ -9,7 +9,7 @@
 using System;
 using System.Collections ;
 
-namespace ClockScreenSaverGL.Textes
+namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
 	/// <summary>
 	/// Description of Citations_Donnees.

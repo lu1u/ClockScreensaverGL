@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils  Options  Codage  Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.DisplayedObject;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

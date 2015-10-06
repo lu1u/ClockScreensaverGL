@@ -11,7 +11,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using SharpGL;
 
-namespace ClockScreenSaverGL.Fonds
+namespace ClockScreenSaverGL.DisplayedObject.Fonds
 {
 	/// <summary>
 	/// Description of Noir.

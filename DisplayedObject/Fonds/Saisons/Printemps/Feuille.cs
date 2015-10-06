@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
     class Feuille : IDisposable
     {
