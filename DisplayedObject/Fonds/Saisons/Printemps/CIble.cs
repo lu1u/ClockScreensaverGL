@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpGL;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -18,6 +19,11 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         public void Draw(Graphics g)
         {
             g.FillRectangle(Brushes.Green, Position.X, Position.Y, 2, 2);
+        }
+
+        public void Draw(OpenGL gl)
+        {
+            gl.Vertex(Position.X, Position.Y);
         }
     }
 }

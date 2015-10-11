@@ -1,35 +1,40 @@
-﻿using System;
+﻿using SharpGL;
+using SharpGL.SceneGraph.Assets;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
-    class Feuille : IDisposable
+    class Feuille
     {
         static Random r = new Random();
-        const int NB_TYPES_FEUILLES = 3;
-        static readonly int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-
+        const int NB_TYPES_FEUILLES =2;
+        static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
+        static Bitmap _b = TYPE_FEUILLES == 0 ? Resources.feuille1 :  Resources.feuille2 ;
         public Vector3 Position { get; set; }
         public float _taille;
-        private Bitmap _feuille;
-        
+        private static Texture _texture;
+        private float _angle;
+
+
+        static Feuille()
+            {
+            InitTexture();
+            }
         public Feuille(Vector3 position)
         {
             Position = position;
             _taille = 20;
-
-            Bitmap b = TYPE_FEUILLES == 0 ? Resources.feuille1 : Resources.feuille2;
-            _feuille = RotateImage(b,r.Next(-45, 90) );
+            _angle = r.Next(-45, 90);
         }
 
-        public void Dispose()
+        public static void InitTexture()
         {
-            if ( _feuille != null)
-            {
-                _feuille.Dispose();
-                _feuille = null;
-            }
+            TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
+            _b = TYPE_FEUILLES == 0 ? Resources.feuille1 : Resources.feuille2;
+
+            _texture = null;
         }
 
         public void Grow(float intervalle)
@@ -132,9 +137,25 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 
             return rotatedBmp;
         }
-        public void Draw(Graphics g, float dx, float dy)
+        public void Draw(OpenGL gl, float dx, float dy)
         {
-            g.DrawImage(_feuille, Position.X + dx - _taille/2, Position.Y + dy - _taille/2, _taille, _taille);
+            if ( _texture== null)
+            {
+                _texture = new Texture();
+                _texture.Create(gl, _b);// RotateImage(_b, r.Next(-45, 90)));
+            }
+
+            _texture.Bind(gl);
+            gl.PushMatrix();
+            gl.Translate(Position.X + dx, Position.Y + dy, 0);
+            gl.Rotate(0, 0, _angle + dy*0.5f);
+            gl.Begin(OpenGL.GL_QUADS);
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(- (_taille / 2), - (_taille / 2));
+            gl.TexCoord(0.0f, 1.0f); gl.Vertex(- (_taille / 2), + (_taille / 2));
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(+ (_taille / 2), + (_taille / 2));
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(+ (_taille / 2), - (_taille / 2));
+            gl.End();
+            gl.PopMatrix();
         }
     }
 }

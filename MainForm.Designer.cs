@@ -92,7 +92,6 @@ namespace ClockScreenSaverGL
             this.ClientSize = new System.Drawing.Size(951, 652);
             this.ControlBox = false;
             this.Controls.Add(this.openGLControl);
-            this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;

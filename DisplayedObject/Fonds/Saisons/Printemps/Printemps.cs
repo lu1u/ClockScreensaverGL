@@ -3,6 +3,7 @@
  * Inspire de http://www.jgallant.com/blog/
  */
 
+using SharpGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,28 +22,69 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         public static readonly int LARGEUR_ARBRE = conf.getParametre(CAT, "Largeur Arbre", 1200);
         public static readonly int HAUTEUR_ARBRE = conf.getParametre(CAT, "Hauteur Arbre", 400);
         public static readonly int LONGUEUR_BRANCHE = conf.getParametre(CAT, "Longueur Branche", 7);
-        public static readonly int DISTANCE_MIN = 7;//conf.getParametre(CAT, "Distance Min", 5);
-        public static readonly int DISTANCE_MAX = 200;//conf.getParametre(CAT, "Distance Max", 100);
+        public static readonly int DISTANCE_MIN = conf.getParametre(CAT, "Distance Min", 5);
+        public static readonly int DISTANCE_MAX = conf.getParametre(CAT, "Distance Max", 100);
         public static readonly int NB_CIBLES = conf.getParametre(CAT, "Nb Cibles", 200);
         float _oscillation = 0;
+        
         #endregion
         DateTime _finCroissance;
         Tree _tree;
         public Printemps(int LargeurEcran, int HauteurEcran)
         {
-            _tree = new Tree(LargeurEcran, HauteurEcran * 0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
+            _tree = new Tree(LargeurEcran, HauteurEcran * FloatRandom( 0.4f, 0.6f), 0, 
+                LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
         }
+
+/*
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            g.Clear(getCouleurOpaqueAvecAlpha(couleur, 64));
-            _tree.Draw(g);
+             _tree.Draw(g);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
+*/
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
+            gl.PushMatrix();
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PushMatrix();
+            gl.LoadIdentity();
+            gl.Ortho2D(0.0, tailleEcran.Width, tailleEcran.Height, 0.0);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_BLEND);
+           
+            gl.Color(0.0f, 0.0f, 0.0f, 1.0f);
+            gl.Disable(OpenGL.GL_BLEND);
+            _tree.Draw(gl);
+
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.PopMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.PopMatrix();
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            c = getCouleurOpaqueAvecAlpha(c, (byte)64);
+
+            gl.ClearColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);
+        }
+
         /// <summary>
         /// 
         /// </summary>

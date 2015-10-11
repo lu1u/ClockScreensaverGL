@@ -7,15 +7,15 @@
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
 using System;
-using System.Collections ;
+using System.Collections;
 
 namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
-	/// <summary>
-	/// Description of Citations_Donnees.
-	/// </summary>
-	partial class Citations
-	{
+    /// <summary>
+    /// Description of Citations_Donnees.
+    /// </summary>
+    partial class Citations
+    {
         static String[] _citations =
         {
             "Impossible de vous dire mon âge,\nil change tout le temps.|Alphonse Allais",
@@ -200,32 +200,32 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
             "Ceux qui aiment marcher en rangs sur une musique militaire:\nce ne peut être que par erreur qu’ils ont reçu un cerveau,\nune moelle épinière leur suffirait amplement.|Albert Einstein",
             "La vie, c’est comme une bicyclette,\nil faut avancer pour ne pas perdre l’équilibre.|Albert Einstein",
             "Un estomac creux n’est pas un bon conseiller politique.|Albert Einstein",
-            "Le mot progrès n’aura aucun sens tant qu’il y aura des enfants malheureux|Albert Einstein",
-            "Rendez les choses aussi simples que possible, mais pas plus simples.|Albert Einstein",
+            "Le mot progrès n’aura aucun sens tant\nqu’il y aura des enfants malheureux|Albert Einstein",
+            "Rendez les choses aussi simples que possible,\nmais pas plus simples.|Albert Einstein",
             "Une personne qui n’a jamais commis d’erreurs\nn’a jamais tenté d’innover|Albert Einstein",
-            "Si vous ne pouvez expliquer un concept à un enfant de six ans,\nc'est que vous ne le comprenez pas complètement|Albert Einstein"
+            "Si vous ne pouvez expliquer un concept à un enfant de six ans,\nc'est que vous ne le comprenez pas complètement|Albert Einstein",
+            "La majorité des gens\na un nombre de pieds supérieur à la moyenne.|Biostatistiques"
+        };
 
-        } ;
-		
-		// Classe pour melanger un tableau
-		public class Melangeur : IComparer
-		{
-			private static Random rnd;
+        // Classe pour melanger un tableau
+        public class Melangeur : IComparer
+        {
+            private static Random rnd;
 
-			static Melangeur()
-			{
-				rnd = new Random();
-			}
+            static Melangeur()
+            {
+                rnd = new Random();
+            }
 
-			public int Compare( object x, object y)
-			{
+            public int Compare(object x, object y)
+            {
 
-				if (x.Equals(y))
-					return 0;
-				else
-					return rnd.Next(-1, 1);
-			}
+                if (x.Equals(y))
+                    return 0;
+                else
+                    return rnd.Next(-1, 1);
+            }
 
-		}
-	}
+        }
+    }
 }

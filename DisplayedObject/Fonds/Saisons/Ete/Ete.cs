@@ -13,7 +13,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
         #region PARAMETRES
         const string CAT = "Ete";
         static private readonly int NB_HERBES = conf.getParametre(CAT, "Nb Herbes", 80);
-        private readonly int NB_FLARES = conf.getParametre(CAT, "Nb Flares", 6);
+        private readonly int NB_FLARES = 12;// conf.getParametre(CAT, "Nb Flares", 6);
         private readonly float VX_SOLEIL = conf.getParametre(CAT, "VX Soleil", 5f);
         private readonly float VY_SOLEIL = conf.getParametre(CAT, "VY Soleil", 5f);
         private readonly int TAILLE_SOLEIL = conf.getParametre(CAT, "Taille Soleil", 300);

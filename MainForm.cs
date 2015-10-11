@@ -392,7 +392,8 @@ namespace ClockScreenSaverGL
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
-            
+            gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
+
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject.DisplayedObject b in _listeObjets)
             {

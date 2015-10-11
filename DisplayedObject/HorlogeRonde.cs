@@ -111,7 +111,6 @@ namespace ClockScreenSaverGL.DisplayedObject
         /// <param name="maintenant"></param>
         public override void DateChangee(OpenGL gl, Temps maintenant)
         {
-
             CreerBitmapFond(gl);
         }
 
@@ -366,7 +365,6 @@ namespace ClockScreenSaverGL.DisplayedObject
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-
             if (_textureFondHorloge == null)
                 CreerBitmapFond(gl);
             CentreX = _trajectoire._Px + _rayon;
@@ -384,7 +382,7 @@ namespace ClockScreenSaverGL.DisplayedObject
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
-            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, ALPHA / 256.0f };
             gl.Color(col);
 
             _textureFondHorloge.Bind(gl);

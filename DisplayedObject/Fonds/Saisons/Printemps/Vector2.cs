@@ -11,7 +11,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         public float X;
         public float Y;
         public float Z;
-        public Vector3(float x, float y, float z = 0 )
+        public Vector3(float x, float y, float z  )
         {
             this.X = x;
             this.Y = y;

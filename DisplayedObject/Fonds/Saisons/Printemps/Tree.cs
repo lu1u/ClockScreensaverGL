@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using ClockScreenSaverGL.DisplayedObject.Fonds.Printemps;
+using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
@@ -21,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         readonly int DISTANCE_MAX;
         readonly int LONGUEUR_BRANCHE;
         readonly float LARGEUR_TRONC;
-
+        readonly Vector3 POUSSEE = new Vector3(-1, 0, 0);
         readonly static float RATIO_TAILLE_PARENT = 1.01f;
         Branch _racineArbre;
         List<Cible> _ciblesBranches;
@@ -46,6 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
             GenereTronc();
 
             _feuilles = new List<Feuille>();
+            Feuille.InitTexture();
         }
 
         private void GenerateCrown()
@@ -77,17 +79,17 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         {
             _branches = new Dictionary<Vector3, Branch>();
 
-            _racineArbre = new Branch(null, Position, new Vector3(-1, 0, 0));
+            _racineArbre = new Branch(null, Position, POUSSEE);
             _racineArbre.Size = LARGEUR_TRONC;
             _branches.Add(_racineArbre.Position, _racineArbre);
 
-            Branch current = new Branch(_racineArbre, new Vector3(Position.X - LONGUEUR_BRANCHE, Position.Y, 0), new Vector3(-1, 0, 0));
+            Branch current = new Branch(_racineArbre, new Vector3(Position.X - LONGUEUR_BRANCHE, Position.Y, 0), POUSSEE);
             _branches.Add(current.Position, current);
 
             //Keep growing trunk upwards until we reach a leaf      
             while ((_racineArbre.Position - current.Position).Length() < HAUTEUR_TRONC)
             {
-                Branch trunk = new Branch(current, new Vector3(current.Position.X - LONGUEUR_BRANCHE, current.Position.Y, 0), new Vector3(-1, 0, 0));
+                Branch trunk = new Branch(current, new Vector3(current.Position.X - LONGUEUR_BRANCHE, current.Position.Y, 0), POUSSEE);
                 _branches.Add(trunk.Position, trunk);
                 current = trunk;
             }
@@ -204,23 +206,31 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         }
 
 
-        public void Draw(Graphics g)
+
+        public void Draw(OpenGL gl)
         {
             /*
+            gl.PointSize(4);
+            gl.Begin(OpenGL.GL_POINTS);
             foreach (Cible b in _ciblesBranches )
-                b.Draw(g);
-             */
+                b.Draw(gl);
+            gl.End();
+            */
 
             foreach (Branch b in _branches.Values)
-                b.Draw(g, 0, _oscillation * (b.Position.X - Position.X));
+                b.Draw(gl, 0, _oscillation * (b.Position.X - Position.X));
 
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            gl.Color(0.2, 0.2, 0.2, 0.9);
             foreach (Feuille f in _feuilles)
             {
                 f.Grow(0.1f);
-                f.Draw(g, 0, _oscillation * (f.Position.X - Position.X));
+                f.Draw(gl, 0, _oscillation * (f.Position.X - Position.X));
             }
+            gl.Disable(OpenGL.GL_BLEND);
         }
-
         internal void Oscillation(float p)
         {
             _oscillation = p;

@@ -1,12 +1,14 @@
 ﻿
+using SharpGL;
+using System;
 using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
 {
     public class Branch
     {
-        readonly public static float LARGEUR_INITIALE = 2 ;
-        
+        readonly public static float LARGEUR_INITIALE = 2;
+
         public Branch Parent { get; private set; }
         public Vector3 GrowDirection { get; set; }
         public Vector3 OriginalGrowDirection { get; set; }
@@ -20,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
             Position = position;
             GrowDirection = growDirection;
             OriginalGrowDirection = growDirection;
-            Size =LARGEUR_INITIALE ;
+            Size = LARGEUR_INITIALE;
         }
 
         public void Reset()
@@ -29,12 +31,29 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
             GrowDirection = OriginalGrowDirection;
         }
 
-        public void Draw(Graphics g, float dx, float dy )
+        public void Draw(Graphics g, float dx, float dy)
         {
             if (Parent != null)
-                using (Pen p = new Pen(Color.FromArgb (255,0,0,0), Size))
-                   // g.DrawLine(p, Position.Point(), Parent.Position.Point());
-            g.DrawLine(p, Position.X + dx, Position.Y + dy, Parent.Position.X + dx, Parent.Position.Y + dy);
+                using (Pen p = new Pen(Color.FromArgb(255, 0, 0, 0), Size))
+                    g.DrawLine(p, Position.X + dx, Position.Y + dy, Parent.Position.X + dx, Parent.Position.Y + dy);
+        }
+
+        /// <summary>
+        /// Dessine la branche en utilisant OpenGL
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="dx"></param>
+        /// <param name="dy"></param>
+        public void Draw(OpenGL gl, float dx, float dy)
+        {
+            if (Parent != null)
+            {
+                gl.LineWidth(Size);
+                gl.Begin(OpenGL.GL_LINES);
+                gl.Vertex(Position.X+dx , Position.Y+dy);
+                gl.Vertex(Parent.Position.X + dx, Parent.Position.Y+ dy);
+                gl.End();
+            }
         }
     }
 }
