@@ -142,9 +142,9 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             gl.Color(col);
 
             // Tracer les anneaux
-            for (int i = 0; i < NB_ANNEAUX - 1; i++)
+            gl.Begin(OpenGL.GL_QUADS);
+                for (int i = 0; i < NB_ANNEAUX - 1; i++)
             {
-                gl.Begin(OpenGL.GL_QUADS);
                 {
                     int iPlusUn = i < (NB_ANNEAUX - 1) ? i + 1 : 0;
 
@@ -163,8 +163,9 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
                         }
                     }
                 }
-                gl.End();
+               
             }
+             gl.End();
             if (WIRE_FRAME)
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
 #if TRACER
