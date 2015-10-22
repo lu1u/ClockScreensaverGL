@@ -14,14 +14,14 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
     /// <summary>
     /// Description of Tunnel.
     /// </summary>
-    public sealed class Tunnel : TroisD
+    public sealed class Fragments : TroisD
     {
-        private const string CAT = "Tunnel.OpenGL";
+        private const string CAT = "Fragments";
         private static readonly int TAILLE_ANNEAU_MIN = conf.getParametre(CAT, "NbFacettesMin", 4);
         private static readonly int TAILLE_ANNEAU_MAX = conf.getParametre(CAT, "NbFacettesMax", 16);
         private readonly int TAILLE_ANNEAU;
         private static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 200);
-        private static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f);
+        private static readonly float VITESSE_ANNEAU = 0.5f;// conf.getParametre(CAT, "Vitesse", 2f);
         private static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f);
         private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
         private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f);
@@ -38,6 +38,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         static DateTime debut = DateTime.Now;
 
         Vecteur3D[,] _anneaux;
+        bool[,] _afficher;
         readonly float _zMax;
         const float VIEWPORT_X = 2f;
         const float VIEWPORT_Y = 2f;
@@ -48,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// Constructeur: initialiser les anneaux
         /// </summary>
         /// <param name="gl"></param>
-        public Tunnel(OpenGL gl)
+        public Fragments(OpenGL gl)
             : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
         {
             TAILLE_ANNEAU = r.Next(TAILLE_ANNEAU_MIN, TAILLE_ANNEAU_MAX + 1);
@@ -57,6 +58,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             else
                 BANDES_PLEINES = r.Next(1, BANDES_PLEINES + 1);
             _anneaux = new Vecteur3D[NB_ANNEAUX, TAILLE_ANNEAU];
+            _afficher = new bool[NB_ANNEAUX, TAILLE_ANNEAU];
 
             _zMax = -_tailleCubeZ;
             _CentreAnneauX = 0;
@@ -97,6 +99,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
                 _anneaux[i, j] = new Vecteur3D(_CentreAnneauX + (float)(RAYON_ANNEAU * Math.Cos(angle)),
                                               _CentreAnneauY + (float)(RAYON_ANNEAU * Math.Sin(angle)),
                                               z);
+                _afficher[i, j] = r.Next(0, 8) > 6;
             }
         }
 
@@ -130,12 +133,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             gl.Enable(OpenGL.GL_LIGHT0);
             gl.Disable(OpenGL.GL_AUTO_NORMAL);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, LightPos);
-            gl.Enable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, col);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, 128);
-            gl.ColorMaterial(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT_AND_DIFFUSE);
-
-
+            
             if (WIRE_FRAME)
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
             gl.Rotate(0, 0, rotation);
@@ -150,16 +148,14 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
                     for (int j = 0; j < TAILLE_ANNEAU; j++)
                     {
-                        if ((j + 1) % BANDES_PLEINES != 0)
+                        if (_afficher[i,j])
                         {
                             int jPlusUn = j < (TAILLE_ANNEAU - 1) ? j + 1 : 0;
 
-                            Vecteur3D n = NormaleTriangle(_anneaux[iPlusUn, j], _anneaux[i, j], _anneaux[i, jPlusUn]);
-                            gl.Normal(n.x, n.y, n.z);
-                            gl.Vertex(_anneaux[i, j].x, _anneaux[i, j].y, _anneaux[i, j].z);
-                            gl.Vertex(_anneaux[i, jPlusUn].x, _anneaux[i, jPlusUn].y, _anneaux[i, jPlusUn].z);
-                            gl.Vertex(_anneaux[iPlusUn, jPlusUn].x, _anneaux[iPlusUn, jPlusUn].y, _anneaux[iPlusUn, jPlusUn].z);
-                            gl.Vertex(_anneaux[iPlusUn, j].x, _anneaux[iPlusUn, j].y, _anneaux[iPlusUn, j].z);
+                            gl.Vertex(_anneaux[i, j].x, _anneaux[i,j].y, _anneaux[i, j].z);
+                            gl.Vertex(_anneaux[i, j].x, _anneaux[i, j].y + 0.2f, _anneaux[i, j].z + 0.2f);
+                            gl.Vertex(_anneaux[i, j].x + 0.2f, _anneaux[i, j].y + 0.2f, _anneaux[i, j].z + 0.2f);
+                            gl.Vertex(_anneaux[i, j].x + 0.2f, _anneaux[i, j].y, _anneaux[i, j].z);
                         }
                     }
                 }
@@ -224,7 +220,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
                     _anneaux[i, j].y = py;
                 }
 
-            if (_anneaux[2, 0].z > _tailleCubeZ)
+            if (_anneaux[0, 0].z > _tailleCubeZ)
             {
                 for (int i = 0; i < NB_ANNEAUX - 1; i++)
                     for (int j = 0; j < TAILLE_ANNEAU; j++)

@@ -156,11 +156,13 @@
     <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\CIble.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Tree.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Vector2.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\CarresEspace.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Automne.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Fragments.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Tunnel.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />

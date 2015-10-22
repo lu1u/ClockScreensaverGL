@@ -63,13 +63,15 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_METABALLES = 2;
         const int TYPE_FOND_NUAGES = 3;
         const int TYPE_FOND_COULEUR = 4;
-        const int TYPE_FOND_BACTERIES = 5;
+        const int TYPE_FOND_CARRES_ESPACE = 5;
         const int TYPE_FOND_ENCRE = 6;
         const int TYPE_FOND_TUNNEL = 7;
         const int TYPE_FOND_NEIGE_META = 8;
         const int TYPE_FOND_LIFE = 9;
         const int TYPE_FOND_TERRE = 10;
-        const int NB_FONDS = 11;
+        const int TYPE_FOND_BACTERIES = 11;
+        
+        const int NB_FONDS = 12;
         #endregion
 
         #region Render Modes
@@ -190,8 +192,9 @@ namespace ClockScreenSaverGL
                 case TYPE_FOND_LIFE: return new Life(gl);
                 case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);                    
-                case TYPE_FOND_TUNNEL:return new TunnelOpenGL(gl);
+                case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);
+                case TYPE_FOND_TUNNEL: return new Tunnel(gl);
+                case TYPE_FOND_CARRES_ESPACE: return new CarresEspace(gl);
                 case TYPE_FOND_NUAGES: return new NuagesOpenGL(gl);
                 case TYPE_FOND_TERRE: return new TerreOpenGL(gl);
 
