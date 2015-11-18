@@ -13,7 +13,7 @@ using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.DisplayedObject.Textes
 {
-    public abstract class Texte : DisplayedObject
+    public abstract class Texte : DisplayedObject, IDisposable
     {
         protected Trajectoire _trajectoire;
         protected Font _fonte;
@@ -38,10 +38,6 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
             _alpha = alpha;
         }
 
-        ~Texte()
-        {
-            _fonte.Dispose();
-        }
 
         /// <summary>
         /// Deplace l'objet, en tenant compte de la derniere taille calculee de cet objet
@@ -71,7 +67,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         protected virtual bool TexteChange() { return false; }
         protected virtual void drawOpenGL(OpenGL gl, Rectangle tailleEcran, Color couleur, Temps maintenant)
         {
-            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, _alpha / 255.0f };
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, _alpha / 256.0f };
             gl.Color(col);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
 
@@ -167,5 +163,10 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
 
         }
 
+        public void Dispose()
+        {
+            _fonte?.Dispose();
+            _bitmap?.Dispose();
+        }
     }
 }

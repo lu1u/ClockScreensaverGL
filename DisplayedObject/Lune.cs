@@ -16,27 +16,12 @@ namespace ClockScreenSaverGL
 	/// <summary>
 	/// Description of Lune.
 	/// </summary>
-	public class Lune : IDisposable
+	public class Lune
 	{
 		//private Bitmap _bitmapLune = null ;
 		private int _ageLune = -1 ;
 		DateTime _maintenant ;
-		
-		
-		public Lune()
-		{
-		}
 
-        ~Lune()
-        {
-            Dispose();
-        }
-
-        public void Dispose()
-        {
-			//if ( _bitmapLune != null)
-			//	_bitmapLune.Dispose() ;
-		}
 		
 		private static int JulianDate(int d, int m, int y)
 		{

@@ -35,8 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         protected int NbMetaballes;
         protected MetaBalle[] _metaballes;
         protected readonly int Largeur, Hauteur;
-        protected Bitmap _bmp;
-
+        
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -110,8 +109,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
                     _metaballes[i]._Vy = -Math.Abs(_metaballes[i]._Vy);
             }
 
-            // Construire la bitmap
-            updateFrame();
+           
 
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
@@ -159,9 +157,6 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            if (_bmp == null)
-                return;
-
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.PushMatrix();
@@ -182,10 +177,11 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             gl.Color(col);
 
-            Texture text = new Texture();
-            text.Create(gl, _bmp);
-            text.Bind(gl);
-
+            using (Bitmap bmp = updateFrame())
+            {
+                Texture text = new Texture();
+                text.Create(gl, bmp);
+                text.Bind(gl);
             gl.Begin(OpenGL.GL_QUADS);
             gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, 1);
             gl.TexCoord(0.0f, 1.0f); gl.Vertex(0, 0);
@@ -193,9 +189,10 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
             gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
             gl.End();
 
-            //uint[] textures = { text.TextureName };
-            //gl.DeleteTextures(1, textures);
-            //text.Destroy(gl);
+            uint[] textures = { text.TextureName };
+            gl.DeleteTextures(1, textures);
+            text.Destroy(gl);
+            }
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
@@ -297,10 +294,10 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         /// Rempli les pixels de la bitmap
         /// </summary>
         /// <param name="bmpd"></param>
-        protected unsafe void updateFrame()
+        protected unsafe Bitmap updateFrame()
         {
-            _bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
-            BitmapData bmpd = _bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
+            Bitmap bmp = new Bitmap(Largeur, Hauteur, PixelFormat.Format32bppRgb);
+            BitmapData bmpd = bmp.LockBits(_rectBitmap, ImageLockMode.WriteOnly, PixelFormat.Format32bppRgb);
             double x, y;
             int z, Indice;
             double Champs;
@@ -328,8 +325,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
                     *pixels++ = _palette[Indice];
                 }
             }
-            _bmp.UnlockBits(bmpd);
-
+            bmp.UnlockBits(bmpd);
+            return bmp;
         }
 
         public override void AppendHelpText(StringBuilder s)

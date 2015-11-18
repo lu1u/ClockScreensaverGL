@@ -280,6 +280,9 @@ namespace ClockScreenSaverGL
         /// <param name="args"></param>
         void onGDIDraw(object sender, SharpGL.RenderEventArgs args)
         {
+            if (openGLControl.RenderContextType == RenderContextType.NativeWindow)
+                return;
+
             Graphics g = args.Graphics;
 
             try

@@ -96,6 +96,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClockScreenSaverGL.Program</StartupObject>
@@ -162,7 +163,6 @@
     <Compile Include="DisplayedObject\Fonds\Saisons\Neige.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Fragments.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Tunnel.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />

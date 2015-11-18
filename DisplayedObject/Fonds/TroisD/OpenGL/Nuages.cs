@@ -22,11 +22,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
     {
         #region PARAMETRES
         const string CAT = "Nuages.OpenGL";
-        static readonly float ALPHA = 0.05f;// conf.getParametre(CAT, "Alpha", 0.1f);
+        static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.25f);
+        static readonly bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2f);
-        static readonly float RAYON_MAX = 5;// conf.getParametre(CAT, "RayonMax", 8f);
+        static readonly float RAYON_MAX = conf.getParametre(CAT, "RayonMax", 8f);
         static readonly float RAYON_MIN = conf.getParametre(CAT, "RayonMin", 5f);
-        static readonly float TAILLE_PARTICULE = 4f;// conf.getParametre(CAT, "TailleParticules", 2.5f);
+        static readonly float TAILLE_PARTICULE = conf.getParametre(CAT, "TailleParticules", 2.5f);
         static readonly int NB_NUAGES = conf.getParametre(CAT, "Nb", 10);
         static readonly int MAX_NIVEAU = conf.getParametre(CAT, "NbNiveaux", 6);
         static readonly int NB_EMBRANCHEMENTS = conf.getParametre(CAT, "NbEmbranchements", 3);
@@ -179,7 +180,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             DessineCiel(gl, col);
 
             gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, ADDITIVE ? OpenGL.GL_ONE :  OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);

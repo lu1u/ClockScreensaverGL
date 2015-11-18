@@ -62,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
         public override void ClearBackGround(OpenGL gl, Color couleur)
         {
             Color c = getCouleur(couleur);
-            gl.ClearColor(c.R / 512.0f, c.G / 512.0f, c.B / 512.0f, 1.0f);
+            gl.ClearColor(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1.0f);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT );
         }
 

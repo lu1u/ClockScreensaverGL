@@ -15,15 +15,15 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
     {
         #region Parametres
         const String CAT = "TerreOpenGl";
-        static readonly float SPEC = conf.getParametre(CAT, "Specular", 1f);
+        static readonly float SPEC = 128.0f;// conf.getParametre(CAT, "Specular", 1f);
         static readonly float AMB = conf.getParametre(CAT, "Ambient", 0.0f);
         static readonly float DIF = conf.getParametre(CAT, "Diffuse", 0.1f);
-        static readonly float SHININESS = conf.getParametre(CAT, "Shininess", 50);
+        static readonly float SHININESS = 128;// conf.getParametre(CAT, "Shininess", 50);
         static readonly int NB_TRANCHES = conf.getParametre(CAT, "NbTranches", 64);
         static readonly int NB_MERIDIENS = conf.getParametre(CAT, "NbMeridiens", 64);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5f);
         static readonly float INITIAL_ROTATION = conf.getParametre(CAT, "Rotation initiale", 270); // Ajuster pour montrer le pays qu'on veut au depart
-        static readonly float LONGITURE_DRAPEAU = 270 + conf.getParametre(CAT, "Longitude", 5.97f); // Longitude du drapeau + correction en fonction de la texture
+        static readonly float LONGITUDE_DRAPEAU = 270 + conf.getParametre(CAT, "Longitude", 5.97f); // Longitude du drapeau + correction en fonction de la texture
         static readonly float LATITUDE_DRAPEAU = 0 + conf.getParametre(CAT, "Latitude", 45.28f); // Latitude du drapeau
         static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);
         #endregion
@@ -73,7 +73,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_ALPHA_TEST);
@@ -118,7 +118,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
                 gl.Disable(OpenGL.GL_LIGHTING);
                 gl.Disable(OpenGL.GL_CULL_FACE);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
-                gl.Rotate(0, LONGITURE_DRAPEAU, LATITUDE_DRAPEAU);
+                gl.Rotate(0, LONGITUDE_DRAPEAU, LATITUDE_DRAPEAU);
                 gl.Begin(OpenGL.GL_QUADS);
                     gl.Vertex(1, 0, 0.002f);
                     gl.Vertex(1, 0, -0.002f);
@@ -127,15 +127,15 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
                     gl.Vertex(1, 0.002f, 0);
                     gl.Vertex(1, -0.002f, 0);
-                    gl.Vertex(1.1f, -0.002f, 0);
-                    gl.Vertex(1.1f, 0.002f, 0);
+                    gl.Vertex(1.2f, -0.002f, 0);
+                    gl.Vertex(1.2f, 0.002f, 0);
                     gl.End();
                 
                 gl.Begin(OpenGL.GL_QUAD_STRIP);
                 for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 {
-                    gl.Vertex(1.05f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
-                    gl.Vertex(1.09f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
+                    gl.Vertex(1.15f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
+                    gl.Vertex(1.19f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                 }
                 gl.End();           
             }             

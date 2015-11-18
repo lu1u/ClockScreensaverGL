@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 
 namespace ClockScreenSaverGL.DisplayedObject.Meteo
 {
-    class Meteo : DisplayedObject
+    class Meteo : DisplayedObject, IDisposable
     {
         #region PARAMETRES
         public const string CAT = "Meteo";
@@ -319,6 +319,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
+        }
+
+        public void Dispose()
+        {
+            _bitmap.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

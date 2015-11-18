@@ -64,7 +64,7 @@ namespace ClockScreenSaverGL.DisplayedObject
         public HorlogeRonde(int d, float Px, float Py)
         {
             _trajectoire = new TrajectoireDiagonale(Px, Py, conf.getParametre(CAT, "VX", 35), conf.getParametre(CAT, "VY", -34));
-            _diametre = (d + 1) / 2 * 2;
+            _diametre = d;// (d + 1) / 2 * 2;
             _rayon = _diametre / 2.0f;
             _taille = new SizeF(_diametre, _diametre);
 #if USE_GDI_PLUS_FOR_2D
@@ -88,14 +88,13 @@ namespace ClockScreenSaverGL.DisplayedObject
         {
             try
             {
-                _bmpFondHorloge.Dispose();
+                _bmpFondHorloge?.Dispose();
 #if USE_GDI_PLUS_FOR_2D
                 _penTrotteuse.Dispose();
                 _penTrotteuseC.Dispose();
                 _penMinutes.Dispose();
                 _penHeures.Dispose();
 #endif
-                lune.Dispose();
             }
             finally
             {
