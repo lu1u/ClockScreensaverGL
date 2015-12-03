@@ -22,6 +22,17 @@ namespace ClockScreenSaverGL.DisplayedObject
     /// </summary>
     public abstract class DisplayedObject
     {
+
+        public const Keys TOUCHE_PROCHAIN_FOND = Keys.F;
+        public const Keys TOUCHE_DE_SAISON = Keys.S;
+        public const Keys TOUCHE_INVERSER = Keys.I;
+        public const Keys TOUCHE_REINIT = Keys.R;
+        public const Keys TOUCHE_WIREFRAME = Keys.W;
+        public const Keys TOUCHE_CITATION = Keys.C;
+        public const Keys TOUCHE_ADDITIVE = Keys.A;
+        public const Keys TOUCHE_NEGATIF = Keys.N;
+        public const Keys TOUCHE_DEEZER = Keys.D;
+
         const float PRECISION_RANDOM = 100000.0f;
         static public Random r = new Random();
         static protected Config conf = Config.getInstance();
@@ -29,6 +40,11 @@ namespace ClockScreenSaverGL.DisplayedObject
         protected SizeF _taille = new SizeF(-1, -1);
 
         public virtual void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
+
+        public virtual void Dispose()
+        {
+        }
+
         public virtual void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
         public virtual void AppendHelpText(StringBuilder s) { }
 
@@ -39,6 +55,8 @@ namespace ClockScreenSaverGL.DisplayedObject
         public virtual void ClearBackGround(OpenGL gl, Color c) { }
 
         private int _noFrame = 0;
+
+
 
         /// <summary>
         /// Retourne une couleur correspondant a la teinte donnee avec la transparence donnee
@@ -109,6 +127,14 @@ namespace ClockScreenSaverGL.DisplayedObject
                 return (float)r.Next((int)(Max * PRECISION_RANDOM), (int)(Min * PRECISION_RANDOM)) / PRECISION_RANDOM;
             else
                 return Min;
+        }
+
+        static public int SigneRandom()
+        {
+            if (r.Next(2) > 0)
+                return 1;
+            else
+                return -1;
         }
 
         static protected Bitmap BitmapNuance(Graphics g, Bitmap bmp, Color couleur)

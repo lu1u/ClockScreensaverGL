@@ -22,7 +22,7 @@
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <SourceAnalysisOverrideSettingsFile>d:\UtilisateursW8\lucien\AppData\Roaming\ICSharpCode/SharpDevelop4\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>D:\Utilisateurs\lucien.PCDELULU\Desktop\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -35,8 +35,9 @@
     <TargetCulture>fr</TargetCulture>
     <PublisherName>Lpilloni</PublisherName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <AutorunEnabled>true</AutorunEnabled>
     <DisallowUrlActivation>true</DisallowUrlActivation>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>true</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -76,7 +77,7 @@
     <ManifestKeyFile>ClockScreenSaverGL_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
@@ -85,7 +86,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>TRACE;DEBUG; TRACER</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -102,6 +103,10 @@
     <StartupObject>ClockScreenSaverGL.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NDde, Version=2.1.563.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NDde.2.01.0563\lib\NDde.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpGL">
       <HintPath>SharpGL.WinForms\SharpGL.dll</HintPath>
     </Reference>
@@ -141,6 +146,7 @@
     <Compile Include="DisplayedObject\Bandes\Temps.cs" />
     <Compile Include="DisplayedObject\DisplayedObject.cs" />
     <Compile Include="DisplayedObject\Fonds\Couleur.cs" />
+    <Compile Include="DisplayedObject\Fonds\Couronnes.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Ete\Ete.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Ete\Herbe.cs" />
     <Compile Include="DisplayedObject\Fonds\Fond.cs" />
@@ -168,6 +174,7 @@
     <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />
     <Compile Include="DisplayedObject\HorlogeRonde.cs" />
     <Compile Include="DisplayedObject\Lune.cs" />
+    <Compile Include="DisplayedObject\Meteo\DeezerInfo.cs" />
     <Compile Include="DisplayedObject\Meteo\LignePrevisionMeteo.cs" />
     <Compile Include="DisplayedObject\Meteo\Meteo.cs" />
     <Compile Include="DisplayedObject\Meteo\MeteoInfo.cs" />
@@ -200,6 +207,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClockScreenSaverGL_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +476,11 @@
   <ItemGroup>
     <None Include="Ressources\life.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="NDde.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Resources\music-note.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

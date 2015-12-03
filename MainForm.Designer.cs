@@ -40,6 +40,9 @@ namespace ClockScreenSaverGL
 
                 if (_fontHelp != null)
                     _fontHelp.Dispose();
+
+                foreach (DisplayedObject.DisplayedObject o in _listeObjets)
+                    o.Dispose();
 			}
 			base.Dispose(disposing);
 		}

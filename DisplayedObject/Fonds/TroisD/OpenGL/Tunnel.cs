@@ -183,7 +183,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         {
             switch (k)
             {
-               case Keys.I:
+               case TOUCHE_WIREFRAME:
                     {
                         WIRE_FRAME = !WIRE_FRAME;
                         conf.setParametre(CAT, "WireFrame", WIRE_FRAME);

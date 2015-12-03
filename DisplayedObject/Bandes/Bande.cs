@@ -61,9 +61,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes
 
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            Dispose();
             _fonte?.Dispose();
 
             GC.SuppressFinalize(this);

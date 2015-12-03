@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL
     /// <summary>
     /// Description of MainForm.
     /// </summary>
-    public partial class MainForm : Form
+    public partial class MainForm : Form, IDisposable
     {
         
         #region Parametres
@@ -59,7 +59,8 @@ namespace ClockScreenSaverGL
 
         #region Fonds
         const int TYPE_FOND_ESPACE = 0;
-        const int TYPE_FOND_NOIR = 1;
+        //const int TYPE_FOND_NOIR = 1;
+        const int TYPE_FOND_COURONNES = 1;
         const int TYPE_FOND_METABALLES = 2;
         const int TYPE_FOND_NUAGES = 3;
         const int TYPE_FOND_COULEUR = 4;
@@ -165,7 +166,7 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fond createBackgroundObject(int Type, bool initial)
         {
-            OpenGL gl = openGLControl.OpenGL;
+             OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
@@ -174,8 +175,7 @@ namespace ClockScreenSaverGL
                 {
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
-                        return new Hiver(gl);
-                        
+                        return new Hiver(gl);                        
                     case SAISON.PRINTEMPS:
                         return new Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
@@ -190,7 +190,8 @@ namespace ClockScreenSaverGL
                 case TYPE_FOND_ENCRE: return new Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_BACTERIES: return new Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_LIFE: return new Life(gl);
-                case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                //case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_COURONNES: return new Couronnes();
                 case TYPE_FOND_COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);
                 case TYPE_FOND_TUNNEL: return new Tunnel(gl);
@@ -459,7 +460,10 @@ namespace ClockScreenSaverGL
                 _listeObjets.Add(new DateTexte(0, 0));
             if (conf.getParametre(CAT, "Heure", true))
                 _listeObjets.Add(new HeureTexte(gl, 100, CentreY));
-
+            /*
+            if (conf.getParametre(CAT, "Deezer", true))
+                _listeObjets.Add(new DeezerInfo(CentreX, CentreY));
+            */
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
                 _listeObjets.Add(new Meteo());
@@ -497,7 +501,7 @@ namespace ClockScreenSaverGL
                     case Keys.PageUp: _couleur.ChangeValue(1); break;
                     case Keys.PageDown: _couleur.ChangeValue(-1); break;
                     case Keys.H: _afficherAide = !_afficherAide; break;
-                    case Keys.S:
+                    case DisplayedObject.DisplayedObject.TOUCHE_DE_SAISON:
                         {
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
@@ -505,7 +509,7 @@ namespace ClockScreenSaverGL
                             _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
-                    case Keys.F:
+                    case DisplayedObject.DisplayedObject.TOUCHE_PROCHAIN_FOND :
                         {
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;

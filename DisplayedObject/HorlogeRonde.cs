@@ -84,7 +84,7 @@ namespace ClockScreenSaverGL.DisplayedObject
             Dispose();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             try
             {

@@ -214,20 +214,20 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         {
             switch (k)
             {
-                case Keys.R:
+                case TOUCHE_REINIT:
                     {
                         ConstruitMetaballes();
                         return true;
                     }
 
-                case Keys.I:
+                case TOUCHE_INVERSER:
                     {
                         _CouleursInverses = !_CouleursInverses;
                         conf.setParametre(CAT, COULEURS_INVERSE, _CouleursInverses);
                         return true;
                     }
 
-                case Keys.N:
+                case TOUCHE_NEGATIF:
                     {
                         _NegatifCouleurs = !_NegatifCouleurs;
                         conf.setParametre(CAT, NEGATIF, _NegatifCouleurs);
@@ -334,6 +334,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
             s.Append(Resources.AideMetaballes);
         }
 
+#if TRACER
         public override string DumpRender()
         {
 #if USE_GDI_PLUS_FOR_2D
@@ -342,6 +343,6 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
             return base.DumpRender() + " (OpenGL)";
 #endif
         }
-
+#endif
     }
 }

@@ -320,7 +320,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         ///
         public override bool KeyDown(Form f, Keys k)
         {
-            if (k == Keys.I)
+            if (k == TOUCHE_INVERSER)
             {
                 _positionNuage = -_positionNuage;
                 conf.setParametre(CAT, "EnHaut", _positionNuage > 0 ? true : false);

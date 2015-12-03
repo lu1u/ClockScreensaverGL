@@ -1093,6 +1093,16 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap music_note {
+            get {
+                object obj = ResourceManager.GetObject("music_note", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap nuage1 {
             get {
                 object obj = ResourceManager.GetObject("nuage1", resourceCulture);

@@ -241,7 +241,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         /// <returns></returns>
         public override bool KeyDown(Form f, Keys k)
         {
-            if (Keys.C == k)
+            if (TOUCHE_CITATION == k)
             {
                 ChoisitCitation(f);
                 return true;

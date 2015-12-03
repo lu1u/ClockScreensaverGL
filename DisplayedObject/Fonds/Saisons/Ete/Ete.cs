@@ -139,7 +139,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
                 gl.Begin(OpenGL.GL_QUADS);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(tailleEcran.Left, tailleEcran.Bottom);
                 gl.TexCoord(0.0f, 0.01f); gl.Vertex(tailleEcran.Left, tailleEcran.Bottom - (HAUTEUR_TOUFFE * 4));
-                gl.TexCoord(1.0f, 0.01f); gl.Vertex(tailleEcran.Right, tailleEcran.Bottom - (HAUTEUR_TOUFFE * 4 ));
+                gl.TexCoord(1.0f, 0.01f); gl.Vertex(tailleEcran.Right, tailleEcran.Bottom - (HAUTEUR_TOUFFE * 4));
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(tailleEcran.Right, tailleEcran.Bottom);
                 gl.End();
             }
@@ -157,11 +157,11 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
             gl.End();
             float dx = CENTREX - _xSoleil;
             float dy = CENTREY - _ySoleil;
-            
+
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-            gl.Color(0, 0, 0,0.5);
+            gl.Color(0, 0, 0, 0.5);
             foreach (Herbe h in _herbes)
                 h.Affiche(gl, _vent);
 
@@ -180,7 +180,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
                 gl.End();
             }
-            
+
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
@@ -213,7 +213,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
                         return true;
                     }
                     */
-                case Keys.I:
+                case TOUCHE_INVERSER:
                     AFFICHE_FOND = !AFFICHE_FOND;
                     conf.setParametre(CAT, "Affiche Fond", AFFICHE_FOND);
                     return true;
@@ -244,12 +244,13 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
 #endif
         }
 
+#if TRACER
         public override string DumpRender()
         {
             return base.DumpRender() + _vent.ToString("Vent:  000.000");
         }
+#endif
     }
 }
 
 
-       

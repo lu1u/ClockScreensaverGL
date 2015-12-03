@@ -163,7 +163,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
 
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _fonte?.Dispose();
             _bitmap?.Dispose();

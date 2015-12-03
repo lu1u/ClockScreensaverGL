@@ -22,6 +22,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
         public string lever;
         public string coucher;
         public string _title;
+        public bool _hasNewInfo;
+
         #endregion MEMBRES_PUBLICS
 
         private string _url;
@@ -31,6 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
         public MeteoInfo(string url)
         {
             donneesPretes = false;
+            _hasNewInfo = false;
             _url = url ;
             new Thread(new ThreadStart(ChargeDonnees)).Start();
         }
@@ -98,6 +101,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
             }
 
             donneesPretes = true;
+            _hasNewInfo = true;
         }
 
         /// <summary>
@@ -285,6 +289,17 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
                 default:
                     return Resources.Meteo_44; // Indeterminee
             }
+        }
+
+        internal bool HasNewInfo()
+        {
+            if (_hasNewInfo)
+            {
+                _hasNewInfo = false;
+                return true;
+            }
+            else
+                return false;
         }
     }
 }
