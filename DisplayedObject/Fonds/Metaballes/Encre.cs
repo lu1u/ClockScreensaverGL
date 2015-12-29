@@ -6,9 +6,10 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using SharpGL;
 using System;
-using System.Drawing ;
-namespace ClockScreenSaverGL.DisplayedObject.Metaballes
+using System.Drawing;
+namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 	/// <summary>
 	/// Description of Fumee.
@@ -25,7 +26,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		static DateTime derniereCreation = DateTime.Now ;
 		
 		int NbMax = 0 ;
-		public Encre( int cx, int cy): base( cx, cy)
+		public Encre(OpenGL gl, int cx, int cy): base( gl, cx, cy)
 		{
 			
 		}
@@ -67,7 +68,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		/// </summary>
 		/// <param name="maintenant"></param>
 		/// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
 		{
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;

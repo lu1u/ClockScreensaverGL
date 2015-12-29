@@ -1,4 +1,4 @@
-﻿using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
@@ -13,7 +13,7 @@ using System;
 using System.Drawing;
 using GLfloat = System.Single;
 
-namespace ClockScreenSaverGL.DisplayedObject.Saisons
+namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 {
     /// <summary>
     /// Description of Neige.
@@ -56,8 +56,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Saisons
         const int NB_TYPES_FEUILLES = 5;
         Texture[] texture = new Texture[NB_TYPES_FEUILLES];
 
-        public Automne(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
+        public Automne(OpenGL gl) 
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _xRotation = _tailleCubeX * 0.75f;
 
@@ -199,7 +199,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Saisons
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

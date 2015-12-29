@@ -5,7 +5,7 @@ using SharpGL;
 using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.DisplayedObject.Textes
+namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
 	/// <summary>
 	/// Description of TexteCopyright.
@@ -15,8 +15,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
 		const string CAT = "TexteCopyright" ;
 		private const string _texte = "Lucien Pilloni 2014" ;
 		
-		public TexteCopyright(int Px, int Py):
-			base( Px, Py, conf.getParametre(CAT, "VX", 4), 
+		public TexteCopyright(OpenGL gl, int Px, int Py):
+			base( gl, Px, Py, conf.getParametre(CAT, "VX", 4), 
 			     		conf.getParametre(CAT, "VY", 4), 
 			     		conf.getParametre(CAT, "TailleFonte", 32),
 			     		conf.getParametre(CAT, "Alpha", (byte)10))

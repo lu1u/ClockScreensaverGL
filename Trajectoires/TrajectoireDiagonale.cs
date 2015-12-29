@@ -53,7 +53,6 @@ namespace ClockScreenSaverGL
 		/// <param name="Taille"></param>
         public override void Avance(RectangleF Bounds, SizeF Taille, Temps maintenant)
 		{
-
             _Px += (_Vx * maintenant._intervalle);
 			
 			if ((_Px < Bounds.Left) && (_Vx < 0))

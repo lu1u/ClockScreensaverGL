@@ -8,8 +8,9 @@
  */
 using System;
 using System.Drawing;
+using SharpGL;
 
-namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeHorizontale
+namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
 {
     /// <summary>
     /// Description of Bande.
@@ -18,15 +19,17 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeHorizontale
     {
         public const string CAT = "BandeHorizontale";
         public static readonly int TailleFonte = conf.getParametre(CAT, "TailleFonte", 30);
+        private OpenGLFonte _glFonte;
 
-        public BandeHorizontale(int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha)
-            : base(valMax, intervalle, largeurcase, TailleFonte, origineX, largeur, alpha)
+        public BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha)
+            : base(gl, valMax, intervalle, largeurcase, TailleFonte, origineX, largeur, alpha)
 
         {
+            _glFonte = new OpenGLFonte(gl, "0123456789", TailleFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
             _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, conf.getParametre(CAT, "VY", 20f));
             _taillebande = new SizeF(largeur, _hauteurFonte * 2);
         }
-
+        /*
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleurGlobale)
         {
             SizeF stringSize;
@@ -85,6 +88,69 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeHorizontale
                 RenderStop(CHRONO_TYPE.RENDER);
 #endif
             }
+        }*/
+
+
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+            float decalage, valeur;
+            getValue(maintenant, out valeur, out decalage);
+
+
+            float Decalage = _origine - (decalage * _largeurCase);
+            float X = Decalage;
+            float Y = _trajectoire._Py;
+
+            int val = (int)valeur;
+            gl.Begin(OpenGL.GL_LINES);
+            gl.Vertex(0, Y);
+            gl.Vertex(tailleEcran.Width, Y);
+            gl.Vertex(0, Y + _hauteurFonte * 2);
+            gl.Vertex(tailleEcran.Width, Y + _hauteurFonte * 2);
+            gl.End();
+            // Reculer jusqu'à la droite de l'écran
+            int NbRecul = (int)(X / _largeurCase) + 1;
+            X -= (NbRecul * _largeurCase);
+            val -= NbRecul;
+            while (val < 0)
+                val += (int)_valeurMax;
+
+            String texte;
+            //SizeF stringSize;
+            // Tracer les graduations
+            while (X < (tailleEcran.Width - 1))
+            {
+                if (val % _intervalleTexte == 0)
+                {
+                    texte = val.ToString();
+                    //stringSize = g.MeasureString(texte, _fonte);
+                    _glFonte.drawOpenGL(gl, val.ToString(), X, Y, couleur);
+                    gl.Begin(OpenGL.GL_LINES);
+                    gl.Vertex(X, Y);
+                    gl.Vertex(X, Y + _hauteurFonte);
+                    gl.End();
+                }
+                else
+                {
+                    gl.Begin(OpenGL.GL_LINES);
+                    gl.Vertex(X, Y);
+                    gl.Vertex( X, Y + _hauteurFonte / 2);
+                    gl.End();
+                }
+                X += _largeurCase;
+                val = (val + 1);
+                while (val > _valeurMax)
+                    val -= _valeurMax;
+            }
+
+            // Repere de l'origine
+            gl.Vertex(_origine , Y - 4);
+            gl.Vertex(_origine , Y + _hauteurFonte * 2 + 4);
+            gl.End();
+#if TRACER
+                RenderStop(CHRONO_TYPE.RENDER);
+#endif
+
         }
     }
 }

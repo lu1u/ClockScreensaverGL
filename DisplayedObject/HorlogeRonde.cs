@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -15,7 +16,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 
-namespace ClockScreenSaverGL.DisplayedObject
+namespace ClockScreenSaverGL.DisplayedObjects
 {
     /// <summary>
     /// Description of HorlogeRonde.
@@ -28,8 +29,8 @@ namespace ClockScreenSaverGL.DisplayedObject
         public const string CAT = "HorlogeRonde";
 
         private readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)200);
-        private static readonly int HAUTEUR_FONTE = conf.getParametre(CAT, "HauteurFonte1", (byte)42);
-        private static readonly int HAUTEUR_FONTE2 = conf.getParametre(CAT, "HauteurFonte2", (byte)20);
+        private static readonly int HAUTEUR_FONTE = conf.getParametre(CAT, "HauteurFonte1", (byte)38);
+        private static readonly int HAUTEUR_FONTE2 = conf.getParametre(CAT, "HauteurFonte2", (byte)16);
         public static readonly byte ALPHA_AIGUILLES = conf.getParametre(CAT, "AlphaAiguilles", (byte)250);
         public static readonly float EPAISSEUR_TROTTEUSE = conf.getParametre(CAT, "EpaisseurTrotteuse", 8.0f);
         public static readonly float EPAISSEUR_MINUTES = conf.getParametre(CAT, "EpaisseurMinutes", 15.0f);
@@ -39,9 +40,11 @@ namespace ClockScreenSaverGL.DisplayedObject
 
         private static readonly Color COULEUR_AIGUILLES = Color.FromArgb(ALPHA_AIGUILLES, 0, 0, 0);
         private static readonly Color COULEUR_GRADUATIONS = Color.FromArgb(ALPHA_AIGUILLES, 0, 0, 0);
+        //private DateTexte _date;
+        //private HeureTexte _heure;
         #endregion
 
-        Trajectoire _trajectoire;
+        public float _pX, _pY;
         private int _diametre;
         private float _rayon;
 #if USE_GDI_PLUS_FOR_2D
@@ -54,16 +57,21 @@ namespace ClockScreenSaverGL.DisplayedObject
 #endif
 
         private Bitmap _bmpFondHorloge;
-
+        //private bool _aDroite;
         // Optimisation, pour eviter de les passer en parametre
         private float CentreX, CentreY;
-
+        
 
         private Lune lune = new Lune();
 
-        public HorlogeRonde(int d, float Px, float Py)
+        public HorlogeRonde(OpenGL gl, bool adroite, int d, float Px, float Py): base(gl)
         {
-            _trajectoire = new TrajectoireDiagonale(Px, Py, conf.getParametre(CAT, "VX", 35), conf.getParametre(CAT, "VY", -34));
+            //_aDroite = adroite;
+            //_date = new DateTexte(gl, (int)Px, (int)Py, 30);
+            //_heure = new HeureTexte(gl, (int)Px, (int)Py, 35);
+
+            _pX = Px;
+            _pY = Py;
             _diametre = d;// (d + 1) / 2 * 2;
             _rayon = _diametre / 2.0f;
             _taille = new SizeF(_diametre, _diametre);
@@ -111,6 +119,8 @@ namespace ClockScreenSaverGL.DisplayedObject
         public override void DateChangee(OpenGL gl, Temps maintenant)
         {
             CreerBitmapFond(gl);
+            //_date.DateChangee(gl, maintenant);
+            //_heure.DateChangee(gl, maintenant);
         }
 
 
@@ -236,13 +246,32 @@ namespace ClockScreenSaverGL.DisplayedObject
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
 
-            _trajectoire.Avance(tailleEcran, _taille, maintenant);
+            //_trajectoire.Avance(tailleEcran, _taille, maintenant);
+            /*if (_aDroite)
+                _pX = tailleEcran.Width - _diametre;
+            else
+                _pX = 0;
+
+            _pY = tailleEcran.Top + (tailleEcran.Height - _taille.Height) / 2;
+
+            if (_aDroite)
+                tailleEcran = new Rectangle((int)tailleEcran.Left, (int)tailleEcran.Top, tailleEcran.Width - (int)_pX, (int)tailleEcran.Height);
+            else
+                tailleEcran = new Rectangle((int)_taille.Width, (int)tailleEcran.Y, (int)(tailleEcran.Width - _taille.Width), (int)tailleEcran.Height);
+
+            _date.Deplace(maintenant, tailleEcran);
+            _date._pX = _pX;
+            _date._pY = tailleEcran.Bottom - 120;
+
+            _heure.Deplace(maintenant, tailleEcran);
+            _heure._pX = _pX;
+            _heure._pY = tailleEcran.Bottom - 80;*/
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -320,8 +349,8 @@ namespace ClockScreenSaverGL.DisplayedObject
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            CentreX = _trajectoire._Px + _rayon;
-            CentreY = _trajectoire._Py + _rayon;
+            CentreX = _pX + _rayon;
+            CentreY = _pY + _rayon;
 
             using (Brush b = new SolidBrush(getCouleurAvecAlpha(couleur, ALPHA)))
             {
@@ -366,8 +395,12 @@ namespace ClockScreenSaverGL.DisplayedObject
 #endif
             if (_textureFondHorloge == null)
                 CreerBitmapFond(gl);
-            CentreX = _trajectoire._Px + _rayon;
-            CentreY = _trajectoire._Py + _rayon;
+
+            //_date.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+            //_heure.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+
+            CentreX = _pX + _rayon;
+            CentreY = _pY + _rayon;
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
@@ -377,20 +410,26 @@ namespace ClockScreenSaverGL.DisplayedObject
 
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, ALPHA / 256.0f };
+            
+            // Rectangle semi opaque
+            /*gl.Disable(OpenGL.GL_TEXTURE_2D);
+            gl.Color(couleur.R * 0.25f / 256.0f, couleur.G * 0.25f / 256.0f, couleur.B * 0.25f/ 256.0f, 0.375f);
+            gl.Rect(tailleEcran.Right - _diametre, tailleEcran.Top, tailleEcran.Right, tailleEcran.Bottom);
+            */
+            // Fond de l'horloge (bitmap)
             gl.Color(col);
-
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
             _textureFondHorloge.Bind(gl);
             gl.Translate(CentreX, CentreY, 0);
             gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-_rayon, _rayon);
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-_rayon, _rayon-1);
             gl.TexCoord(0.0f, 1.0f); gl.Vertex(-_rayon, -_rayon);
-            gl.TexCoord(1.0f, 1.0f); gl.Vertex(_rayon, -_rayon);
-            gl.TexCoord(1.0f, 0.0f); gl.Vertex(_rayon, _rayon);
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(_rayon-1, -_rayon);
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(_rayon-1, _rayon-1);
             gl.End();
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);

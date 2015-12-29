@@ -8,7 +8,7 @@
  */
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.DisplayedObject.Metaballes
+namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 	/// <summary>
 	/// Description of MetaBalle.

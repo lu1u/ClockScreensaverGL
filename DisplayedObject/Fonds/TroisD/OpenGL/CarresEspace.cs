@@ -7,7 +7,7 @@ using GLfloat = System.Single;
 using GLuint = System.UInt32;
 using System.Windows.Forms;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
     /// <summary>
     /// Description of Neige.
@@ -47,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="gl"></param>
         public CarresEspace(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _Carres = new Carre[NB_PAVES];
             text.Create(gl, Resources.particleTexture);
@@ -151,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

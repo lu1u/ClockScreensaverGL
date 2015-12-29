@@ -8,14 +8,12 @@
  */
 using System;
 using System.Drawing;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
 using System.Text;
 using SharpGL;
-using SharpGL.SceneGraph.Assets;
 
-namespace ClockScreenSaverGL.DisplayedObject
+namespace ClockScreenSaverGL.DisplayedObjects
 {
     /// <summary>
     /// Classe de base pour tous les objets affiches
@@ -36,10 +34,16 @@ namespace ClockScreenSaverGL.DisplayedObject
         const float PRECISION_RANDOM = 100000.0f;
         static public Random r = new Random();
         static protected Config conf = Config.getInstance();
+        protected readonly OpenGL _gl;
 
         protected SizeF _taille = new SizeF(-1, -1);
 
-        public virtual void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
+        //public virtual void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
+
+        public DisplayedObject(OpenGL gl)
+        {
+            _gl = gl;
+        }
 
         public virtual void Dispose()
         {
@@ -48,7 +52,7 @@ namespace ClockScreenSaverGL.DisplayedObject
         public virtual void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
         public virtual void AppendHelpText(StringBuilder s) { }
 
-        public abstract void Deplace(Temps maintenant, ref Rectangle tailleEcran);
+        public virtual void Deplace(Temps maintenant, Rectangle tailleEcran) { }
 
         // Cette fonction sera appelee quand un changement de date sera detecte
         public virtual void DateChangee(OpenGL gl, Temps maintenant) { }
@@ -64,7 +68,7 @@ namespace ClockScreenSaverGL.DisplayedObject
         /// <param name="color"></param>
         /// <param name="alpha"></param>
         /// <returns></returns>
-        protected static Color getCouleurAvecAlpha(Color color, byte alpha)
+        public static Color getCouleurAvecAlpha(Color color, byte alpha)
         {
             return Color.FromArgb(alpha, color.R, color.G, color.B);
         }
@@ -77,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObject
             _noFrame++;
             return (_noFrame % NbFrames == 0);
         }
-        protected static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
+        public static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
         {
             float a = (float)alpha / 255.0f;
 
@@ -104,7 +108,7 @@ namespace ClockScreenSaverGL.DisplayedObject
         /// <param name="max">Maximum</param>
         /// <param name="vitesse">Vitesse</param>
         /// <param name="intervalle">Intervalle depuis la derniere frame</param>
-        protected void Varie(ref float v, float min, float max, float vitesse, float intervalle)
+        public static void Varie(ref float v, float min, float max, float vitesse, float intervalle)
         {
             float dev = FloatRandom(-vitesse, vitesse) * intervalle;
 

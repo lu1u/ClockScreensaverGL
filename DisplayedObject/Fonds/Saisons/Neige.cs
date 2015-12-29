@@ -1,4 +1,4 @@
-﻿using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
@@ -28,7 +28,7 @@ using GLsizei = System.Int32;
 using GLubyte = System.Byte;
 using GLushort = System.UInt16;
 using GLvoid = System.IntPtr;*/
-namespace ClockScreenSaverGL.DisplayedObject.Saisons
+namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 {
     /// <summary>
     /// Description of Neige.
@@ -71,7 +71,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Saisons
         Texture[] texture = new Texture[NB_TYPES_FLOCONS];
 
         public Hiver(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _xRotation = _tailleCubeX * 0.75f;
 
@@ -192,7 +192,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Saisons
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

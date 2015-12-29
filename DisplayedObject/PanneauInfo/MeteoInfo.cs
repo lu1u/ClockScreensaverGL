@@ -10,7 +10,7 @@ using System.Xml.XPath;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
-namespace ClockScreenSaverGL.DisplayedObject.Meteo
+namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     class MeteoInfo
     {
@@ -44,7 +44,10 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
         public void ChargeDonnees()
         {
             // Create a new XmlDocument  
-            XPathDocument doc = new XPathDocument(_url);
+            try
+            {
+                XPathDocument doc = new XPathDocument(_url);
+            
 
             // Create navigator  
             XPathNavigator navigator = doc.CreateNavigator();
@@ -102,6 +105,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Meteo
 
             donneesPretes = true;
             _hasNewInfo = true;
+            }
+            catch (Exception)
+            {
+                donneesPretes = false;
+                _hasNewInfo = false;             
+            }
         }
 
         /// <summary>

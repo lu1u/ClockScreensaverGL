@@ -1,12 +1,14 @@
-﻿using ClockScreenSaverGL.DisplayedObject;
-using ClockScreenSaverGL.DisplayedObject.Fonds;
-using ClockScreenSaverGL.DisplayedObject.Fonds.Printemps;
-using ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete;
-using ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl;
-using ClockScreenSaverGL.DisplayedObject.Metaballes;
-using ClockScreenSaverGL.DisplayedObject.Meteo;
-using ClockScreenSaverGL.DisplayedObject.Saisons;
-using ClockScreenSaverGL.DisplayedObject.Textes;
+﻿using ClockScreenSaverGL.DisplayedObjects;
+using ClockScreenSaverGL.DisplayedObjects.Fonds;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
+using ClockScreenSaverGL.DisplayedObjects.Metaballes;
+using ClockScreenSaverGL.DisplayedObjects.Meteo;
+using ClockScreenSaverGL.DisplayedObjects.Saisons;
+using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
 /*
  * Crée par SharpDevelop.
@@ -34,7 +36,7 @@ namespace ClockScreenSaverGL
     /// </summary>
     public partial class MainForm : Form, IDisposable
     {
-        
+
         #region Parametres
         public const string CAT = "Main";
         const string PARAM_DELAI_CHANGE_FOND = "DelaiChangeFondMinutes";
@@ -48,7 +50,7 @@ namespace ClockScreenSaverGL
         #endregion
 
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
-        private List<DisplayedObject.DisplayedObject> _listeObjets = new List<DisplayedObject.DisplayedObject>();
+        private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
         private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
 
@@ -56,14 +58,14 @@ namespace ClockScreenSaverGL
         DateTime _derniereFrame = DateTime.Now;                // Heure de la derniere frame affichee
         DateTime _debut = DateTime.Now;
         Temps _temps;
+        private bool wireframe = false;
 
         #region Fonds
         const int TYPE_FOND_ESPACE = 0;
-        //const int TYPE_FOND_NOIR = 1;
         const int TYPE_FOND_COURONNES = 1;
         const int TYPE_FOND_METABALLES = 2;
         const int TYPE_FOND_NUAGES = 3;
-        const int TYPE_FOND_COULEUR = 4;
+        const int TYPE_FOND_PARTICULES_PLUIE = 4;
         const int TYPE_FOND_CARRES_ESPACE = 5;
         const int TYPE_FOND_ENCRE = 6;
         const int TYPE_FOND_TUNNEL = 7;
@@ -71,8 +73,16 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_LIFE = 9;
         const int TYPE_FOND_TERRE = 10;
         const int TYPE_FOND_BACTERIES = 11;
-        
-        const int NB_FONDS = 12;
+        const int TYPE_FOND_PARTICULES1 = 12;
+        const int TYPE_FOND_COULEUR = 13;
+        const int TYPE_FOND_FUSEES = 14;
+        const int TYPE_FOND_ARTIFICE = 15;
+        const int TYPE_FOND_NOIR = 16;
+        const int TYPE_FOND_ATTRACTEUR = 17;
+        const int TYPE_FOND_GRAVITE = 18;
+
+
+        const int NB_FONDS = TYPE_FOND_GRAVITE + 1;
         #endregion
 
         #region Render Modes
@@ -166,7 +176,7 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fond createBackgroundObject(int Type, bool initial)
         {
-             OpenGL gl = openGLControl.OpenGL;
+            OpenGL gl = openGLControl.OpenGL;
             if (_fondDeSaison && initial)
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
@@ -175,32 +185,37 @@ namespace ClockScreenSaverGL
                 {
                     case SAISON.HIVER:
                         conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
-                        return new Hiver(gl);                        
+                        return new Hiver(gl);
                     case SAISON.PRINTEMPS:
-                        return new Printemps(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Printemps(gl,SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
-                        return new Ete( gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Ete(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.AUTOMNE:
                         return new Automne(gl);
                 }
             }
             switch (Type)
             {
-                case TYPE_FOND_METABALLES: return new Neige(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ENCRE: return new Encre(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_BACTERIES: return new Bacteries(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_ENCRE: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_BACTERIES: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_LIFE: return new Life(gl);
-                //case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_COURONNES: return new Couronnes();
+                case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case TYPE_FOND_COURONNES: return new Couronnes(gl);
                 case TYPE_FOND_COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);
                 case TYPE_FOND_TUNNEL: return new Tunnel(gl);
                 case TYPE_FOND_CARRES_ESPACE: return new CarresEspace(gl);
                 case TYPE_FOND_NUAGES: return new NuagesOpenGL(gl);
                 case TYPE_FOND_TERRE: return new TerreOpenGL(gl);
-
+                case TYPE_FOND_PARTICULES1: return new ParticulesGalaxie(gl);
+                case TYPE_FOND_PARTICULES_PLUIE: return new FontaineParticulesPluie(gl);
+                case TYPE_FOND_FUSEES: return new ParticulesFusees(gl);
+                case TYPE_FOND_ARTIFICE: return new FeuDArtifice(gl);
+                case TYPE_FOND_ATTRACTEUR: return new AttracteurParticules(gl);
+                case TYPE_FOND_GRAVITE: return new Gravite(gl);
                 default:
-                    return new Metaballes(SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
         }
 
@@ -248,12 +263,12 @@ namespace ClockScreenSaverGL
             try
             {
                 UpdateStyles();
-               /* switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
-                {
-                    case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection; break;
-                    case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
-                    case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
-                }*/
+                /* switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
+                 {
+                     case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection; break;
+                     case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
+                     case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
+                 }*/
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
                 timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
@@ -273,7 +288,7 @@ namespace ClockScreenSaverGL
             }
         }
 
-        
+        /*
         /// <summary>
         /// Partie GDI (2D) de l'affichage
         /// </summary>
@@ -293,11 +308,11 @@ namespace ClockScreenSaverGL
                 g.CompositingQuality = CompositingQuality.HighSpeed;
 
                 Color Couleur = _couleur.GetRGB();
-                
+
                 // Afficher tous les objets
                 foreach (DisplayedObject.DisplayedObject b in _listeObjets)
                     b.AfficheGDI(g, _temps, Bounds, Couleur);
-                    
+
 #if TRACER
                 if (_afficheDebug)
                     afficheDebug(g);
@@ -323,7 +338,7 @@ namespace ClockScreenSaverGL
                 Application.Exit();
             }
         }
-        
+        */
 
 #if TRACER
         /// <summary>
@@ -370,8 +385,8 @@ namespace ClockScreenSaverGL
             _temps = new Temps(DateTime.Now, _derniereFrame);
 
             Rectangle bnd = Bounds;
-            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
-                b.Deplace(_temps, ref bnd);
+            foreach (DisplayedObject b in _listeObjets)
+                b.Deplace(_temps, bnd);
 
             if (_jourActuel != _temps._JourDeLAnnee)
             {
@@ -379,7 +394,7 @@ namespace ClockScreenSaverGL
                 // qu'une fois par jour
 
                 OpenGL gl = openGLControl.OpenGL;
-                foreach (DisplayedObject.DisplayedObject b in _listeObjets)
+                foreach (DisplayedObject b in _listeObjets)
                     b.DateChangee(gl, _temps);
 
                 _jourActuel = _temps._JourDeLAnnee;
@@ -397,12 +412,14 @@ namespace ClockScreenSaverGL
             Color Couleur = _couleur.GetRGB();
             //gl.Enable(OpenGL.GL_MULTISAMPLE);
             // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
+            foreach (DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
-            gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
+            //gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
 
+            if ( wireframe)
+                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
             // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject.DisplayedObject b in _listeObjets)
+            foreach (DisplayedObject b in _listeObjets)
             {
                 gl.PushMatrix();
                 gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
@@ -411,6 +428,8 @@ namespace ClockScreenSaverGL
                 gl.PopMatrix();
             }
 
+            if (wireframe)
+                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
             gl.End();
             gl.Flush();
 
@@ -426,7 +445,7 @@ namespace ClockScreenSaverGL
             createAllObjects();
 
             OpenGL gl = openGLControl.OpenGL;
-            gl.Clear(0);            
+            gl.Clear(0);
         }
 
 
@@ -438,12 +457,12 @@ namespace ClockScreenSaverGL
             OpenGL gl = openGLControl.OpenGL;
             int CentreX = Bounds.Width / 2;
             int CentreY = Bounds.Height / 2;
-
+            bool meteoADroite = new Random().Next(0, 2) > 0 ;
             int TailleHorloge = conf.getParametre(CAT, "TailleCadran", 400);
             if (IsPreviewMode)
             {
                 TailleHorloge = 10;
-                _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+                _listeObjets.Add(new HorlogeRonde(gl, true, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
                 return;
             }
 
@@ -453,28 +472,28 @@ namespace ClockScreenSaverGL
 
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
-                _listeObjets.Add(new TexteCopyright(-4, 100));
-
+                _listeObjets.Add(new TexteCopyright(gl, -4, 100));
+            // citations
+            if (conf.getParametre(CAT, "Citation", true))
+                _listeObjets.Add(new Citations(gl, this, 200, 200));
             // Heure et date numeriques
-            if (conf.getParametre(CAT, "Date", true))
-                _listeObjets.Add(new DateTexte(0, 0));
+         /*   if (conf.getParametre(CAT, "Date", true))
+                _listeObjets.Add(new DateTexte(gl, 0, 0));
             if (conf.getParametre(CAT, "Heure", true))
-                _listeObjets.Add(new HeureTexte(gl, 100, CentreY));
+                _listeObjets.Add(new HeureTexte(gl, 100, CentreY));*/
             /*
             if (conf.getParametre(CAT, "Deezer", true))
                 _listeObjets.Add(new DeezerInfo(CentreX, CentreY));
             */
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
-                _listeObjets.Add(new Meteo());
+                _listeObjets.Add(new PanneauInfos(gl, meteoADroite));
 
-            // citations
-            if (conf.getParametre(CAT, "Citation", true))
-                _listeObjets.Add(new Citations(this, 200, 200));
+
 
             // Horloge ronde
-            if (conf.getParametre(CAT, "HorlogeRonde", true))
-                _listeObjets.Add(new HorlogeRonde(TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+            //if (conf.getParametre(CAT, "HorlogeRonde", true))
+            //    _listeObjets.Add(new HorlogeRonde(gl, ! meteoADroite, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
 
         }
 
@@ -501,7 +520,17 @@ namespace ClockScreenSaverGL
                     case Keys.PageUp: _couleur.ChangeValue(1); break;
                     case Keys.PageDown: _couleur.ChangeValue(-1); break;
                     case Keys.H: _afficherAide = !_afficherAide; break;
-                    case DisplayedObject.DisplayedObject.TOUCHE_DE_SAISON:
+                    case DisplayedObject.TOUCHE_REINIT:
+                        _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
+                        timerChangeFond.Stop();
+                        timerChangeFond.Start();
+                        break;
+
+                    case DisplayedObject.TOUCHE_WIREFRAME:
+                        wireframe = !wireframe;
+                        break;
+
+                    case DisplayedObject.TOUCHE_DE_SAISON:
                         {
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
@@ -509,7 +538,7 @@ namespace ClockScreenSaverGL
                             _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
-                    case DisplayedObject.DisplayedObject.TOUCHE_PROCHAIN_FOND :
+                    case DisplayedObject.TOUCHE_PROCHAIN_FOND:
                         {
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
@@ -531,7 +560,7 @@ namespace ClockScreenSaverGL
                     default:
                         // Proposer la touche a chaque objet affiche
                         bool b = false;
-                        foreach (DisplayedObject.DisplayedObject o in _listeObjets)
+                        foreach (DisplayedObject o in _listeObjets)
                             if (o.KeyDown(this, (Keys)e.KeyValue))
                                 b = true;
 

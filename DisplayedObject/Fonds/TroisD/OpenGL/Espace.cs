@@ -5,17 +5,17 @@ using System.Drawing;
 
 using GLfloat = System.Single;
 using GLuint = System.UInt32;
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class EspaceOpenGL : TroisD
+    public sealed class EspaceOpenGL : TroisD, IDisposable
     {
         #region Parametres
         public const string CAT = "Espace.OpenGL";
 
-        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)200);
+        private static readonly byte ALPHA = 255;// conf.getParametre(CAT, "Alpha", (byte)200);
         private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
         private static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 2000);
         private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
@@ -32,22 +32,21 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         private class Etoile
         {
             public float x, y, z;
-            public bool aSupprimer;
         }
         private readonly Etoile[] _etoiles;
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
-        Texture text = new Texture();
-
+        Texture _texture = new Texture();
+        
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="gl"></param>
         public EspaceOpenGL(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            text.Create(gl, Resources.particleTexture);
+            _texture.Create(gl, Resources.particleTexture);
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -58,12 +57,19 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             }
         }
 
+        
+        public override void Dispose()
+        {
+            base.Dispose();
+            _texture.Destroy(_gl);
+        }
+
         private void NouvelleEtoile(ref Etoile f)
         {
             if (f == null)
                 f = new Etoile();
 
-            f.aSupprimer = false;
+            //f.aSupprimer = false;
             f.x = FloatRandom(-VIEWPORT_X * 6, VIEWPORT_X * 6);
             f.z = -VIEWPORT_Z;
             f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
@@ -106,7 +112,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             gl.Rotate(0, 0, vitesseCamera);
 
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, ALPHA/256.0f };
-            text.Bind(gl);
+            _texture.Bind(gl);
             gl.Color(col);
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Etoile o in _etoiles)
@@ -129,7 +135,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
@@ -139,25 +145,20 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
             float deltaZ = VITESSE * maintenant._intervalle;
             float deltaWind = (float)Math.Sin(depuisdebut / PERIODE_TRANSLATION) * VITESSE_TRANSLATION * maintenant._intervalle;
-            // Deplace les flocons
+            // Deplace les etoiles
             bool trier = false;
             for (int i = 0; i < NB_ETOILES; i++)
             {
-                if (_etoiles[i].aSupprimer)
-                {
-                    NouvelleEtoile(ref _etoiles[i]);
-                    trier = true;
-                }
-                else
-                {
-                    if (_etoiles[i].z > _zCamera)
-                        _etoiles[i].aSupprimer = true;
+               if (_etoiles[i].z > _zCamera)
+                    {
+                        NouvelleEtoile(ref _etoiles[i]);
+                        trier = true;
+                    }
                     else
                     {
                         _etoiles[i].z += deltaZ;
                         _etoiles[i].x += deltaWind;
                     }
-                }
             }
 
             if (trier)

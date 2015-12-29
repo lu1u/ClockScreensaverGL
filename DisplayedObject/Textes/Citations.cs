@@ -12,7 +12,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.DisplayedObject.Textes
+namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
 
     /// <summary>
@@ -33,8 +33,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         private RectangleF _rectCitation, _rectAuteur;
         private bool _citationChangee = false;
         private int _tailleFonte, _tailleFonteAuteur;
-        public Citations(Form f, int Px, int Py)
-            : base(Px, Py,
+        public Citations(OpenGL gl, Form f, int Px, int Py)
+            : base(gl, Px, Py,
                    conf.getParametre(CAT, "VX", -15),
                    conf.getParametre(CAT, "VY", 12),
                    10,
@@ -250,9 +250,9 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
             return false;
         }
 
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            base.Deplace(maintenant, ref tailleEcran);
+            base.Deplace(maintenant, tailleEcran);
             // Changer la citation toutes les n minutes
             if (DateTime.Now.Subtract(_changement).TotalMilliseconds > DELAI_CHANGEMENT)
                 prochaineCitation();

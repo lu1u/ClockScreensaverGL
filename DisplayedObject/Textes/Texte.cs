@@ -11,16 +11,16 @@ using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.DisplayedObject.Textes
+namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
     public abstract class Texte : DisplayedObject, IDisposable
     {
-        protected Trajectoire _trajectoire;
+        public Trajectoire _trajectoire;
         protected Font _fonte;
         protected byte _alpha;
         protected Bitmap _bitmap;
         protected Texture _texture = new Texture();
-       
+        
         /// <summary>
         /// Constructeur
         /// Initialise la trajectoire, la fonte et le niveau de transparence
@@ -31,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         /// <param name="Vy"></param>
         /// <param name="tailleFonte"></param>
         /// <param name="alpha"></param>
-        public Texte(float Px, float Py, float Vx, float Vy, int tailleFonte, byte alpha)
+        public Texte(OpenGL gl, float Px, float Py, float Vx, float Vy, int tailleFonte, byte alpha): base(gl)
         {
             _trajectoire = new TrajectoireDiagonale(Px, Py, Vx, Vy);
             _fonte = CreerFonte(tailleFonte);
@@ -44,7 +44,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
@@ -167,6 +167,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
         {
             _fonte?.Dispose();
             _bitmap?.Dispose();
+            _texture?.Destroy(_gl);
         }
     }
 }

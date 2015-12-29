@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace ClockScreenSaverGL.DisplayedObject.Meteo
+namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     public class LignePrevisionMeteo
     {

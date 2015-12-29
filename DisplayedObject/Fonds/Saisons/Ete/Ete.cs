@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 {
     class Ete : Fond
     {
@@ -54,7 +54,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
         /**
          * Constructeur
          */
-        public Ete(OpenGL gl, int LargeurEcran, int HauteurEcran)
+        public Ete(OpenGL gl, int LargeurEcran, int HauteurEcran) : base(gl)
         {
             LARGEUR = LargeurEcran;
             HAUTEUR = HauteurEcran;
@@ -229,7 +229,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

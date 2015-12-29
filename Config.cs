@@ -105,7 +105,7 @@ namespace ClockScreenSaverGL
             }
         }
 
-        string toLigneType(Parameter p)
+        static string toLigneType(Parameter p)
         {
             switch (p._type)
             {
@@ -127,7 +127,7 @@ namespace ClockScreenSaverGL
             }
         }
 
-        string toLigneValue(Parameter p)
+        static string toLigneValue(Parameter p)
         {
             switch (p._type)
             {
@@ -148,7 +148,8 @@ namespace ClockScreenSaverGL
                     return null;
             }
         }
-        string toLigneDefaut(Parameter p)
+
+        static string toLigneDefaut(Parameter p)
         {
             switch (p._type)
             {
@@ -280,7 +281,7 @@ namespace ClockScreenSaverGL
         /// Calcule le nom du fichier
         /// </summary>
         /// <returns></returns>
-        string getNomFichier(string categorie)
+        static string getNomFichier(string categorie)
         {
             string path = getRepertoire();
             Directory.CreateDirectory(path);

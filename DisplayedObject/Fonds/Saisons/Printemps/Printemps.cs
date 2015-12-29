@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 {
     class Printemps : Fond
     {
@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         #endregion
         DateTime _finCroissance;
         Tree _tree;
-        public Printemps(int LargeurEcran, int HauteurEcran)
+        public Printemps(OpenGL gl, int LargeurEcran, int HauteurEcran) : base(gl)
         {
             _tree = new Tree(LargeurEcran, HauteurEcran * FloatRandom( 0.4f, 0.6f), 0, 
                 LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
@@ -90,7 +90,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

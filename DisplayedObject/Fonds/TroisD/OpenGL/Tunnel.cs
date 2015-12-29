@@ -9,7 +9,7 @@ using SharpGL;
 using GLfloat = System.Single;
 using System.Windows.Forms;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
     /// <summary>
     /// Description of Tunnel.
@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="gl"></param>
         public Tunnel(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, VIEWPORT_Y / 2)
         {
             TAILLE_ANNEAU = r.Next(TAILLE_ANNEAU_MIN, TAILLE_ANNEAU_MAX + 1);
             if (r.Next(0, 3) > 0)
@@ -196,7 +196,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
 
 
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

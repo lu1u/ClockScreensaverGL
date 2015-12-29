@@ -2,7 +2,7 @@
 using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.Saisons.Ete
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 {
     class Herbe
     {

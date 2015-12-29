@@ -12,7 +12,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     /// <summary>
     /// Description of Life.
@@ -28,6 +28,10 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
         private readonly int LARGEUR = conf.getParametre(CAT, "Largeur", 60);
         private readonly int HAUTEUR = conf.getParametre(CAT, "Hauteur", 50);
         private readonly int SKIP = conf.getParametre(CAT, "Skip", 2);
+        private readonly float VITESSE_ANGLE = conf.getParametre(CAT, "Vitesse Angle", 2.0f);
+        private readonly float LOOK_AT_X = conf.getParametre(CAT, "LookAtX", 0.1f);
+        private readonly float LOOK_AT_Y = 0.03f;// conf.getParametre(CAT, "LookAtY", 0.05f);
+        private readonly float LOOK_AT_Z = conf.getParametre(CAT, "LookAtZ", -0.3f);
         #endregion
 
         private byte[,] cellules;
@@ -37,8 +41,9 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
         private const byte NORMAL = 1;
         private const byte NAISSANCE = 2;
         private int _colonneMin, _colonneMax, _largeurCalcul;
+        float _angle = 0;
         Texture textureCellule = new Texture();
-        public Life(OpenGL gl)
+        public Life(OpenGL gl): base(gl)
         {
             _largeurCalcul = LARGEUR / SKIP;
             _colonneMin = -_largeurCalcul;
@@ -68,26 +73,44 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
 #endif
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.ClearColor(0, 0, 0, 0);
-            gl.PushMatrix();
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PushMatrix();
+            //gl.PushMatrix();
+            //gl.MatrixMode(OpenGL.GL_PROJECTION);
+            //gl.PushMatrix();
+            // gl.LoadIdentity();
+            //gl.Ortho2D(0.0, LARGEUR, 0.0, HAUTEUR);
+            //gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
-            gl.Ortho2D(0.0, LARGEUR, 0.0, HAUTEUR);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
+            gl.Disable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable(OpenGL.GL_BLEND);
-            textureCellule.Bind(gl);
 
             Color Naissance = getCouleurOpaqueAvecAlpha(couleur, 70);
             byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
             Color Normal = getCouleurOpaqueAvecAlpha(couleur, 150);
             byte[] cNormal = { Normal.R, Normal.G, Normal.B };
 
+
+            gl.LookAt(LOOK_AT_X, LOOK_AT_Y, LOOK_AT_Z, 0,-0.1f, 0, 0, -1, 0);
+            gl.Scale(1.0f / LARGEUR, 1.0f / HAUTEUR, 1);
+            gl.Rotate(0, 0, _angle);
             byte ancienType = MORT;
+            
+            //gl.Begin(OpenGL.GL_QUADS);
+            //gl.Disable(OpenGL.GL_TEXTURE_2D);
+            //gl.Color(cNormal[0], cNormal[1], cNormal[2]);
+            //gl.Vertex(0, HAUTEUR);
+            //gl.Vertex(0, 0);
+            //gl.Vertex(LARGEUR, 0);
+            //gl.Vertex(LARGEUR, HAUTEUR);
+            //gl.Enable(OpenGL.GL_TEXTURE_2D);
+            //gl.End();
+             textureCellule.Bind(gl);
+            gl.Translate(-LARGEUR / 2, -HAUTEUR / 2, 0);
             gl.Begin(OpenGL.GL_QUADS);
+
             for (int x = 0; x < LARGEUR; x++)
                 for (int y = 0; y < HAUTEUR; y++)
                 {
@@ -107,12 +130,14 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
                         gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + 1, y);
                         gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + 1, y + 1);
                     }
+                   
                 }
             gl.End();
-            gl.MatrixMode(OpenGL.GL_PROJECTION);
-            gl.PopMatrix();
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-            gl.PopMatrix();
+            
+            //gl.MatrixMode(OpenGL.GL_PROJECTION);
+            // gl.PopMatrix();
+            // gl.MatrixMode(OpenGL.GL_MODELVIEW);
+            //gl.PopMatrix();
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -125,12 +150,13 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
 
+            _angle += maintenant._intervalle * VITESSE_ANGLE;
             int xMin, xMax;
             DecoupeEnBandes(out xMin, out xMax);
 
@@ -180,6 +206,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds
             {
                 _colonneMin += _largeurCalcul;
                 _colonneMax += _largeurCalcul;
+                if (_colonneMax > LARGEUR)
+                    _colonneMax = LARGEUR;
             }
             else
             {

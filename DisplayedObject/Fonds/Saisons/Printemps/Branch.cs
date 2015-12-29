@@ -3,7 +3,7 @@ using SharpGL;
 using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 {
     public class Branch
     {

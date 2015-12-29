@@ -9,7 +9,7 @@
 using System;
 using System.Drawing;
 using SharpGL;
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of _3d.
@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD
         public const float MAX_COORD = Int32.MaxValue;
         public const float MIN_COORD = Int32.MinValue;
         
-        public TroisD(float vpX, float vpY, float vpZ, float zCam)
+        public TroisD(OpenGL gl, float vpX, float vpY, float vpZ, float zCam): base(gl)
         {
             _tailleCubeX = vpX;
             _tailleCubeY = vpY;

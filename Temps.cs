@@ -20,8 +20,10 @@ namespace ClockScreenSaverGL
 		public int _Heure, _Minute, _Seconde, _Millieme ;
 		public float _intervalle ;
 		public DateTime _derniere ;
-		
-		public Temps(DateTime t, DateTime derniere )
+        public double _totalMillisecondes;
+        public static DateTime BASEDATE = new DateTime(1970, 1, 1);
+
+        public Temps(DateTime t, DateTime derniere )
 		{
 			_temps = t ;
 			_Annee = t.Year ;
@@ -32,8 +34,8 @@ namespace ClockScreenSaverGL
 			_Minute = t.Minute ;
 			_Seconde = t.Second ;
 			_Millieme = t.Millisecond ;
-			
-			_derniere = derniere ;
+            _totalMillisecondes = t.Subtract(BASEDATE).TotalMilliseconds ;
+            _derniere = derniere ;
 			_intervalle = (float)(t.Subtract(derniere).TotalMilliseconds / 1000.0);
 		}
 	}

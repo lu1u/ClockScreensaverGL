@@ -6,8 +6,9 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using SharpGL;
 using System;
-namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeVerticale
+namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
 {
     /// <summary>
     /// Description of BandeSeconde.
@@ -16,8 +17,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeVerticale
     {
 
 
-        public BandeSeconde(float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaSeconde", (byte)100))
+        public BandeSeconde(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
+            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaSeconde", (byte)100))
         {
         }
 

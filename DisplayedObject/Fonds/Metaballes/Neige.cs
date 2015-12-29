@@ -6,11 +6,12 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using SharpGL;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ClockScreenSaverGL.DisplayedObject.Metaballes
+namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 	/// <summary>
 	/// Description of Neige.
@@ -20,10 +21,11 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		const string CAT = "NeigeMeta" ;
 		static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
 		static int NbMax;
-		static DateTime derniereCreation = DateTime.Now ;
+		//static DateTime derniereCreation = DateTime.Now ;
+        TimerIsole _timer = new TimerIsole(800);
 		
-		public Neige( int cx, int cy): base( cx, cy)
-		{
+		public Neige(OpenGL gl, int cx, int cy) : base(gl, cx, cy)
+        {
 		}
 		
 		/// <summary>
@@ -39,6 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 			L = conf.getParametre(CAT, "Largeur", 400 ) ;
 			H = conf.getParametre(CAT, "Hauteur", 300 ) ;
 			C = conf.getParametre(CAT, "Niveaux", 512 ) ;
+            RatioCouleur = conf.getParametre(CAT, "RatioCouleur", 0.9f);
 		}
 		
 		protected override void ConstruitMetaballes()
@@ -78,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		/// </summary>
 		/// <param name="maintenant"></param>
 		/// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
 		{
 			#if TRACER
 			RenderStart(CHRONO_TYPE.DEPLACE) ;
@@ -108,11 +111,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 			
 			// Ajouter eventuellement une metaballe
 			if ( NbMetaballes < NbMax)
-				if ( maintenant._temps.Subtract( derniereCreation ).TotalMilliseconds> 800 )
+			//	if ( maintenant._temps.Subtract( derniereCreation ).TotalMilliseconds> 800 )
+            if ( _timer.Ecoule())
 			{
 				NouvelleMetaballe(ref _metaballes[NbMetaballes]) ;
 				NbMetaballes++ ;
-				derniereCreation = maintenant._temps ;
+				//derniereCreation = maintenant._temps ;
 			}
 
             updateFrame();
@@ -122,5 +126,53 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 			#endif
 			
 		}
-	}
+        /// <summary>
+		/// Change les couleurs de la palette
+		/// La palette est 'monochrome' avec la teinte globale de l'image
+		/// </summary>
+		/// <param name="c"></param>
+		///
+		protected override void updatePalette(Color c)
+        {
+            try
+            {
+                double r, g, b;
+
+                if (_CouleursInverses)
+                {
+                    r = (255 - c.R);
+                    g = (255 - c.G);
+                    b = (255 - c.B);
+                }
+                else
+                {
+                    r = c.R;
+                    g = c.G;
+                    b = c.B;
+                }
+
+                r = r * RatioCouleur / NiveauxCouleurs;
+                g = g * RatioCouleur / NiveauxCouleurs;
+                b = b * RatioCouleur / NiveauxCouleurs;
+
+                if (_NegatifCouleurs)
+                    for (int x = 0; x < NiveauxCouleurs; x++)
+                    {
+
+                        _palette[NiveauxCouleurs - 1 - x] = ((int)(r * x) << 16) | ((int)(g * x) << 8) | (int)(b * x);
+                    }
+                else
+                    for (int x = 0; x < NiveauxCouleurs; x++)
+                    {
+                        _palette[x] = ((int)(r * x) << 16) | ((int)(g * x) << 8) | (int)(b * x);
+                    }
+
+
+            }
+            catch
+            {
+
+            }
+        }
+    }
 }

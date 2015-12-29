@@ -2,9 +2,10 @@
  * Bande:
  * classe de base pour les objets qui affichent heure/minutes/secondes, verticalement ou horizontalement
  */
+using SharpGL;
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.DisplayedObject.Bandes
+namespace ClockScreenSaverGL.DisplayedObjects.Bandes
 {
     /// <summary>
     /// Description of Bande.
@@ -30,8 +31,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes
         /// <param name="decalage"></param>
         protected abstract void getValue(Temps maintenant, out float value, out float decalage);
 
-        public Bande(int valMax, int intervalle, float largeurcase, int hauteurfonte, float origineX, int largeur, byte alpha) :
-            base()
+        public Bande(OpenGL gl, int valMax, int intervalle, float largeurcase, int hauteurfonte, float origineX, int largeur, byte alpha) :
+            base(gl)
         {
             _valeurMax = valMax;
             _largeurCase = largeurcase;
@@ -48,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

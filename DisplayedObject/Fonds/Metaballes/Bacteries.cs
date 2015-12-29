@@ -6,9 +6,10 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using SharpGL;
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.DisplayedObject.Metaballes
+namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 	/// <summary>
 	/// Description of Bacteries.
@@ -19,8 +20,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
 		static private int UnSur = 0 ;
 		
-		public Bacteries( int cx, int cy): base( cx, cy)
-		{
+		public Bacteries(OpenGL gl, int cx, int cy) : base(gl, cx, cy)
+        {
 		}
 		
 		/// <summary>
@@ -61,9 +62,9 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 		/// </summary>
 		/// <param name="maintenant"></param>
 		/// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
 		{
-            base.Deplace(maintenant, ref tailleEcran);
+            base.Deplace(maintenant, tailleEcran);
 			
 			UnSur ++ ;
 			

@@ -10,13 +10,17 @@ using SharpGL;
 using System;
 using System.Drawing;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
 	/// <summary>
 	/// Description of Class1.
 	/// </summary>
 	public abstract class Fond : DisplayedObject
 	{
+        public Fond(OpenGL gl): base(gl)
+            {
+
+        }
         public override void ClearBackGround(OpenGL gl, Color c)
         {
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);

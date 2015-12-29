@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.Printemps
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 {
     public class Cible
     {

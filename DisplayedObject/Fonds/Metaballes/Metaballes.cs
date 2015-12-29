@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Text;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-namespace ClockScreenSaverGL.DisplayedObject.Metaballes
+namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 
     public class Metaballes : Fonds.Fond
@@ -23,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         const string COULEURS_INVERSE = "CouleursInversees";
         const string NEGATIF = "NegatifCouleurs";
 
-        protected readonly static double RatioCouleur = conf.getParametre(CAT, "RatioCouleur", 0.3f);	// Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
+        protected double RatioCouleur = conf.getParametre(CAT, "RatioCouleur", 0.3f);	// Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
         protected static bool _CouleursInverses = conf.getParametre(CAT, COULEURS_INVERSE, false);
         protected static bool _NegatifCouleurs = conf.getParametre(CAT, NEGATIF, false);
         #endregion
@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         /// <summary>
         /// Constructeur
         /// </summary>
-        public Metaballes(int cx, int cy)
+        public Metaballes(OpenGL gl, int cx, int cy) : base(gl)
         {
             GetPreferences(ref Largeur, ref Hauteur, ref NbMetaballes, ref NiveauxCouleurs);
             _palette = new int[NiveauxCouleurs];
@@ -84,7 +84,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
@@ -174,7 +174,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
 
             updatePalette(couleur);
             
-            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
 
             using (Bitmap bmp = updateFrame())
@@ -214,12 +214,6 @@ namespace ClockScreenSaverGL.DisplayedObject.Metaballes
         {
             switch (k)
             {
-                case TOUCHE_REINIT:
-                    {
-                        ConstruitMetaballes();
-                        return true;
-                    }
-
                 case TOUCHE_INVERSER:
                     {
                         _CouleursInverses = !_CouleursInverses;

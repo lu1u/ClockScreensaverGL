@@ -10,7 +10,7 @@
 using SharpGL;
 using System;
 using System.Drawing;
-namespace ClockScreenSaverGL.DisplayedObject.Textes
+namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
     /// <summary>
     /// Description of Date.
@@ -18,19 +18,18 @@ namespace ClockScreenSaverGL.DisplayedObject.Textes
     public class DateTexte : Texte
     {
         const string CAT = "DateTexte";
-        static private string _date; // Sera initialise dans OnDateChange
+        private string _date; // Sera initialise dans OnDateChange
 
-        public DateTexte(int Px, int Py)
-            : base(Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160))
+        public DateTexte(OpenGL gl, int Px, int Py)
+            : base(gl, Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160))
         {
         }
 
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte)
+            : base(gl, Px, 0, 0, 0, tailleFonte, conf.getParametre(CAT, "Alpha", (byte)160))
         {
-            base.Deplace(maintenant, ref tailleEcran);
-            tailleEcran = new Rectangle(tailleEcran.Left, tailleEcran.Top + (int)_taille.Height, tailleEcran.Width, tailleEcran.Height - (int)_taille.Height);
         }
-
+        
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
             _date = maintenant._temps.ToLongDateString();

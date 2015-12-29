@@ -69,7 +69,7 @@ namespace ClockScreenSaverGL
         {
 
             //loops through all the computer's screens (monitors)
-            foreach (Screen screen in Screen.AllScreens)
+           // foreach (Screen screen in Screen.AllScreens)
             {
                 /*Rectangle r = screen.Bounds  ;
             	r.Inflate( r.Width / 4, r.Height/4 )  ;

@@ -13,26 +13,29 @@ using System.Windows.Forms;
 using System.Text;
 using SharpGL.SceneGraph.Assets;
 using System.Collections.Generic;
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
+using GLfloat = System.Single;
+using GLuint = System.UInt32;
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
     /// <summary>
     /// Description of Nuage.
     /// </summary>
-    public sealed class NuagesOpenGL : TroisD
+    public sealed class NuagesOpenGL : TroisD, IDisposable
     {
         #region PARAMETRES
         const string CAT = "Nuages.OpenGL";
-        static readonly float ALPHA = conf.getParametre(CAT, "Alpha", 0.25f);
-        static readonly bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
+        static readonly float ALPHA = 0.2f;// conf.getParametre(CAT, "Alpha", 0.25f);
+        static  bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2f);
         static readonly float RAYON_MAX = conf.getParametre(CAT, "RayonMax", 8f);
         static readonly float RAYON_MIN = conf.getParametre(CAT, "RayonMin", 5f);
-        static readonly float TAILLE_PARTICULE = conf.getParametre(CAT, "TailleParticules", 2.5f);
+        static readonly float TAILLE_PARTICULE = 3f;// conf.getParametre(CAT, "TailleParticules", 2.5f);
         static readonly int NB_NUAGES = conf.getParametre(CAT, "Nb", 10);
         static readonly int MAX_NIVEAU = conf.getParametre(CAT, "NbNiveaux", 6);
         static readonly int NB_EMBRANCHEMENTS = conf.getParametre(CAT, "NbEmbranchements", 3);
         static readonly bool CIEL_DEGRADE = conf.getParametre(CAT, "CielDegrade", true);
         float _positionNuage = conf.getParametre(CAT, "EnHaut", true) ? 1f : -1f;
+        private static readonly GLfloat[] fogcolor = { 0, 0, 0, 1 };
         #endregion
         const float VIEWPORT_X = 1f;
         const float VIEWPORT_Y = 1f;
@@ -69,13 +72,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
         const int NB_TEXTURES = 3;
         private Texture[] texture = new Texture[NB_TEXTURES];
-
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="gl"></param>
         public NuagesOpenGL(OpenGL gl)
-            : base(VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 0)
+            : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 0)
         {
             _nuages = new Nuage[NB_NUAGES];
             texture[0] = new Texture();
@@ -91,6 +93,13 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
             NBPARTICULES_MAX = _NbParticules * NB_NUAGES;
             _particules = new Particule[NBPARTICULES_MAX];
             _NbParticules = 0;
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (Texture t in texture)
+                t?.Destroy(_gl);
         }
 
         /// <summary>
@@ -178,16 +187,21 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 #endif
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
             DessineCiel(gl, col);
-
+            gl.Enable(OpenGL.GL_FOG);
+            gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);
+            gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
+            gl.Fog(OpenGL.GL_FOG_DENSITY, 1.0f);
+            gl.Fog(OpenGL.GL_FOG_START, VIEWPORT_Z);
+            gl.Fog(OpenGL.GL_FOG_END, _zCamera/2);
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, ADDITIVE ? OpenGL.GL_ONE :  OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
 
-            texture[0].Create(gl, Resources.nuage1);
-            texture[1].Create(gl, Resources.nuage2);
-            texture[2].Create(gl, Resources.nuage3);
+            texture[0].Create(gl, Resources.particleTexture);
+            texture[1].Create(gl, Resources.particleTexture);
+            texture[2].Create(gl, Resources.particleTexture);
             int derniereTexture = -1;
             gl.Begin(OpenGL.GL_QUADS);
             for (int i = 0; i < _NbParticules; i++)
@@ -259,8 +273,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// Deplacer les nuages
         /// </summary>
         /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref Rectangle tailleEcran)
+        /// <param name="tailleEcran"></param
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
@@ -327,6 +341,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
                 for (int i = 0; i < NB_NUAGES; i++)
                     creerNuage(ref _nuages[i], true);
+                return true;
+            }
+            if ( k == TOUCHE_ADDITIVE)
+            {
+                ADDITIVE = !ADDITIVE;
+                conf.setParametre(CAT, "Additive", ADDITIVE);
                 return true;
             }
             else

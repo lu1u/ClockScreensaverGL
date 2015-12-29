@@ -9,9 +9,9 @@ using SharpGL.SceneGraph.Assets;
 using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Evaluators;
 
-namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
-    sealed class TerreOpenGL : TroisD
+    sealed class TerreOpenGL : Fond, IDisposable
     {
         #region Parametres
         const String CAT = "TerreOpenGl";
@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
         Texture _textureTerre = new Texture();
         Sphere _sphere = new Sphere();
-
+        
         float _rotation = 270;
         float[] _zDrapeau = new float[DETAILS_DRAPEAU];
         int _frame = 0;
@@ -43,8 +43,8 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// Constructeur: preparer les objets OpenGL
         /// </summary>
         /// <param name="gl"></param>
-        public TerreOpenGL(OpenGL gl)
-            : base(1.0f, 1.0f, 1.0f, 0)
+        public TerreOpenGL(OpenGL gl): base(gl)
+            //: base(1.0f, 1.0f, 1.0f, 0)
         {
             _textureTerre.Create(gl, Resources.terre);
 
@@ -59,6 +59,12 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
 
             for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 _zDrapeau[i] = 0.002f * (float)Math.Sin(i * 4.0 * Math.PI / DETAILS_DRAPEAU);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _textureTerre?.Destroy(_gl);
         }
 
         /// <summary>
@@ -150,7 +156,7 @@ namespace ClockScreenSaverGL.DisplayedObject.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant, ref  Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant,  Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

@@ -6,7 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils  Options  Codage  Editer les en-têtes standards.
  */
-using ClockScreenSaverGL.DisplayedObject;
+using ClockScreenSaverGL.DisplayedObjects;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -138,26 +138,27 @@ namespace ClockScreenSaverGL
                 bmpRes = new Bitmap(bmp.Width, bmp.Height, g);
             else
                 bmpRes = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppRgb);
-			Graphics gMem = Graphics.FromImage(bmpRes);
-			
-			float[][] ptsArray =
-			{
-				new float[] {1, 0, 0, 0, 0}, 
-				new float[] {0, 1, 0, 0, 0}, 
-				new float[] {0, 0, 1, 0, 0}, 
-				new float[] {0, 0, 0, HorlogeRonde.ALPHA_AIGUILLES/255.0f, 0}, 
-				new float[] {0, 0, 0, 0, 1}
-			};
-			
-			ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
-			ImageAttributes imgAttribs = new ImageAttributes();
-			imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
-			
-			gMem.DrawImage(bmp, 
-			               new Rectangle(0, 0, bmp.Width, bmp.Height), 
-			               0, 0, bmp.Width, bmp.Height, 
-			               GraphicsUnit.Pixel, imgAttribs) ;
-			gMem.Dispose() ;
+            using (Graphics gMem = Graphics.FromImage(bmpRes))
+            {
+
+                float[][] ptsArray =
+                {
+                new float[] {1, 0, 0, 0, 0},
+                new float[] {0, 1, 0, 0, 0},
+                new float[] {0, 0, 1, 0, 0},
+                new float[] {0, 0, 0, HorlogeRonde.ALPHA_AIGUILLES/255.0f, 0},
+                new float[] {0, 0, 0, 0, 1}
+            };
+
+                ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+                ImageAttributes imgAttribs = new ImageAttributes();
+                imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
+
+                gMem.DrawImage(bmp,
+                               new Rectangle(0, 0, bmp.Width, bmp.Height),
+                               0, 0, bmp.Width, bmp.Height,
+                               GraphicsUnit.Pixel, imgAttribs);
+            }
 			return bmpRes;
 		}
 	}

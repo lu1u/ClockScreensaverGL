@@ -8,8 +8,9 @@
  */
 using System;
 using System.Drawing;
+using SharpGL;
 
-namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeVerticale
+namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
 {
     /// <summary>
     /// Description of BandeVerticale.
@@ -18,42 +19,33 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeVerticale
     {
         public const string CAT = "BandeVerticale";
         public static int TailleFonte = conf.getParametre(CAT, "TailleFonte", 30);
+        private OpenGLFonte _glFonte;
+        
 
-
-        public BandeVerticale(int valMax, int intervalle, float largeurcase, float origineY, float Px, int largeur, byte alpha)
-            : base(valMax, intervalle, largeurcase, TailleFonte, origineY, largeur, alpha)
+        public BandeVerticale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineY, float Px, int largeur, byte alpha)
+            : base(gl, valMax, intervalle, largeurcase, TailleFonte, origineY, largeur, alpha)
         {
+            _glFonte = new OpenGLFonte(gl, "0123456789", TailleFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
             _trajectoire = new TrajectoireDiagonale(Px, _origine, conf.getParametre(CAT, "VY", 20f), 0);
             _taillebande = new SizeF(_hauteurFonte * 2, largeur);
         }
 
 
 
+       
 
-        /// <summary>
-        /// Affichage d'une bande verticale 
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        /// <param name="couleurGlobale"></param>
-        public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleurGlobale)
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
-#if TRACER
-            RenderStart(CHRONO_TYPE.RENDER);
-#endif
-
             float decalage, valeur;
             getValue(maintenant, out valeur, out decalage);
 
-            Color couleur = getCouleurAvecAlpha(couleurGlobale, _alpha);
-
-            using (Brush brush = new SolidBrush(couleur))
-            using (Pen pen = new Pen(couleur, 4))
+            
+            //using (Brush brush = new SolidBrush(couleur))
+           // using (Pen pen = new Pen(couleur, 4))
             {
                 float Decalage = _origine - (decalage * _largeurCase);
-                float Y = (float)Decalage;
-                float X = (float)_trajectoire._Px;
+                float Y = Decalage;
+                float X = _trajectoire._Px;
 
                 int val = (int)valeur;
 
@@ -67,37 +59,40 @@ namespace ClockScreenSaverGL.DisplayedObject.Bandes.BandeVerticale
                 // Revenir jusqu'a la gauche de l'ecran
                 while (val < 0)
                     val += (int)_valeurMax;
-
+                
                 // Trace les chiffres et marques
                 while (Y < tailleEcran.Height)
                 {
-                    if (val % _intervalleTexte == 0)
-                    {
-                        g.DrawLine(pen, X, Y, X + _hauteurFonte, Y);
-                        g.DrawString(val.ToString(), _fonte, brush, X, Y);
-                    }
-                    else
-                        g.DrawLine(pen, X, Y, X + _hauteurFonte / 2, Y);
+                    gl.Begin(OpenGL.GL_LINES);
+                    gl.Vertex(X, Y);
+                    gl.Vertex(val % _intervalleTexte == 0 ? X + _hauteurFonte : X + _hauteurFonte / 2.0f, Y);
+                    gl.End();
 
-                    Y += (float)_largeurCase;
+                    if (val % _intervalleTexte == 0)
+                        _glFonte.drawOpenGL( gl, val.ToString(), X, Y, couleur );
+                    Y += _largeurCase;
                     val = (val + 1);
-                    while (val > _valeurMax)
+                    while (val >= _valeurMax)
                         val -= _valeurMax;
                 }
 
+
+                gl.Begin(OpenGL.GL_LINES);
                 // Deux lignes verticales pour les bords de la bande
-                g.DrawLine(pen, X, 0, X, tailleEcran.Height);
-                g.DrawLine(pen, X + _hauteurFonte * 2, 0, X + _hauteurFonte * 2, tailleEcran.Height);
+                gl.Vertex(X, 0);
+                gl.Vertex(X, tailleEcran.Height);
+
+                gl.Vertex(X + _hauteurFonte*2.0f, 0);
+                gl.Vertex(X + _hauteurFonte*2.0f, tailleEcran.Height);
+
 
                 // Repere pour la valeur
-                g.DrawLine(pen, X, _origine - 4, X + _hauteurFonte * 2, (float)_origine - 4);
-                g.DrawLine(pen, X, (float)_origine + 4, X + _hauteurFonte * 2, (float)_origine + 4);
-            }
-#if TRACER
-            RenderStop(CHRONO_TYPE.RENDER);
-#endif
-        }
+                gl.Vertex(X-4, _origine );
+                gl.Vertex(X + 4 + _hauteurFonte * 2, _origine );
 
+                gl.End();
+            }
+        }
 
     }
 }
