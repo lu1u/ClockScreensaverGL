@@ -15,9 +15,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         const String CAT = "Gravite";
         static readonly int NB_EMETTEURS = conf.getParametre(CAT, "Nb Emetteurs", 1);
         static readonly int NB_ATTRACTEURS = conf.getParametre(CAT, "Nb Emetteurs", 1);
-        static readonly int NB_PARTICULES = 200000;// conf.getParametre(CAT, "Nb Particules", 100000);
-        readonly float TAILLE_PARTICULE = 0.01f;// conf.getParametre(CAT, "TailleParticule", 0.01f);
-        readonly float VITESSE_PARTICULE = 0.75f;// conf.getParametre(CAT, "VitesseParticule", 0.5f);
+        static readonly int NB_PARTICULES = conf.getParametre(CAT, "Nb Particules", 100);
+        readonly float TAILLE_PARTICULE = 0.01f;// conf.getParametre(CAT, "TailleParticule", 0.005f);
+        readonly float VITESSE_PARTICULE = 0.0005f;// conf.getParametre(CAT, "VitesseParticule", 0.001f);
 
         public Gravite(OpenGL gl) : base(gl, NB_PARTICULES)
         {
@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                 ModificateurExclusion.Exclusions.EXCLURE_TOUT));
 
             AjouteModificateur(new ModificateurRecentre(0.5f));
-            AjouteModificateur(new ModificateurAttracteurMutuelle(0.01f));
+            AjouteModificateur(new ModificateurAttracteurMutuelle(0.05f));
             AjouteModificateur(new ModificateurVitesseLineaire());
         }
     }

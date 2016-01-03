@@ -9,7 +9,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules.Modificat
     class ModificateurAttracteurMutuelle : Modificateur
     {
         private float _g;
-        const float SEUIL = 0.005f;
+        const float SEUIL = 0.01f;
 
         static RectangleF bounds = new RectangleF(SystemeParticules.MIN_X, SystemeParticules.MIN_Y, SystemeParticules.LARGEUR, SystemeParticules.HAUTEUR);
         static SizeF tailleEmetteur = new SizeF(0.1f, 0.1f);
@@ -44,7 +44,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules.Modificat
                             }
                             else
                             {
-                                s._particules[i].taille = (float)Math.Sqrt(s._particules[i].taille* s._particules[i].taille + s._particules[j].taille*s._particules[j].taille);
+
+                                s._particules[i].vx = ((s._particules[i].vx * s._particules[i].taille) + (s._particules[j].vx * s._particules[j].taille)) / (s._particules[i].taille + s._particules[j].taille);
+                                s._particules[i].vy = ((s._particules[i].vy * s._particules[i].taille) + (s._particules[j].vy * s._particules[j].taille)) / (s._particules[i].taille + s._particules[j].taille);
+                                s._particules[i].taille = (float)Math.Sqrt((s._particules[i].taille * s._particules[i].taille) + (s._particules[j].taille * s._particules[j].taille));
                                 s._particules[j].active = false;
                             }
                         }

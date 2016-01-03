@@ -7,11 +7,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules.Modificat
 {
     class ModificateurAlpha: Modificateur
     {
+        const float SEUIL = 0.001f;
         private DateTime _derniere = DateTime.Now;
         private float _dAlpha;
-        public ModificateurAlpha(float dAlpha)
+        private bool _eliminerSiSeuil;
+        public ModificateurAlpha(float dAlpha, bool eliminerSiSeuil = false)
         {
             _dAlpha = dAlpha;
+            _eliminerSiSeuil = eliminerSiSeuil;
         }
 
         public override void Applique(SystemeParticules s, Temps maintenant )
@@ -22,6 +25,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules.Modificat
                 if (s._particules[i].active)
                 {
                     s._particules[i].alpha -= dAlpha;
+                    if (_eliminerSiSeuil)
+                        if (s._particules[i].alpha < SEUIL)
+                        {
+                            s._particules[i].active = false;
+                            s._trier = true;
+                        }
                 }
         }
     }

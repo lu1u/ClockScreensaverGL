@@ -15,10 +15,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
     {
         #region Parametres
         const String CAT = "TerreOpenGl";
-        static readonly float SPEC = 128.0f;// conf.getParametre(CAT, "Specular", 1f);
-        static readonly float AMB = conf.getParametre(CAT, "Ambient", 0.0f);
-        static readonly float DIF = conf.getParametre(CAT, "Diffuse", 0.1f);
-        static readonly float SHININESS = 128;// conf.getParametre(CAT, "Shininess", 50);
+        static readonly int SPEC = 128;// conf.getParametre(CAT, "Specular", 1f);
+        static readonly int AMB = 0; //conf.getParametre(CAT, "Ambient", 0);
+        static readonly int DIF = 1;// conf.getParametre(CAT, "Diffuse", 1);
+        static readonly int SHININESS = 128;// conf.getParametre(CAT, "Shininess", 50);
         static readonly int NB_TRANCHES = conf.getParametre(CAT, "NbTranches", 64);
         static readonly int NB_MERIDIENS = conf.getParametre(CAT, "NbMeridiens", 64);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5f);
@@ -28,9 +28,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);
         #endregion
 
-        static readonly float[] COL_SPECULAR = { SPEC, SPEC, SPEC, 1.0f };
-        static readonly float[] COL_AMBIENT = { AMB, AMB, AMB, 1.0f };
-        static readonly float[] COL_DIFFUSE = { DIF, DIF, DIF, 1.0f };
+        static readonly int[] COL_SPECULAR = { SPEC, SPEC, SPEC };
+        static readonly int[] COL_AMBIENT = { AMB, AMB, AMB };
+        static readonly int[] COL_DIFFUSE = { DIF, DIF, DIF };
         static readonly float[] COL_LIGHTPOS = { -9f, 5f, -5f, 1 };
 
         Texture _textureTerre = new Texture();
@@ -80,6 +80,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
+            float[] lcol = { 1, 1, 1, 1 };
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_ALPHA_TEST);
@@ -94,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, COL_LIGHTPOS);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_COLOR, col);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_COLOR, lcol);
 
             // Aspect de la surface
             gl.ShadeModel(OpenGL.GL_SMOOTH);

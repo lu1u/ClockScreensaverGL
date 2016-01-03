@@ -99,6 +99,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DefineConstants />
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClockScreenSaverGL.Program</StartupObject>
@@ -185,6 +186,7 @@
     <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurVitesseLineaire.cs" />
     <Compile Include="DisplayedObject\Fonds\Systemes Particules\Particule.cs" />
     <Compile Include="DisplayedObject\Fonds\Systemes Particules\SystemeParticules.cs" />
+    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Engrenages.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\CarresEspace.cs" />
     <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
     <Compile Include="DisplayedObject\Fonds\Saisons\Automne.cs" />

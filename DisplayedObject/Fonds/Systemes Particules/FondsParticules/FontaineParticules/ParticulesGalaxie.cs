@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         readonly float GRAVITE_X = conf.getParametre(CAT, "Gravite X", 0.05f);
         readonly float GRAVITE_Y = conf.getParametre(CAT, "Gravite Y", 0.2f);
         readonly float ALPHA_MODIFIEUR = 0.1f;// conf.getParametre(CAT, "Modifieur Alpha", 0.05f);
-        readonly float TAILLE_MODIFIEUR = 0.04f;// conf.getParametre(CAT, "Modifieur Taille", 1.1f);
+        readonly float TAILLE_MODIFIEUR = 0.02f;// conf.getParametre(CAT, "Modifieur Taille", 1.1f);
         readonly float TAILLE_PARTICULE = 0.01f;// conf.getParametre(CAT, "TailleParticule", 0.02f);
         readonly float VITESSE_ANGLE = 2.0f;// conf.getParametre(CAT, "VitesseAngle", 2.0f);
         readonly float VITESSE_PARTICULE = 0.1f;// conf.getParametre(CAT, "VitesseParticule", 0.2f);
@@ -37,9 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
             AttributBlend = SystemeParticules.PARTICULES_BLEND_ADDITIVE;
 
-            AjouteModificateur(new ModificateurExclusion(SystemeParticules.MIN_X,
-                SystemeParticules.MIN_Y, SystemeParticules.MAX_X, SystemeParticules.MAX_Y,
-                ModificateurExclusion.Exclusions.EXCLURE_TOUT));
+            AjouteModificateur(new ModificateurExclusion(MIN_X*1.1f, MIN_Y * 1.1f, MAX_X * 1.1f, MAX_Y * 1.1f, ModificateurExclusion.Exclusions.EXCLURE_TOUT));
 
             AjouteModificateur(new ModificateurLife());
             AjouteModificateur(new ModificateurVitesseLineaire());

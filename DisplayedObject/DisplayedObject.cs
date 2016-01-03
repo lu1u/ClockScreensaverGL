@@ -30,6 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const Keys TOUCHE_ADDITIVE = Keys.A;
         public const Keys TOUCHE_NEGATIF = Keys.N;
         public const Keys TOUCHE_DEEZER = Keys.D;
+        public const Keys TOUCHE_PARTICULES = Keys.P;
 
         const float PRECISION_RANDOM = 100000.0f;
         static public Random r = new Random();

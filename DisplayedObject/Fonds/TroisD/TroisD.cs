@@ -126,7 +126,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         }
     */
         
-        protected Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
+        protected static Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
             Vecteur3D v = new Vecteur3D();
             v.x = (P2.y - P1.y) * (P3.z - P1.z) - (P2.z - P1.z) * (P3.y - P1.y);

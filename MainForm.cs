@@ -1,7 +1,8 @@
-﻿using ClockScreenSaverGL.DisplayedObjects;
+﻿
+using ClockScreenSaverGL.DisplayedObjects;
 using ClockScreenSaverGL.DisplayedObjects.Fonds;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
@@ -9,6 +10,7 @@ using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
 using ClockScreenSaverGL.DisplayedObjects.Saisons;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 /*
  * Crée par SharpDevelop.
@@ -20,14 +22,10 @@ using SharpGL;
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
+
 namespace ClockScreenSaverGL
 {
 
@@ -80,9 +78,10 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_NOIR = 16;
         const int TYPE_FOND_ATTRACTEUR = 17;
         const int TYPE_FOND_GRAVITE = 18;
+        const int TYPE_FOND_ENGRENAGES = 19;
 
 
-        const int NB_FONDS = TYPE_FOND_GRAVITE + 1;
+        const int NB_FONDS = TYPE_FOND_ENGRENAGES + 1;
         #endregion
 
         #region Render Modes
@@ -214,6 +213,7 @@ namespace ClockScreenSaverGL
                 case TYPE_FOND_ARTIFICE: return new FeuDArtifice(gl);
                 case TYPE_FOND_ATTRACTEUR: return new AttracteurParticules(gl);
                 case TYPE_FOND_GRAVITE: return new Gravite(gl);
+                case TYPE_FOND_ENGRENAGES: return new Engrenages(gl);
                 default:
                     return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
@@ -416,8 +416,11 @@ namespace ClockScreenSaverGL
                 b.ClearBackGround(gl, Couleur);
             //gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
 
-            if ( wireframe)
+            if (wireframe)
+            {
+                gl.LineWidth(1);
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
+            }
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
             {

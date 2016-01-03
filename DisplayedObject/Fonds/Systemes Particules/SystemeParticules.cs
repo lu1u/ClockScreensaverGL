@@ -4,6 +4,7 @@ using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules
 {
@@ -21,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules
         public const float HAUTEUR = MAX_Y - MIN_Y;
         public const float MILIEU_X = MIN_X + LARGEUR / 2.0f;
         public const float MILIEU_Y = MIN_Y + HAUTEUR / 2.0f;
-
+        private static bool afficheDebug = false;
 
         public enum TYPE_FOND
         {
@@ -226,7 +227,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules
             }
 
 
-            //#region debug
+            if  (afficheDebug)
             {
                 gl.Color(1.0f, 1.0f, 1.0f, 0.2f);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -267,6 +268,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules
                 t.Destroy(_gl);
         }
 
+        public override bool KeyDown(Form f, Keys k)
+        {
+            switch (k)
+            {
+                case TOUCHE_PARTICULES:
+                    afficheDebug = !afficheDebug;
+                    return true;
 
+                default:
+                    return base.KeyDown(f, k);
+            }
+        }
     }
 }
