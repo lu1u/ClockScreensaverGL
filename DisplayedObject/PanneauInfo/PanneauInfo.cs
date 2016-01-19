@@ -12,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
     class PanneauInfos : DisplayedObject, IDisposable
     {
         #region PARAMETRES
-        public const string CAT = "Meteo";
+        public const string CAT = "PanneauInfos";
         private static readonly float ORIGINE_X = conf.getParametre(CAT, "OrigineX", 1000.0f);
         private static readonly float ORIGINE_Y = conf.getParametre(CAT, "OrigineY", 500.0f);
         private static readonly float VITESSE_X = conf.getParametre(CAT, "VitesseX", 30.0f);
@@ -21,19 +21,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private static readonly float DELTA_ALPHA = conf.getParametre(CAT, "DeltaAlpha", 0.7f);
         private static readonly string METEO_URL = conf.getParametre(CAT, "URL", @"http://weather.yahooapis.com/forecastrss?w=588014&u=c");
         private static readonly string EXE_DEEZERINFO = conf.getParametre(CAT, "DeezerInfo", getDeezerInfoDirectory());
-        private static readonly int DIAMETRE_HORLOGE = 360;
+        private static readonly int DIAMETRE_HORLOGE = conf.getParametre(CAT, "Diametre Horloge", 360);
         private static readonly int MARGE_HORLOGE = 20;
         private static readonly int TAILLE_TEXTE_HEURE = 32;
         private static readonly int MARGE_TEXTE_HEURE = 20;
         private static readonly int TAILLE_TEXTE_DATE = 30;
-        private static readonly int MARGE_TEXTE_DATE = 20;
+        //private static readonly int MARGE_TEXTE_DATE = 20;
 
 
         private static string getDeezerInfoDirectory()
         {
             string myExeDir = (new FileInfo(System.Reflection.Assembly.GetEntryAssembly().Location)).FullName;
             FileInfo p = new FileInfo(myExeDir);
-            return Path.Combine(p.DirectoryName, "GetDeezerInfo.exe");
+            return Path.Combine(p.DirectoryName, "GetDeezerInformation.exe");
 
         }
 

@@ -174,7 +174,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Systeme_Particules
                 int derniereTexture = -1;
                 foreach (Particule p in _particules)
                 {
+                    // Particule active?
                     if (p.active && p.alpha > SEUIL_ALPHA)
+                        // Particule sur l'ecran ?
+                        if ((p.x+p.taille)>MIN_X && (p.x-p.taille)<MAX_X && (p.y+p.taille)>MIN_Y && (p.y-p.taille)<MAX_Y)
                     {
                         if (p._couleurIndividuelle)
                             gl.Color(p._couleur);

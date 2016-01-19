@@ -15,8 +15,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         static readonly int NB_PARTICULES_EMISES = conf.getParametre(CAT, "Nb ParticulesEmises", 10);
         readonly float ALPHA_MODIFIEUR = conf.getParametre(CAT, "Modifieur Alpha", 0.002f);
         readonly float TAILLE_PARTICULE = conf.getParametre(CAT, "TailleParticule", 0.012f);
-        readonly float VITESSE_PARTICULE = conf.getParametre(CAT, "VitesseParticule", 0.02f);
-        readonly float VITESSE_EMETTEUR = conf.getParametre(CAT, "VitesseEmetteur", 0.05f);
+        readonly float VITESSE_PARTICULE = 0.01f;// conf.getParametre(CAT, "VitesseParticule", 0.02f);
+        readonly float VITESSE_EMETTEUR = 0.02f;// conf.getParametre(CAT, "VitesseEmetteur", 0.05f);
         readonly float VITESSE_ATTRACTEUR = conf.getParametre(CAT, "VitesseAttracteur", 0.02f);
 
         public AttracteurParticules(OpenGL gl) : base(gl, NB_PARTICULES)

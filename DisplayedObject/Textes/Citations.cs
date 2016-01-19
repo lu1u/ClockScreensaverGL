@@ -120,7 +120,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
                 // Calculer la taille du texte affiche
                 SizeF stringSize = new SizeF();
-                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
+                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Regular, GraphicsUnit.Pixel))
                     stringSize = g.MeasureString(_citation, fonte, SystemInformation.VirtualScreen.Width);
                 _rectCitation = new RectangleF(0, 0, stringSize.Width, stringSize.Height);
 

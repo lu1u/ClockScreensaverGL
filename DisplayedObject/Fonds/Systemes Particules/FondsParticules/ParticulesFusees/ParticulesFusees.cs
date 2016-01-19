@@ -33,7 +33,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             typeFond = SystemeParticules.TYPE_FOND.FOND_COULEUR;
             couleurParticules = SystemeParticules.COULEUR_PARTICULES.BLANC;
             AjouteTexture(Resources.particleTexture);
-            
+            AjouteTexture(Resources.nuage1);
+            AjouteTexture(Resources.nuage2);
+            AjouteTexture(Resources.nuage3);
+
             AjouteModificateur(new ModificateurExclusion(SystemeParticules.MIN_X,
                 SystemeParticules.MIN_Y, SystemeParticules.MAX_X, SystemeParticules.MAX_Y,
                 ModificateurExclusion.Exclusions.EXCLURE_AU_DESSUS | ModificateurExclusion.Exclusions.EXCLURE_A_DROITE| ModificateurExclusion.Exclusions.EXCLURE_A_GAUCHE));

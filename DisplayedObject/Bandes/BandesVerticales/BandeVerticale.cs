@@ -21,7 +21,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
         public static int TailleFonte = conf.getParametre(CAT, "TailleFonte", 30);
         private OpenGLFonte _glFonte;
         
-
         public BandeVerticale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineY, float Px, int largeur, byte alpha)
             : base(gl, valMax, intervalle, largeurcase, TailleFonte, origineY, largeur, alpha)
         {
@@ -29,10 +28,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
             _trajectoire = new TrajectoireDiagonale(Px, _origine, conf.getParametre(CAT, "VY", 20f), 0);
             _taillebande = new SizeF(_hauteurFonte * 2, largeur);
         }
-
-
-
-       
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {

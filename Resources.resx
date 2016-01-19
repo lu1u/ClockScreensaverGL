@@ -730,9 +730,6 @@ R: réinitialiser le fond</value>
   <data name="flocon3" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\flocon3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="terre" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\terre.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="feuille1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\feuille1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -927,9 +924,6 @@ R: réinitialiser le fond</value>
   </data>
   <data name="flare4" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\ete\flare4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="fondEte" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\fond.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="AideEte" xml:space="preserve">
     <value>I: Afficher/cacher fond herbeux

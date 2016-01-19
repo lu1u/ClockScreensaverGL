@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace ClockScreenSaverGL
 {
@@ -73,6 +74,16 @@ namespace ClockScreenSaverGL
             EcritFichier();
         }
 
+        private static string getImagesDirectory()
+        {
+            return Path.Combine(new FileInfo((Assembly.GetExecutingAssembly().Location)).Directory.FullName, "images");
+        }
+
+        public static string getImagePath(string imgName)
+        {
+            return Path.Combine(getImagesDirectory(), imgName);//.Replace("\\\\","\\");
+        }
+
         /// <summary>
         /// Ecrit le fichier de configuration
         /// </summary>
@@ -104,6 +115,7 @@ namespace ClockScreenSaverGL
                 }
             }
         }
+
 
         static string toLigneType(Parameter p)
         {
@@ -209,15 +221,15 @@ namespace ClockScreenSaverGL
                             if (type.Equals(TYPE_BOOL))
                                 setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString(defaut));
                             else if (type.Equals(TYPE_DOUBLE))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_DOUBLE, Double.Parse(valeur), Double.Parse(defaut));
+                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_DOUBLE, doubleFromString(valeur), doubleFromString(defaut));
                             else if (type.Equals(TYPE_FLOAT))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_FLOAT, (float)Double.Parse(valeur), (float)Double.Parse(defaut));
+                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_FLOAT, floatFromString(valeur), floatFromString(defaut));
                             else if (type.Equals(TYPE_INT))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, (int)Int64.Parse(valeur), (int)Int64.Parse(defaut));
+                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, intFromSting(valeur), intFromSting(defaut));
                             else if (type.Equals(TYPE_STRING))
                                 setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_STRING, valeur, defaut);
                             else if (type.Equals(TYPE_BYTE))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, (byte)Int64.Parse(valeur), (byte)Int64.Parse(defaut));
+                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, byteFromString(valeur), byteFromString(defaut));
                         }
                     }
                     _categories.Add(categorieName, categorie);
@@ -233,11 +245,58 @@ namespace ClockScreenSaverGL
             }
             catch (Exception)
             {
-                throw ;
+                throw;
             }
 
         }
 
+        static private byte byteFromString(string valeur)
+        {
+            return (byte)(intFromSting(valeur) % 256);
+        }
+
+        static private int intFromSting(string valeur)
+        {
+            try
+            {
+                return (int)Int64.Parse(valeur);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    return (int)Math.Round( Double.Parse(valeur));
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+            }
+        }
+
+        static private float floatFromString(string valeur)
+        {
+            return (float)doubleFromString(valeur);
+        }
+
+        static private double doubleFromString(string valeur)
+        {
+            try
+            {
+                return Double.Parse(valeur);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    return Int64.Parse(valeur);
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+            }
+        }
 
         static bool boolFromString(string s)
         {

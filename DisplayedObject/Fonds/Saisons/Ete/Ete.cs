@@ -65,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             _textureSoleil = new Texture();
             _textureSoleil.Create(gl, Resources.soleil);
             _textureFond = new Texture();
-            _textureFond.Create(gl, Resources.fondEte);
+            _textureFond.Create(gl, Config.getImagePath("fondEte.png"));
             Init(gl);
         }
         /**

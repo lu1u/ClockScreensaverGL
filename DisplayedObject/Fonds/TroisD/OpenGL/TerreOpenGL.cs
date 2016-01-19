@@ -11,16 +11,15 @@ using SharpGL.SceneGraph.Evaluators;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 {
-    sealed class TerreOpenGL : Fond, IDisposable
+    class TerreOpenGL : Fond, IDisposable
     {
         #region Parametres
         const String CAT = "TerreOpenGl";
-        static readonly int SPEC = 128;// conf.getParametre(CAT, "Specular", 1f);
-        static readonly int AMB = 0; //conf.getParametre(CAT, "Ambient", 0);
-        static readonly int DIF = 1;// conf.getParametre(CAT, "Diffuse", 1);
-        static readonly int SHININESS = 128;// conf.getParametre(CAT, "Shininess", 50);
-        static readonly int NB_TRANCHES = conf.getParametre(CAT, "NbTranches", 64);
-        static readonly int NB_MERIDIENS = conf.getParametre(CAT, "NbMeridiens", 64);
+        //static readonly float SPEC = 0.5f;// conf.getParametre(CAT, "Specular", 0);
+        //static readonly float AMB = 0.5f;// conf.getParametre(CAT, "Ambient", 0);
+        //static readonly float DIF = 0.99f;// conf.getParametre(CAT, "Diffuse", 100);
+        static readonly int NB_TRANCHES = 128;// conf.getParametre(CAT, "NbTranches", 64);
+        static readonly int NB_MERIDIENS = 128;// conf.getParametre(CAT, "NbMeridiens", 64);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5f);
         static readonly float INITIAL_ROTATION = conf.getParametre(CAT, "Rotation initiale", 270); // Ajuster pour montrer le pays qu'on veut au depart
         static readonly float LONGITUDE_DRAPEAU = 270 + conf.getParametre(CAT, "Longitude", 5.97f); // Longitude du drapeau + correction en fonction de la texture
@@ -28,14 +27,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);
         #endregion
 
-        static readonly int[] COL_SPECULAR = { SPEC, SPEC, SPEC };
-        static readonly int[] COL_AMBIENT = { AMB, AMB, AMB };
-        static readonly int[] COL_DIFFUSE = { DIF, DIF, DIF };
-        static readonly float[] COL_LIGHTPOS = { -9f, 5f, -5f, 1 };
+        float []COL_AMBIENT = { 0.2125f, 0.1275f, 0.054f, 1.0f };
+        float[] COL_DIFFUSE = { 0.075164f, 0.060648f, 0.022648f, 1.0f };
+        float[] COL_SPECULAR = { 0.86f, 0.555802f, 0.5f, 1.0f };
+        float[] COL_LIGHTPOS = { -2, 1.5f, -2.5f, 1 };
+        float SHININESS = 20f ;
 
+        static readonly float[] SPECULAR_LIGHT = { 1.0f, 1.0f, 1.0f }; //set the 
+        static readonly float[] AMBIENT_LIGHT = { 0.0f, 0.0f, 0.0f }; //set the 
+        static readonly float[] DIFFUSE_LIGHT = { 0.5f, 0.5f, 0.5f }; //set the 
         Texture _textureTerre = new Texture();
         Sphere _sphere = new Sphere();
-        
+
         float _rotation = 270;
         float[] _zDrapeau = new float[DETAILS_DRAPEAU];
         int _frame = 0;
@@ -43,10 +46,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         /// Constructeur: preparer les objets OpenGL
         /// </summary>
         /// <param name="gl"></param>
-        public TerreOpenGL(OpenGL gl): base(gl)
-            //: base(1.0f, 1.0f, 1.0f, 0)
+        public TerreOpenGL(OpenGL gl) : base(gl)
+        //: base(1.0f, 1.0f, 1.0f, 0)
         {
-            _textureTerre.Create(gl, Resources.terre);
+            _textureTerre.Create(gl, Config.getImagePath("terre.png"));
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;
@@ -79,7 +82,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             float[] lcol = { 1, 1, 1, 1 };
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
@@ -88,7 +90,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
             gl.DepthMask((byte)OpenGL.GL_TRUE);
-            gl.Disable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_DEPTH);
+            gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.CullFace(OpenGL.GL_BACK);
 
             // Lumiere
@@ -96,6 +99,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.Enable(OpenGL.GL_LIGHT0);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, COL_LIGHTPOS);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_COLOR, lcol);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, SPECULAR_LIGHT);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, AMBIENT_LIGHT);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, DIFFUSE_LIGHT);
 
             // Aspect de la surface
             gl.ShadeModel(OpenGL.GL_SMOOTH);
@@ -103,9 +109,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, COL_SPECULAR);
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT, COL_AMBIENT);
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_DIFFUSE, COL_DIFFUSE);
-
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, SHININESS);
-            gl.Color(col);
 
             // Rotations, translation
             gl.Translate(1, -0.5f, -2f);
@@ -113,6 +117,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.Rotate(0, _rotation, 0);
 
             // Dessine le globe
+            float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
+            gl.Color(col);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
             _textureTerre.Bind(gl);
@@ -127,25 +133,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
                 gl.Rotate(0, LONGITUDE_DRAPEAU, LATITUDE_DRAPEAU);
                 gl.Begin(OpenGL.GL_QUADS);
-                    gl.Vertex(1, 0, 0.002f);
-                    gl.Vertex(1, 0, -0.002f);
-                    gl.Vertex(1.1f, 0, -0.002f);
-                    gl.Vertex(1.1f, 0, 0.002f);
+                gl.Vertex(1, 0, 0.002f);
+                gl.Vertex(1, 0, -0.002f);
+                gl.Vertex(1.1f, 0, -0.002f);
+                gl.Vertex(1.1f, 0, 0.002f);
 
-                    gl.Vertex(1, 0.002f, 0);
-                    gl.Vertex(1, -0.002f, 0);
-                    gl.Vertex(1.2f, -0.002f, 0);
-                    gl.Vertex(1.2f, 0.002f, 0);
-                    gl.End();
-                
+                gl.Vertex(1, 0.002f, 0);
+                gl.Vertex(1, -0.002f, 0);
+                gl.Vertex(1.2f, -0.002f, 0);
+                gl.Vertex(1.2f, 0.002f, 0);
+                gl.End();
+
                 gl.Begin(OpenGL.GL_QUAD_STRIP);
                 for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 {
                     gl.Vertex(1.15f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                     gl.Vertex(1.19f, i * 0.05f / DETAILS_DRAPEAU, _zDrapeau[i]);
                 }
-                gl.End();           
-            }             
+                gl.End();
+            }
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
@@ -157,7 +163,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
-        public override void Deplace(Temps maintenant,  Rectangle tailleEcran)
+        public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);

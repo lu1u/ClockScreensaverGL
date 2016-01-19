@@ -277,16 +277,6 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap fondEte {
-            get {
-                object obj = ResourceManager.GetObject("fondEte", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Jeudi.
         /// </summary>
         internal static string Jeudi {
@@ -1165,16 +1155,6 @@ namespace ClockScreenSaverGL {
         internal static string Temperatures {
             get {
                 return ResourceManager.GetString("Temperatures", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap terre {
-            get {
-                object obj = ResourceManager.GetObject("terre", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

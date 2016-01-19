@@ -41,8 +41,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                     s._particules[indice].debutVie = maintenant._totalMillisecondes;
                     s._particules[indice].finVie = maintenant._totalMillisecondes + 300000;
 
-                    s._particules[indice].vx = -_traj._Vx + _vitesseParticule * DisplayedObject.FloatRandom(-0.5f, 0.5f);
-                    s._particules[indice].vy = -_traj._Vy + _vitesseParticule * DisplayedObject.FloatRandom(-0.5f, 0.5f);
+                    s._particules[indice].vx = -_traj._Vx + _vitesseParticule * DisplayedObject.FloatRandom(-0.4f, 0.4f);
+                    s._particules[indice].vy = -_traj._Vy + _vitesseParticule * DisplayedObject.FloatRandom(-0.4f, 0.4f);
                     s._particules[indice].taille = _taille * DisplayedObject.FloatRandom(0.5f, 1.5f);
                     s._particules[indice].textureIndex = r.Next(0, s._listeTextures.Count);
                     s._particules[indice].active = true;

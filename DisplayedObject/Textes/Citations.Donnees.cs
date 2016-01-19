@@ -18,6 +18,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         static String[] _citations =
         {
+            "L'école pour tous c'est rudement bien!\nLes riches s'y instruisent et\nles oauvres y apprennent un métier.|Jules Ferry",
+            "Mieux vaut n'penser à rien\nQue n'pas penser du tout.|Serge Gainsbourg",
             "Impossible de vous dire mon âge,\nil change tout le temps.|Alphonse Allais",
             "L'ennui est entré dans le monde par la paresse.|La Bruyère",
             "L'ignorance toujours est prête à s'admirer|Nicolas Boileau",

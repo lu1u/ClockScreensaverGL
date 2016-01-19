@@ -175,7 +175,12 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fond createBackgroundObject(int Type, bool initial)
         {
+               
             OpenGL gl = openGLControl.OpenGL;
+            if (!initial)
+                gl.PopAttrib();
+
+            gl.PushAttrib(OpenGL.GL_ENABLE_BIT|OpenGL.GL_FOG_BIT|OpenGL.GL_LIGHTING_BIT);
             if (_fondDeSaison && initial)
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
@@ -433,8 +438,8 @@ namespace ClockScreenSaverGL
 
             if (wireframe)
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
-            gl.End();
-            gl.Flush();
+            //gl.End();
+           gl.Finish();
 
         }
 

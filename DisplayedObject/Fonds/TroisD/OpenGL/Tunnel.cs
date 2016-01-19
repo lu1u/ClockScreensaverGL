@@ -30,7 +30,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         private static readonly float RAYON_ANNEAU = RATIO_DEPLACEMENT * 5f;
         private static readonly GLfloat PERIODE_DEP_X = conf.getParametre(CAT, "PeriodeDEcalageX", 5f);
         private static readonly GLfloat PERIODE_DEP_Y = conf.getParametre(CAT, "PeriodeDEcalageY", 7f);
-        private static bool WIRE_FRAME = conf.getParametre(CAT, "WireFrame", false);
         float _CentreAnneauX;
         float _CentreAnneauY;
 
@@ -42,7 +41,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         const float VIEWPORT_X = 2f;
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 4f;
-        GLfloat[] LightPos = { 0, RAYON_ANNEAU * 0.8f, -RAYON_ANNEAU * 0.8f, 1 };
+        GLfloat[] LIGHT_POS = { -1, RAYON_ANNEAU * -1.5f, 0, 1 };
+
+        static readonly float[] SPECULAR_LIGHT = { 0.7f, 0.7f, 0.7f }; //set the 
+        static readonly float[] AMBIENT_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
+        static readonly float[] DIFFUSE_LIGHT = { 0.9f, 0.9f, 0.9f }; //set the 
+        static readonly float[] COL_SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };//{
+        static readonly float[] COL_AMBIENT = { 0.1f, 0.1f, 0.1f, 1.0f };//{ 
+        static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
+        static readonly float[] COL_DIFFUSE = { 0.04f, 0.04f, 0.04f, 1.0f };
+        static readonly float SHININESS = 120f;// conf.getParametre(CAT, "Shininess", 70);
 
         /// <summary>
         /// Constructeur: initialiser les anneaux
@@ -119,31 +127,40 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             gl.ClearColor(0, 0, 0, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
-            gl.Translate(0, 0, -_zCamera);
-
+           
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable(OpenGL.GL_FOG);
             gl.Disable(OpenGL.GL_DEPTH);
+            gl.Disable(OpenGL.GL_ALPHA_TEST);
+            gl.Disable(OpenGL.GL_CULL_FACE);
+            gl.Disable(OpenGL.GL_BLEND);
+            gl.Disable(OpenGL.GL_FOG);
+            gl.DepthMask((byte)OpenGL.GL_TRUE);
+            gl.Disable(OpenGL.GL_TEXTURE_2D);
 
             // Lumiere
             gl.Enable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_LIGHT0);
-            gl.Disable(OpenGL.GL_AUTO_NORMAL);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, LightPos);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, LIGHT_POS);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, SPECULAR_LIGHT);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, AMBIENT_LIGHT);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, DIFFUSE_LIGHT);
+            gl.ShadeModel(OpenGL.GL_FLAT);
+
+
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, col);
-            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, 128);
-            gl.ColorMaterial(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT_AND_DIFFUSE);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_AMBIENT, COL_AMBIENT);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_EMISSION, COL_EMISSION);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SPECULAR, COL_SPECULAR);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_DIFFUSE, COL_DIFFUSE);
+            gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, SHININESS);
 
 
-            if (WIRE_FRAME)
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
             gl.Rotate(0, 0, rotation);
             gl.Color(col);
 
             // Tracer les anneaux
             gl.Begin(OpenGL.GL_QUADS);
-                for (int i = 0; i < NB_ANNEAUX - 1; i++)
+            for (int i = 0; i < NB_ANNEAUX - 1; i++)
             {
                 {
                     int iPlusUn = i < (NB_ANNEAUX - 1) ? i + 1 : 0;
@@ -154,46 +171,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
                         {
                             int jPlusUn = j < (TAILLE_ANNEAU - 1) ? j + 1 : 0;
 
-                            Vecteur3D n = NormaleTriangle(_anneaux[iPlusUn, j], _anneaux[i, j], _anneaux[i, jPlusUn]);
-                            gl.Normal(n.x, n.y, n.z);
-                            gl.Vertex(_anneaux[i, j].x, _anneaux[i, j].y, _anneaux[i, j].z);
-                            gl.Vertex(_anneaux[i, jPlusUn].x, _anneaux[i, jPlusUn].y, _anneaux[i, jPlusUn].z);
-                            gl.Vertex(_anneaux[iPlusUn, jPlusUn].x, _anneaux[iPlusUn, jPlusUn].y, _anneaux[iPlusUn, jPlusUn].z);
-                            gl.Vertex(_anneaux[iPlusUn, j].x, _anneaux[iPlusUn, j].y, _anneaux[iPlusUn, j].z);
+                            NormaleTriangle(_anneaux[iPlusUn, j], _anneaux[i, j], _anneaux[i, jPlusUn]).Normal(gl);
+                            _anneaux[i, j].Vertex(gl);
+                            _anneaux[i, jPlusUn].Vertex(gl);
+                            _anneaux[iPlusUn, jPlusUn].Vertex(gl);
+                            _anneaux[iPlusUn, j].Vertex(gl);
                         }
                     }
                 }
-               
+
             }
-             gl.End();
-            if (WIRE_FRAME)
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
+            gl.End();
+            
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-
-        /// <summary>
-        /// Pression sur une touche, retourner true si l'objet a traite, false = fin de l'economiseur
-        /// </summary>
-        /// <param name="f"></param>
-        /// <param name="k"></param>
-        /// <returns></returns>
-        public override bool KeyDown(Form f, Keys k)
-        {
-            switch (k)
-            {
-               case TOUCHE_WIREFRAME:
-                    {
-                        WIRE_FRAME = !WIRE_FRAME;
-                        conf.setParametre(CAT, "WireFrame", WIRE_FRAME);
-                        return true;
-                    }
-
-            }
-            return false;
-        }
-
 
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
