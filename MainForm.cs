@@ -2,15 +2,16 @@
 using ClockScreenSaverGL.DisplayedObjects;
 using ClockScreenSaverGL.DisplayedObjects.Fonds;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
 using ClockScreenSaverGL.DisplayedObjects.Saisons;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 /*
  * Crée par SharpDevelop.
@@ -22,7 +23,9 @@ using SharpGL;
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -50,7 +53,7 @@ namespace ClockScreenSaverGL
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
         private List<DisplayedObject> _listeObjets = new List<DisplayedObject>();
         private int _jourActuel = -1;                          // Pour forcer un changement de date avant la premiere image
-        private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
+        //private bool _afficherAide = false;                    // Vrai si on doit afficher le message d'aide
 
         private bool _fondDeSaison;                           // Vrai si on doit commencer par le fond 'de saison'
         DateTime _derniereFrame = DateTime.Now;                // Heure de la derniere frame affichee
@@ -59,7 +62,12 @@ namespace ClockScreenSaverGL
         private bool wireframe = false;
 
         #region Fonds
-        const int TYPE_FOND_ESPACE = 0;
+        enum FONDS
+        {
+            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, TUNNEL, NEIGE_META, LIFE, TERRE,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, VIELLES_TELES, GRAVITE, ENGRENAGES, ADN
+        };
+        /*const int TYPE_FOND_ESPACE = 0;
         const int TYPE_FOND_COURONNES = 1;
         const int TYPE_FOND_METABALLES = 2;
         const int TYPE_FOND_NUAGES = 3;
@@ -79,15 +87,12 @@ namespace ClockScreenSaverGL
         const int TYPE_FOND_ATTRACTEUR = 17;
         const int TYPE_FOND_GRAVITE = 18;
         const int TYPE_FOND_ENGRENAGES = 19;
+        const int TYPE_FOND_ADN = 20;
+        
 
-
-        const int NB_FONDS = TYPE_FOND_ENGRENAGES + 1;
-        #endregion
-
-        #region Render Modes
-        const int RENDERMODE_DIBSECTION = 0;
-        const int RENDERMODE_FBO = 1;
-        const int RENDERMODE_NATIVE = 2;
+        const int NB_FONDS = TYPE_FOND_ADN + 1;*/
+        const FONDS PREMIER_FOND = FONDS.ESPACE;
+        const FONDS DERNIER_FOND = FONDS.ADN;
         #endregion
 
         enum SAISON { HIVER = 0, PRINTEMPS = 1, ETE = 2, AUTOMNE = 3 };
@@ -173,14 +178,17 @@ namespace ClockScreenSaverGL
         /// Creer l'objet qui anime le fond d'ecran
         /// </summary>
         /// <returns></returns>
-        private Fond createBackgroundObject(int Type, bool initial)
+        private Fond createBackgroundObject(FONDS Type, bool initial)
         {
-               
+
             OpenGL gl = openGLControl.OpenGL;
+
             if (!initial)
                 gl.PopAttrib();
 
-            gl.PushAttrib(OpenGL.GL_ENABLE_BIT|OpenGL.GL_FOG_BIT|OpenGL.GL_LIGHTING_BIT);
+
+            gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
+
             if (_fondDeSaison && initial)
             {
                 // Si l'option 'fond de saison' est selectionnee, l'economiseur commence par celui ci
@@ -188,37 +196,41 @@ namespace ClockScreenSaverGL
                 switch (getSaison())
                 {
                     case SAISON.HIVER:
-                        conf.setParametre(CAT, PARAM_TYPEFOND, TYPE_FOND_ESPACE);
                         return new Hiver(gl);
                     case SAISON.PRINTEMPS:
-                        return new Printemps(gl,SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                        return new Printemps(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.ETE:
                         return new Ete(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                     case SAISON.AUTOMNE:
                         return new Automne(gl);
                 }
             }
+
             switch (Type)
             {
-                case TYPE_FOND_METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ENCRE: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_BACTERIES: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_LIFE: return new Life(gl);
-                case TYPE_FOND_NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_COURONNES: return new Couronnes(gl);
-                case TYPE_FOND_COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case TYPE_FOND_ESPACE: return new EspaceOpenGL(gl);
-                case TYPE_FOND_TUNNEL: return new Tunnel(gl);
-                case TYPE_FOND_CARRES_ESPACE: return new CarresEspace(gl);
-                case TYPE_FOND_NUAGES: return new NuagesOpenGL(gl);
-                case TYPE_FOND_TERRE: return new TerreOpenGL(gl);
-                case TYPE_FOND_PARTICULES1: return new ParticulesGalaxie(gl);
-                case TYPE_FOND_PARTICULES_PLUIE: return new FontaineParticulesPluie(gl);
-                case TYPE_FOND_FUSEES: return new ParticulesFusees(gl);
-                case TYPE_FOND_ARTIFICE: return new FeuDArtifice(gl);
-                case TYPE_FOND_ATTRACTEUR: return new AttracteurParticules(gl);
-                case TYPE_FOND_GRAVITE: return new Gravite(gl);
-                case TYPE_FOND_ENGRENAGES: return new Engrenages(gl);
+                case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.ENCRE: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.BACTERIES: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.LIFE: return new Life(gl);
+                case FONDS.NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.COURONNES: return new Couronnes(gl);
+                case FONDS.COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.ESPACE: return new EspaceOpenGL(gl);
+                case FONDS.TUNNEL: return new Tunnel(gl);
+                case FONDS.CARRE_ESPACE: return new CarresEspace(gl);
+                case FONDS.PARTICULES_GRAVITATION: return new GravitationParticules(gl);
+                case FONDS.NUAGES: return new NuagesOpenGL(gl);
+                case FONDS.TERRE: return new TerreOpenGL(gl);
+                case FONDS.PARTICULES1: return new ParticulesGalaxie(gl);
+                case FONDS.PARTICULES_PLUIE: return new FontaineParticulesPluie(gl);
+                case FONDS.FUSEES: return new ParticulesFusees(gl);
+                case FONDS.MULTICHAINES: return new MultiplesChaines(gl);
+                case FONDS.VIELLES_TELES: return new ViellesTeles(gl);
+                case FONDS.ARTIFICE: return new FeuDArtifice(gl);
+                case FONDS.ATTRACTEUR: return new AttracteurParticules(gl);
+                case FONDS.GRAVITE: return new Gravitation(gl);
+                case FONDS.ENGRENAGES: return new Engrenages(gl);
+                case FONDS.ADN: return new ADN(gl);
                 default:
                     return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
@@ -350,33 +362,32 @@ namespace ClockScreenSaverGL
         /// Affichage des informations de debug et performance
         /// </summary>
         /// <param name="g"></param>
-        private void afficheDebug(Graphics g)
+        private void remplitDebug(OpenGL gl)
         {
-            {
-                StringBuilder s = new StringBuilder();
-                OpenGL gl = openGLControl.OpenGL;
-                double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
+            double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
+            DisplayedObjects.Console console = DisplayedObjects.Console.getInstance(gl);
+
 #if DEBUG
-                s.Append("Version DEBUG ");
+            console.AddLigne(Color.White, "Version DEBUG ");
 #else
-                s.Append("Version RELEASE ");
+            console.AddLigne(Color.White, "Version RELEASE ");
 #endif
 
-                s.Append(Assembly.GetExecutingAssembly().GetName().Version).Append("\n\n");
+            console.AddLigne(Color.White, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-                s.Append((1000.0 / NbMillisec).ToString("0.0") + " FPS\n\n")
-                    .Append("Couleur: " + _couleur.ToString() + "\n\n")
-                    .Append("CPU " + cpuCounter.NextValue().ToString("00") + "%\n")
-                    .Append("Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n")
-                    .Append("Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
+            console.AddLigne(Color.White, (1000.0 / NbMillisec).ToString("0.0") + " FPS\n\n");
+            console.AddLigne(Color.White, "Couleur: " + _couleur.ToString() + "\n\n");
+            console.AddLigne(Color.White, "CPU " + cpuCounter.NextValue().ToString("00") + "%\n");
+            console.AddLigne(Color.White, "Free RAM " + (ramCounter.NextValue() / 1024).ToString("0.00") + "GB\n");
+            console.AddLigne(Color.White, "Memory usage " + ((currentProc.PrivateMemorySize64 / 1024.0) / 1024.0).ToString("0.0") + "MB\n\n");
 
-                foreach (DisplayedObject.DisplayedObject b in _listeObjets)
-                    s.Append(b.DumpRender()).Append("\n");
+            foreach (DisplayedObject b in _listeObjets)
+                console.AddLigne(Color.White, b.DumpRender());
 
-                g.DrawString(s.ToString(), SystemFonts.DefaultFont, Brushes.LightGray, 0, 10);
-                lastFrame = _temps._temps;
-            }
+            //g.DrawString(s.ToString(), SystemFonts.DefaultFont, Brushes.LightGray, 0, 10);
+            lastFrame = _temps._temps;
         }
+
 #endif
         /// <summary>
         /// Deplacer tous les objets
@@ -411,15 +422,26 @@ namespace ClockScreenSaverGL
         void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
         {
             moveAll();
-
-            // Get the OpenGL object, just to clean up the code.
             OpenGL gl = openGLControl.OpenGL;
+
+#if TRACER
+            if (_afficheDebug)
+                remplitDebug(gl);
+#endif
+            // Get the OpenGL object, just to clean up the code.
             Color Couleur = _couleur.GetRGB();
-            //gl.Enable(OpenGL.GL_MULTISAMPLE);
+
+            gl.MatrixMode(OpenGL.GL_PROJECTION);                        // Select The Projection Matrix
+            gl.LoadIdentity();                                   // Reset The Projection Matrix
+            gl.Perspective(60, Bounds.Width / (float)Bounds.Height, .1f, 1000f);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);                         // Select The Modelview Matrix
+            gl.LoadIdentity();
+            gl.Enable(OpenGL.GL_MULTISAMPLE);
+
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
-            //gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
+            gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
 
             if (wireframe)
             {
@@ -438,8 +460,14 @@ namespace ClockScreenSaverGL
 
             if (wireframe)
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
-            //gl.End();
-           gl.Finish();
+
+            if (_afficheDebug)
+            {
+                DisplayedObjects.Console.getInstance(gl).trace(gl, Bounds);
+                DisplayedObjects.Console.getInstance(gl).Clear();
+            }
+
+            gl.Finish();
 
         }
 
@@ -465,7 +493,7 @@ namespace ClockScreenSaverGL
             OpenGL gl = openGLControl.OpenGL;
             int CentreX = Bounds.Width / 2;
             int CentreY = Bounds.Height / 2;
-            bool meteoADroite = new Random().Next(0, 2) > 0 ;
+            bool meteoADroite = true;// new Random().Next(0, 2) > 0 ;
             int TailleHorloge = conf.getParametre(CAT, "TailleCadran", 400);
             if (IsPreviewMode)
             {
@@ -476,7 +504,7 @@ namespace ClockScreenSaverGL
 
             _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
-            _listeObjets.Add(createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
+            _listeObjets.Add(createBackgroundObject((FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
 
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
@@ -484,35 +512,28 @@ namespace ClockScreenSaverGL
             // citations
             if (conf.getParametre(CAT, "Citation", true))
                 _listeObjets.Add(new Citations(gl, this, 200, 200));
-            // Heure et date numeriques
-         /*   if (conf.getParametre(CAT, "Date", true))
-                _listeObjets.Add(new DateTexte(gl, 0, 0));
-            if (conf.getParametre(CAT, "Heure", true))
-                _listeObjets.Add(new HeureTexte(gl, 100, CentreY));*/
-            /*
-            if (conf.getParametre(CAT, "Deezer", true))
-                _listeObjets.Add(new DeezerInfo(CentreX, CentreY));
-            */
+
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
                 _listeObjets.Add(new PanneauInfos(gl, meteoADroite));
-
-
-
-            // Horloge ronde
-            //if (conf.getParametre(CAT, "HorlogeRonde", true))
-            //    _listeObjets.Add(new HorlogeRonde(gl, ! meteoADroite, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
-
         }
 
         void onTimerChangeBackground(object sender, EventArgs e)
         {
-            int Type = conf.getParametre(CAT, PARAM_TYPEFOND, 0);
-            Type = (Type + 1) % NB_FONDS;
-            conf.setParametre(CAT, PARAM_TYPEFOND, Type);
+            FONDS Type = (FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0);
+            Type = ProchainFond(Type);
+            conf.setParametre(CAT, PARAM_TYPEFOND, (int)Type);
 
             // Remplacer le premier objet de la liste par le nouveau fond
             _listeObjets[0] = createBackgroundObject(Type, false);
+        }
+
+        private FONDS ProchainFond(FONDS type)
+        {
+            if (type == DERNIER_FOND)
+                return PREMIER_FOND;
+            else
+                return (FONDS)((int)type + 1);
         }
 
         private void onKeyDown(object sender, KeyEventArgs e)
@@ -521,15 +542,15 @@ namespace ClockScreenSaverGL
             {
                 switch ((Keys)e.KeyValue)
                 {
-                    case Keys.Insert: _couleur.ChangeHue(1); break;
+                    /*case Keys.Insert: _couleur.ChangeHue(1); break;
                     case Keys.Delete: _couleur.ChangeHue(-1); break;
                     case Keys.Home: _couleur.ChangeSaturation(1); break;
                     case Keys.End: _couleur.ChangeSaturation(-1); break;
                     case Keys.PageUp: _couleur.ChangeValue(1); break;
-                    case Keys.PageDown: _couleur.ChangeValue(-1); break;
-                    case Keys.H: _afficherAide = !_afficherAide; break;
+                    case Keys.PageDown: _couleur.ChangeValue(-1); break;*/
+                    //case Keys.H: _afficherAide = !_afficherAide; break;
                     case DisplayedObject.TOUCHE_REINIT:
-                        _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
+                        _listeObjets[0] = createBackgroundObject((FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         timerChangeFond.Stop();
                         timerChangeFond.Start();
                         break;
@@ -543,16 +564,16 @@ namespace ClockScreenSaverGL
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
                             conf.setParametre(CAT, PARAM_FONDDESAISON, _fondDeSaison);
-                            _listeObjets[0] = createBackgroundObject(conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
+                            _listeObjets[0] = createBackgroundObject((FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         }
                         break;
                     case DisplayedObject.TOUCHE_PROCHAIN_FOND:
                         {
                             // Passage en mode manuel
                             timerChangeFond.Enabled = false;
-                            int Type = conf.getParametre(CAT, PARAM_TYPEFOND, 0);
-                            Type = (Type + 1) % NB_FONDS;
-                            conf.setParametre(CAT, PARAM_TYPEFOND, Type);
+                            FONDS Type = (FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0);
+                            Type = ProchainFond(Type);
+                            conf.setParametre(CAT, PARAM_TYPEFOND, (int)Type);
                             // Remplacer le premier objet de la liste par le nouveau fond
                             _listeObjets[0] = createBackgroundObject(Type, false);
                         }

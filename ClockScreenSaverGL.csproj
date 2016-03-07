@@ -86,7 +86,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TRACER</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -99,7 +99,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants />
+    <DefineConstants>TRACE;TRACER</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClockScreenSaverGL.Program</StartupObject>
@@ -132,85 +132,104 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="CouleurGlobale.cs" />
-    <Compile Include="DisplayedObject\Bandes\Bande.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesHorizontales\BandeHeure.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesHorizontales\BandeHorizontale.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesHorizontales\BandeMinute.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesHorizontales\BandeSeconde.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesVerticales\BandeHeure.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesVerticales\BandeMinute.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesVerticales\BandeSeconde.cs" />
-    <Compile Include="DisplayedObject\Bandes\BandesVerticales\BandeVerticale.cs" />
-    <Compile Include="DisplayedObject\Bandes\Temps.cs" />
-    <Compile Include="DisplayedObject\DisplayedObject.cs" />
-    <Compile Include="DisplayedObject\Fonds\Couleur.cs" />
-    <Compile Include="DisplayedObject\Fonds\Couronnes.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurRecentre.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurAttracteurMutuelle.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurAttracteur.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\Gravite\Gravite.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\Gravite\EmetteurGravite.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\AttracteurParticules\EmetteurJet.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\AttracteurParticules\AttracteurParticules.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\FeuDArtifice\EmetteurFeuArtifice.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\FeuDArtifice\FeuDArtifice.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\FontaineParticules\EmetteurGalaxie.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\FontaineParticules\ParticulesGalaxie.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\Fontaine\EmetteurPluie.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\Fontaine\FontaineParticulesPluie.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\ParticulesFusees\EmetteurFusee.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\FondsParticules\ParticulesFusees\ParticulesFusees.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Ete\Ete.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Ete\Herbe.cs" />
-    <Compile Include="DisplayedObject\Fonds\Fond.cs" />
-    <Compile Include="DisplayedObject\Fonds\Life.cs" />
-    <Compile Include="DisplayedObject\Fonds\Metaballes\Bacteries.cs" />
-    <Compile Include="DisplayedObject\Fonds\Metaballes\Encre.cs" />
-    <Compile Include="DisplayedObject\Fonds\Metaballes\MetaBalle.cs" />
-    <Compile Include="DisplayedObject\Fonds\Metaballes\Metaballes.cs" />
-    <Compile Include="DisplayedObject\Fonds\Metaballes\Neige.cs" />
-    <Compile Include="DisplayedObject\Fonds\Noir.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Feuille.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Printemps.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Branch.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\CIble.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Tree.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Printemps\Vector2.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Emetteur.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\Modificateur.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurAlpha.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurExclusion.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurGravite.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurLife.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurTaille.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Modificateurs\ModificateurVitesseLineaire.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\Particule.cs" />
-    <Compile Include="DisplayedObject\Fonds\Systemes Particules\SystemeParticules.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Engrenages.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\CarresEspace.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Espace.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Automne.cs" />
-    <Compile Include="DisplayedObject\Fonds\Saisons\Neige.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Nuages.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\TroisD.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\OpenGL\Tunnel.cs" />
-    <Compile Include="DisplayedObject\Fonds\TroisD\Vecteur3D.cs" />
-    <Compile Include="DisplayedObject\HorlogeRonde.cs" />
-    <Compile Include="DisplayedObject\Lune.cs" />
-    <Compile Include="DisplayedObject\PanneauInfo\DeezerInfo.cs" />
-    <Compile Include="DisplayedObject\PanneauInfo\LignePrevisionMeteo.cs" />
-    <Compile Include="DisplayedObject\PanneauInfo\PanneauInfo.cs" />
-    <Compile Include="DisplayedObject\PanneauInfo\MeteoInfo.cs" />
-    <Compile Include="DisplayedObject\Textes\Citations.cs" />
-    <Compile Include="DisplayedObject\Textes\Citations.Donnees.cs">
+    <Compile Include="DisplayedObjects\Bandes\Bande.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesHorizontales\BandeHeure.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesHorizontales\BandeHorizontale.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesHorizontales\BandeMinute.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesHorizontales\BandeSeconde.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesVerticales\BandeHeure.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesVerticales\BandeMinute.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesVerticales\BandeSeconde.cs" />
+    <Compile Include="DisplayedObjects\Bandes\BandesVerticales\BandeVerticale.cs" />
+    <Compile Include="DisplayedObjects\Bandes\Temps.cs" />
+    <Compile Include="DisplayedObjects\Console.cs" />
+    <Compile Include="DisplayedObjects\DisplayedObject.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Couleur.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Couronnes.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Asteroide.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Material.cs" />
+    <Compile Include="DisplayedObjects\Fonds\LifeCube.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\EmetteurGravitation.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\GravitationParticules.cs" />
+    <Compile Include="DisplayedObjects\Fonds\ViellesTeles.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\MateriauGlobal.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Modele3D.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Planete.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Primitive3D.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Primitive3DBillboard.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Primitive3DQuadrilatere.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Primitive3DSphere.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\PrimitiveCallList.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\PrimitiveDisk.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Vecteur3Ddbl.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurRecentre.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurAttracteurMutuelle.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurAttracteur.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Gravity\Gravitation.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\AttracteurParticules\EmetteurJet.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\AttracteurParticules\AttracteurParticules.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\FeuDArtifice\EmetteurFeuArtifice.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\FeuDArtifice\FeuDArtifice.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\FontaineParticules\EmetteurGalaxie.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\FontaineParticules\ParticulesGalaxie.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\Fontaine\EmetteurPluie.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\Fontaine\FontaineParticulesPluie.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\ParticulesFusees\EmetteurFusee.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\ParticulesFusees\ParticulesFusees.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Ete\Ete.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Ete\Herbe.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Fond.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Life.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Metaballes\Bacteries.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Metaballes\Encre.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Metaballes\MetaBalle.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Metaballes\Metaballes.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Metaballes\Neige.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Noir.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\Feuille.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\Printemps.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\Branch.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\CIble.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\Tree.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Printemps\Vector2.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Emetteur2D.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateur.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurAlpha.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurExclusion.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurGravite.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurLife.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurTaille.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurVitesseLineaire.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Particule.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\SystemeParticules2D.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\ADN.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Engrenages.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\CarresEspace.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Espace.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Automne.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Saisons\Neige.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Nuages.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\TroisD.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Tunnel.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\Vecteur3D.cs" />
+    <Compile Include="DisplayedObjects\HorlogeRonde.cs" />
+    <Compile Include="DisplayedObjects\Lune.cs" />
+    <Compile Include="DisplayedObjects\PanneauInfo\DeezerInfo.cs" />
+    <Compile Include="DisplayedObjects\PanneauInfo\LignePrevisionMeteo.cs" />
+    <Compile Include="DisplayedObjects\PanneauInfo\PanneauInfo.cs" />
+    <Compile Include="DisplayedObjects\PanneauInfo\MeteoInfo.cs" />
+    <Compile Include="DisplayedObjects\MultipleChaines.cs" />
+    <Compile Include="DisplayedObjects\Textes\Citations.cs" />
+    <Compile Include="DisplayedObjects\Textes\Citations.Donnees.cs">
       <DependentUpon>Citations.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayedObject\Textes\DateTexte.cs" />
-    <Compile Include="DisplayedObject\Textes\HeureTexte.cs" />
-    <Compile Include="DisplayedObject\Textes\Texte.cs" />
-    <Compile Include="DisplayedObject\Textes\TexteBande.cs" />
-    <Compile Include="DisplayedObject\Textes\TexteCopyright.cs" />
+    <Compile Include="DisplayedObjects\Textes\DateTexte.cs" />
+    <Compile Include="DisplayedObjects\Textes\HeureTexte.cs" />
+    <Compile Include="DisplayedObjects\Textes\Texte.cs" />
+    <Compile Include="DisplayedObjects\Textes\TexteBande.cs" />
+    <Compile Include="DisplayedObjects\Textes\TexteCopyright.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

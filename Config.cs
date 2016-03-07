@@ -74,6 +74,32 @@ namespace ClockScreenSaverGL
             EcritFichier();
         }
 
+       
+        public void flush( String name)
+        {
+            Categorie categorie;
+            _categories.TryGetValue(name, out categorie);
+            if (categorie != null)
+            {
+                if (!categorie._propre)
+                        {
+                            string nomFichier = getNomFichier(name);
+                            using (TextWriter tw = new StreamWriter(nomFichier))
+                            {
+                                foreach (String key in categorie._valeurs.Keys)
+                                {
+                                    Parameter p = categorie._valeurs[key];
+                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneType(p));
+                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
+                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
+                                }
+                            }
+                            categorie._propre = true;
+                        }                  
+                
+            }
+        }
+
         private static string getImagesDirectory()
         {
             return Path.Combine(new FileInfo((Assembly.GetExecutingAssembly().Location)).Directory.FullName, "images");
@@ -89,31 +115,8 @@ namespace ClockScreenSaverGL
         /// </summary>
         void EcritFichier()
         {
-            // Un fichier par categorie
-            foreach (string cat in _categories.Keys)
-            {
-                Categorie categorie;
-                _categories.TryGetValue(cat, out categorie);
-                if (categorie != null)
-                {
-                    // Ne reecrire que les categories qui ont ete modifiees
-                    if (!categorie._propre)
-                    {
-                        string nomFichier = getNomFichier(cat);
-                        using (TextWriter tw = new StreamWriter(nomFichier))
-                        {
-                            foreach (String key in categorie._valeurs.Keys)
-                            {
-                                Parameter p = categorie._valeurs[key];
-                                tw.WriteLine(key + KEY_SEPARATOR + toLigneType(p));
-                                tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
-                                tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
-                            }
-                        }
-                        categorie._propre = true;
-                    }
-                }
-            }
+            foreach (String name in _categories.Keys)
+                    flush(name);            
         }
 
 
@@ -265,7 +268,7 @@ namespace ClockScreenSaverGL
             {
                 try
                 {
-                    return (int)Math.Round( Double.Parse(valeur));
+                    return (int)Math.Round(Double.Parse(valeur));
                 }
                 catch (Exception)
                 {

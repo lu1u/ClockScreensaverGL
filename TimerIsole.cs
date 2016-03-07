@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClockScreenSaverGL
 {
-    class TimerIsole
+    public class TimerIsole
     {
         private double _intervalle;
         private DateTime _prochainTick;

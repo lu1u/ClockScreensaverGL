@@ -64,6 +64,11 @@ namespace ClockScreenSaverGL
             }
         }
 
+        internal float Hauteur()
+        {
+            return _hauteurChiffre;
+        }
+
         public void drawOpenGL(OpenGL gl, string texte, float X, float Y, Color couleur)
         {
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, couleur.A / 256.0f };

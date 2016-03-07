@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL
 		public float _intervalle ;
 		public DateTime _derniere ;
         public double _totalMillisecondes;
-        public static DateTime BASEDATE = new DateTime(1970, 1, 1);
+        public static readonly DateTime BASEDATE = new DateTime(1970, 1, 1);
 
         public Temps(DateTime t, DateTime derniere )
 		{
