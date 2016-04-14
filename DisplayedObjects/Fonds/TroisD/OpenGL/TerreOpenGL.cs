@@ -25,15 +25,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);
         #endregion
 
-        /*float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
-        float   [] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
-        float   [] COL_SPECULAR = {0.7f, 0.7f, 0.7f, 1.0f };
-        float SHININESS = 18f ;
-
-        float[] COL_LIGHTPOS = { -2, 1.5f, -2.5f, 1 };
-        static readonly float[] SPECULAR_LIGHT = { 1.0f, 1.0f, 1.0f }; //set the 
-        static readonly float[] AMBIENT_LIGHT = { 0.5f, 0.5f, 0.5f }; //set the 
-        static readonly float[] DIFFUSE_LIGHT = { 1.0f, 1.0f, 1.0f }; //set the */
         Texture _textureTerre = new Texture();
         Sphere _sphere = new Sphere();
 
@@ -66,6 +57,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         {
             base.Dispose();
             _textureTerre?.Destroy(_gl);
+            _sphere.DestroyInContext(_gl);
         }
 
         /// <summary>

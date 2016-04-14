@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public const String CAT = "Gravitation";
         public static readonly double RAYON_UNIVERS = 10;// conf.getParametre(CAT, "Rayon Univers", 8);
         public static readonly double RATIO_RAYON = 0.0005;// conf.getParametre(CAT, "Ratio rayon planetes", 0.025);
-        public static readonly double RATIO_DISTANCES = 0.4 ;// conf.getParametre(CAT, "Ratio rayon planetes", 0.025);
+        public static readonly double RATIO_DISTANCES = 0.5 ;// conf.getParametre(CAT, "Ratio rayon planetes", 0.025);
         public static double VITESSE_SUIVI_TO = 0.5;// conf.getParametre(CAT, "Vitesse ciblage", 0.4);
         public static double VITESSE_SUIVI_FROM = 0.005;// conf.getParametre(CAT, "Vitesse camera", 0.2);
         public static double DISTANCE_MIN_CAMERA = 15 * RATIO_RAYON ;// conf.getParametre(CAT, "Distance min camera", 0.5);
@@ -48,7 +48,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         private static List<Primitive3D> _primitives = new List<Primitive3D>();
         int corpsSuivi;
         public static Vecteur3Ddbl cameraFrom, cameraTo, cameraCible;
-        
+        private int nbAsteroides;
         public Gravitation(OpenGL gl) : base(gl)
         {
             _textureTop = new Texture();
@@ -133,13 +133,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
 
             // Quelques asteroides
-            for (int i = 0; i < NB_ASTEROIDES; i++)
+            /*for (int i = 0; i < NB_ASTEROIDES; i++)
             {
                 rayonOrbite = FloatRandom(4.5f, 5.5f) * RATIO_DISTANCES;
                 posOrbite = FloatRandom((float)(Math.PI * -2.0), (float)(Math.PI * 2.0));
                 vOrbite = CalculeVitesseOrbitale(Corps[0]._attraction, rayonOrbite);
                 Corps.Add(new Asteroide(gl, FloatRandom(10, 30) * SigneRandom(), FloatRandom(-30, 30), r.Next(Planete.ASTEROIDE_MIN, Planete.ASTEROIDE_MAX), (float)rayonOrbite, (float)posOrbite, (float)vOrbite, FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), 0));
-            }
+            }*/
+            nbAsteroides = 0;
 
             #endregion
 
@@ -208,7 +209,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             #region OPENGL_SETTINGS
-
+            if (nbAsteroides < NB_ASTEROIDES)
+            {
+                double rayonOrbite = FloatRandom(4.5f, 5.5f) * RATIO_DISTANCES;
+                float posOrbite = FloatRandom((float)(Math.PI * -2.0), (float)(Math.PI * 2.0));
+                double vOrbite = CalculeVitesseOrbitale(Corps[0]._attraction, rayonOrbite);
+                Corps.Add(new Asteroide(gl, FloatRandom(10, 30) * SigneRandom(), FloatRandom(-30, 30), r.Next(Planete.ASTEROIDE_MIN, Planete.ASTEROIDE_MAX), (float)rayonOrbite, (float)posOrbite, (float)vOrbite, FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), FloatRandom(0.5f, 2.0f), 0));
+                nbAsteroides++;
+            }
             gl.ClearColor(0, 0, 0, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
@@ -279,12 +287,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
             Console c = Console.getInstance(gl);
             c.AddLigne(Color.Green, "Gravitation");
-            c.AddLigne(Color.Green, "Nombre de corps " + Corps.Count);
+            c.AddLigne(Color.Green, "Nombre de corps " + Corps.Count + ", nb asteroides " + nbAsteroides);
             c.AddLigne(Color.Green, "Niveau détail" + NIVEAU_DETAIL);
             c.AddLigne(Color.LightGreen, "Corps suivi " + Planete.modeles[Corps[corpsSuivi]._type]._nom);
             c.AddLigne(Color.Red, "Corps suivi from " + VITESSE_SUIVI_FROM);
             c.AddLigne(Color.Red, "Corps suivi to " + VITESSE_SUIVI_TO);
-            if (Planete.modeles[Corps[corpsSuivi]._type]._material != null)
+            /*if (Planete.modeles[Corps[corpsSuivi]._type]._material != null)
             {
                 Material m = Planete.modeles[Corps[corpsSuivi]._type]._material;
                 c.AddLigne(Color.Red, "Shininess: " + m.shininess);
@@ -293,7 +301,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
                 c.AddLigne(Color.Red, "Specular: " + m.specular[0]);
                 c.AddLigne(Color.Red, "Color: " + m.color[0]);
-            }
+            }*/
 
             //Lensflare(gl, tailleEcran, Corps[0].Position, Color.Red, Planete.modeles[Corps[0].type].tailleMax());
 #if TRACER
@@ -390,6 +398,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
+
+
             for (int i = 1; i < Corps.Count; i++)
                 Corps[i].Avance(maintenant._intervalle);
 

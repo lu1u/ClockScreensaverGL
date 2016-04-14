@@ -92,6 +92,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             int c = (int)r.Next(-VIEWPORT_X, VIEWPORT_X);
             return (int)((int)(c / TAILLE_CARRE) * TAILLE_CARRE);
         }
+
+        /// <summary>
+        /// Efface le fond d'ecran
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="c"></param>
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
+
         /// <summary>
         /// Affichage des flocons
         /// </summary>
@@ -107,8 +119,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
 
-            gl.ClearColor(0, 0, 0, 1);
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Enable(OpenGL.GL_DEPTH);

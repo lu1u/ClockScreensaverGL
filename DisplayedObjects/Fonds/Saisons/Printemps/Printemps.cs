@@ -16,6 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     {
         #region PARAMETRES
         const String CAT = "Tree.GDI";
+        public static readonly byte ALPHA = (byte)conf.getParametre(CAT, "ALPHA", 128);
         public static readonly int DELAI_RECOMMENCE = conf.getParametre(CAT, "Delai nouvel arbre", 10) * 1000;
         public static readonly float LARGEUR_TRONC = conf.getParametre(CAT, "Largeur Tronc", 10);
         public static readonly int HAUTEUR_TRONC = conf.getParametre(CAT, "Hauteur Tronc", 200);
@@ -36,18 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
                 LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
         }
 
-/*
-        public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
-        {
-#if TRACER
-            RenderStart(CHRONO_TYPE.RENDER);
-#endif
-             _tree.Draw(g);
-#if TRACER
-            RenderStop(CHRONO_TYPE.RENDER);
-#endif
-        }
-*/
+
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -79,7 +69,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
         public override void ClearBackGround(OpenGL gl, Color c)
         {
-            c = getCouleurOpaqueAvecAlpha(c, (byte)64);
+            c = getCouleurOpaqueAvecAlpha(c, ALPHA);
 
             gl.ClearColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT);

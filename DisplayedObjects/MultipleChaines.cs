@@ -36,6 +36,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         TimerIsole timerNouvelleChaine = new TimerIsole(10000);
         TimerIsole timerEcranChangeChaine = new TimerIsole(1000);
         uint[] textures;
+
+        ///////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="gl"></param>
         public MultiplesChaines(OpenGL gl) : base(gl)
         {
             Chaines = new int[NB_ECRANS_LARGEUR, NB_ECRANS_HAUTEUR];
@@ -49,52 +55,77 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             for (int i = 0; i < NB_CHAINES; i++)
             {
                 _objets[i] = InitObjet(gl);
-                textures[i] = EmptyTexture(gl, LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
+                textures[i] = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
             }
 
         }
 
+        ///////////////////////////////////////////////////////////////////////
+        public override void Dispose()
+        {
+            for (int i = 0; i < NB_CHAINES; i++)
+                deleteEmptyTexture(textures[i]);
+
+            foreach (DisplayedObject o in _objets)
+                o.Dispose();
+        }
+
+        ///////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Initialisation d'un objet a afficher dans une des teles
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <returns></returns>
         protected DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(19))
+            switch (r.Next(16))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 2: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 3: return new Life(gl);
                 case 4: return new Couronnes(gl);
-                case 5: return new EspaceOpenGL(gl);
+                case 5: return new Nuages2(gl);
                 case 6: return new Tunnel(gl);
                 case 7: return new CarresEspace(gl);
                 case 8: return new GravitationParticules(gl);
-                case 9: return new NuagesOpenGL(gl);
-                case 10: return new TerreOpenGL(gl);
-                case 11: return new ParticulesGalaxie(gl);
-                case 12: return new ParticulesFusees(gl);
-                case 13: return new FeuDArtifice(gl);
-                case 14: return new AttracteurParticules(gl);
-                case 15: return new Gravitation(gl);
-                case 16: return new Engrenages(gl);
-                case 17: return new ADN(gl);
+                case 9: return new TerreOpenGL(gl);
+                case 10: return new ParticulesGalaxie(gl);
+                case 11: return new ParticulesFusees(gl);
+                case 12: return new FeuDArtifice(gl);
+                case 13: return new AttracteurParticules(gl);
+                case 14: return new Engrenages(gl);
+                case 15: return new ADN(gl);
                 default:
                     return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
         }
+
+        ///////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Affichage OpenGL
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
+        /// <param name="couleur"></param>
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             if (timerNouvelleChaine.Ecoule())
-                _objets[r.Next(NB_CHAINES)] = InitObjet(gl);
+            {
+                int noChaine = r.Next(NB_CHAINES);
+                _objets[noChaine].Dispose();
+                _objets[noChaine] = InitObjet(gl);
+            }
 
             RenderToTexture(gl, maintenant, tailleEcran, couleur);
             gl.ClearColor(couleur.R / 1024.0f, couleur.G / 1024.0f, couleur.B / 1024.0f, 1);				// Set The Clear Color To Medium Blue
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);      // Clear The Screen And Depth Buffer
 
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.ClearColor(0, 0, 0, 1);
-            //gl.LoadIdentity();
+             //gl.LoadIdentity();
             gl.Enable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
 
@@ -169,6 +200,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             {
                 gl.PushAttrib(OpenGL.GL_ENABLE_BIT|OpenGL.GL_COLOR_BUFFER_BIT);
 
+                _objets[i].ClearBackGround(gl, couleur);
                 _objets[i].AfficheOpenGL(gl, maintenant, r, couleur);
 
                 gl.Enable(OpenGL.GL_TEXTURE_2D);

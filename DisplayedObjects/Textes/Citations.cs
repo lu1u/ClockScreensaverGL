@@ -8,8 +8,11 @@
  */
 using SharpGL;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 namespace ClockScreenSaverGL.DisplayedObjects.Textes
@@ -22,6 +25,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         #region Parametres
         const string CAT = "Citation";
+        List<string> _citations;
+        // Classe pour melanger un tableau
+        private class Melangeur : IComparer
+        {
+            private static Random rnd;
+
+            static Melangeur()
+            {
+                rnd = new Random();
+            }
+
+            public int Compare(object x, object y)
+            {
+
+                if (x.Equals(y))
+                    return 0;
+                else
+                    return rnd.Next(-1, 1);
+            }
+
+        }
 
         private static readonly int DELAI_CHANGEMENT = 1000 * 60 * conf.getParametre(CAT, "DelaiChange", 1);	// x minutes entre les changements de citation
         private static readonly int TailleMax = conf.getParametre(CAT, "TailleMax", 48);
@@ -38,11 +62,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
                    conf.getParametre(CAT, "VX", -15),
                    conf.getParametre(CAT, "VY", 12),
                    10,
-                   conf.getParametre(CAT, "Alpha", (byte)150))
+                   100/*conf.getParametre(CAT, "Alpha", (byte)150)*/)
         {
+            _trajectoire = new TrajectoireDiagonale(10, SystemInformation.VirtualScreen.Height, conf.getParametre(CAT, "VX", -15), 0);
+            LireCitations();
             MelangerCitations();
 
-            _derniereCitation = new Random().Next(0, _citations.Length - 1);
+            _derniereCitation = new Random().Next(0, _citations.Count - 1);
             ChoisitCitation(f);
         }
 
@@ -61,6 +87,32 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             g.Dispose();
         }
 
+        /// Lire les citations a partir du fichier de donnees
+        private void LireCitations()
+        {
+            _citations = new List<string>();
+            string nomFichier = Path.Combine(Config.getDataDirectory(), "citations.txt");
+            try
+            {
+                StreamReader file = new StreamReader(nomFichier, Encoding.UTF8);
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line.Length > 0)
+                        if ((line.IndexOf("|") != -1) || (line[0] == '*'))
+                            _citations.Add(line);
+                }
+
+                file.Close();
+            }
+            catch (Exception e)
+            {
+                _citations.Clear();
+                _citations.Add("Erreur d'acces au fichier|" + e.Message);
+                _citations.Add("Erreur d'acces au fichier|" + e.Message);
+            }
+        }
+
         /// <summary>
         /// Melanger les citations aleatoirement
         /// </summary>
@@ -68,11 +120,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         {
             Random r = new Random();
             int DeuxiemeIndice;
-            for (int i = 0; i < _citations.Length; i++)
+            for (int i = 0; i < _citations.Count; i++)
             {
                 do
                 {
-                    DeuxiemeIndice = r.Next(0, _citations.Length);
+                    DeuxiemeIndice = r.Next(0, _citations.Count);
                 }
                 while (DeuxiemeIndice == i);
 
@@ -90,7 +142,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private void prochaineCitation()
         {
             // Puisque les citations ont ete melangees, on prend la suivante dans la liste
-            if (_derniereCitation < (_citations.Length - 1))
+            if (_derniereCitation < (_citations.Count - 1))
                 _derniereCitation++;
             else
                 _derniereCitation = 0;
@@ -109,10 +161,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
                 _auteur = "(" + words[1] + ")";// - {" + _derniereCitation + '/' + _citations.Length + '}';
             }
 
-            _citation.Replace("\\n", "\n");
+            _citation = _citation.Replace("/", "\n");
+            _auteur = _auteur.Replace("/", "\n");
             // Choisir une taille de texte adequate
-
-
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
                 _tailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
@@ -200,6 +251,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
             _texture.Create(gl, _bitmap);
             _citationChangee = false;
+            _trajectoire._Py = SystemInformation.VirtualScreen.Height - _taille.Height;
         }
         /*
         /// <summary>

@@ -221,22 +221,33 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// Create an empty texture.
         /// </summary>
         /// <returns></returns>
-        protected uint EmptyTexture(OpenGL gl, int LARGEUR_TEXTURE, int HAUTEUR_TEXTURE)
+        protected uint createEmptyTexture(int LARGEUR_TEXTURE, int HAUTEUR_TEXTURE)
         {
             uint[] txtnumber = new uint[1];                     // Texture ID
 
             // Create Storage Space For Texture Data (128x128x4)
             byte[] data = new byte[((LARGEUR_TEXTURE * HAUTEUR_TEXTURE) * 4 * sizeof(uint))];
 
-            gl.GenTextures(1, txtnumber);					// Create 1 Texture
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, txtnumber[0]);			// Bind The Texture
-            gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, 4, LARGEUR_TEXTURE, LARGEUR_TEXTURE, 0,
-                OpenGL.GL_RGBA, OpenGL.GL_UNSIGNED_BYTE, data);			// Build Texture Using Information In data
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+            _gl.GenTextures(1, txtnumber);					// Create 1 Texture
+            _gl.BindTexture(OpenGL.GL_TEXTURE_2D, txtnumber[0]);			// Bind The Texture
+            _gl.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, 4, LARGEUR_TEXTURE, LARGEUR_TEXTURE, 0, OpenGL.GL_RGBA, OpenGL.GL_UNSIGNED_BYTE, data);			// Build Texture Using Information In data
+            _gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
+            _gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
 
             return txtnumber[0];						// Return The Texture ID
         }
+
+        ///////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// DEstruction d'une texture OpenGL cree par createEmptyTexture
+        /// </summary>
+        /// <param name="texture"></param>
+        protected void deleteEmptyTexture(uint texture)
+        {
+            uint[] textures = { texture };
+            _gl.DeleteTextures(1, textures);
+        }
+
         #region Chrono
 #if TRACER
         long moyennedureeR = 0;

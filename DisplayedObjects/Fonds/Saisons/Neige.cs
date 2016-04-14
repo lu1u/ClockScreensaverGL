@@ -33,7 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class Hiver : TroisD
+    public class Hiver : TroisD
     {
         #region Parametres
         public const string CAT = "Neige.OpenGL";
@@ -43,8 +43,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseChute", 5);
         private static readonly float VITESSE_DELTA_VENT = conf.getParametre(CAT, "VitesseDeltaVent", 1f);
         private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
-        private static readonly float ALPHA_CENTRE = conf.getParametre(CAT, "AlphaCentre", 0.25f);
-        private static readonly float ALPHA_BORD = conf.getParametre(CAT, "AlphaBord", 0.05f);
         private readonly int NB_FLOCONS = conf.getParametre(CAT, "NbFlocons", 5000);
         #endregion
 
@@ -68,7 +66,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         const float TAILLE_FLOCON = 0.5f;
 
         const int NB_TYPES_FLOCONS = 3;
-        Texture[] texture = new Texture[NB_TYPES_FLOCONS];
+        const float DECALAGE_TEXTURE = 1.0f / (float)NB_TYPES_FLOCONS;
+        Texture texture = new Texture();
 
         public Hiver(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
@@ -94,12 +93,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _flocons[i].type = r.Next(0, NB_TYPES_FLOCONS);
             }
 
-            texture[0] = new Texture();
-            texture[0].Create(gl, Resources.flocon1);
-            texture[1] = new Texture();
-            texture[1].Create(gl, Resources.flocon2);
-            texture[2] = new Texture();
-            texture[2].Create(gl, Resources.flocon3);
+            texture.Create(gl, Config.getImagePath("flocons.png"));
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            texture?.Destroy(_gl);
         }
 
         private void NouveauFlocon(ref Flocon f)
@@ -133,7 +133,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            float[] col = { couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, ALPHA_CENTRE };
             GLfloat[] fogcolor = { couleur.R / 4096.0f, couleur.G / 4096.0f, couleur.B / 4096.0f, 0.5f };
 
             gl.ClearColor(fogcolor[0], fogcolor[1], fogcolor[2], fogcolor[3]);
@@ -156,27 +155,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Color(col);
+            gl.Color(couleur.R / 255.0f, couleur.G / 255.0f, couleur.B / 255.0f, 0.5f);
 
-            int derniereTexture = -1;
-
+            texture.Bind(gl);
             foreach (Flocon o in _flocons)
             {
-                if (derniereTexture != o.type)
-                {
-                    texture[o.type].Bind(gl);
-                    derniereTexture = o.type;
-                }
-
                 gl.PushMatrix();
                 gl.Translate(o.x, o.y, o.z);
                 gl.Rotate(o.ax, o.ay, o.az);
                 gl.Begin(OpenGL.GL_QUADS);
                 {
-                    gl.TexCoord(0.0f, 0.0f); gl.Vertex(-TAILLE_FLOCON, -TAILLE_FLOCON, 0);
-                    gl.TexCoord(0.0f, 1.0f); gl.Vertex(-TAILLE_FLOCON, TAILLE_FLOCON, 0);
-                    gl.TexCoord(1.0f, 1.0f); gl.Vertex(TAILLE_FLOCON, TAILLE_FLOCON, 0);
-                    gl.TexCoord(1.0f, 0.0f); gl.Vertex(TAILLE_FLOCON, -TAILLE_FLOCON, 0);
+                    float tX = DECALAGE_TEXTURE * o.type;
+                    float tXP1 = DECALAGE_TEXTURE * (o.type+1);
+                    gl.TexCoord(tX, 0.0f); gl.Vertex(-TAILLE_FLOCON, -TAILLE_FLOCON, 0);
+                    gl.TexCoord(tX, 1.0f); gl.Vertex(-TAILLE_FLOCON, TAILLE_FLOCON, 0);
+                    gl.TexCoord(tXP1, 1.0f); gl.Vertex(TAILLE_FLOCON, TAILLE_FLOCON, 0);
+                    gl.TexCoord(tXP1, 0.0f); gl.Vertex(TAILLE_FLOCON, -TAILLE_FLOCON, 0);
                 }
                 gl.End();
                 gl.PopMatrix();

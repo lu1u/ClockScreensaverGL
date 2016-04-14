@@ -9,7 +9,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
     class ModificateurAttracteurMutuelle : Modificateur
     {
         private float _g;
-        const float SEUIL = 0.4f;
+        const float SEUIL = 0.3f;
 
         static RectangleF bounds = new RectangleF(SystemeParticules2D.MIN_X, SystemeParticules2D.MIN_Y, SystemeParticules2D.LARGEUR, SystemeParticules2D.HAUTEUR);
         static SizeF tailleEmetteur = new SizeF(0.1f, 0.1f);

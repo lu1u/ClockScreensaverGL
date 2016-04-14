@@ -154,65 +154,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 
         }
 
-        /// <summary>
-        /// Affichage des nuages
-        /// </summary>
-        /// <param name="gl"></param>
-        /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        /// <param name="couleur"></param>
-        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        public override void ClearBackGround(OpenGL gl, Color couleur)
         {
-#if TRACER
-            RenderStart(CHRONO_TYPE.RENDER);
-#endif
-            gl.ClearColor(0, 0, 0, 1);
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.LoadIdentity();
-
             float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1 };
-            DessineCiel(gl, col);
-            
-            gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, ADDITIVE ? OpenGL.GL_ONE : OpenGL.GL_ONE_MINUS_SRC_ALPHA);
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
-            
-            gl.Enable(OpenGL.GL_FOG);
-            gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);
-            gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
-            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.0f);
-            gl.Fog(OpenGL.GL_FOG_END, -VIEWPORT_Z);
-            gl.Fog(OpenGL.GL_FOG_START, 0);
-
-            gl.Translate(0, 0, -_zCamera);
-            gl.Color(col[0] * 3.0f, col[1] * 3.0f, col[2] * 3.0f, ALPHA);
-
-            //float taille = 1;
-            for (uint i = 0; i < NB_NUAGES; i++)
-            {
-                gl.PushMatrix();
-                gl.Translate(_nuages[i].x, _nuages[i].y, _nuages[i].z);
-                //texture[_nuages[i].iTexture].Bind(gl);
-
-                gl.Begin(OpenGL.GL_QUADS);
-                gl.CallList(_nuages[i].iList);
-                gl.End();
-                gl.PopMatrix();
-            }
-
-
-#if TRACER
-            RenderStop(CHRONO_TYPE.RENDER);
-#endif
-        }
-
-        /// <summary>
-        /// Dessine le ciel, degrade ou uni en fonction des performances de la machine
-        /// </summary>
-        /// <param name="gl"></param>
-        /// <param name="col"></param>
-        private void DessineCiel(OpenGL gl, float[] col)
-        {
             if (CIEL_DEGRADE)
             {
                 gl.LoadIdentity();
@@ -259,6 +203,54 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
                 gl.DepthMask((byte)OpenGL.GL_FALSE);
             }
         }
+        /// <summary>
+        /// Affichage des nuages
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
+        /// <param name="couleur"></param>
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
+            
+            
+            gl.Enable(OpenGL.GL_BLEND);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, ADDITIVE ? OpenGL.GL_ONE : OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            
+            gl.Enable(OpenGL.GL_FOG);
+            gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);
+            gl.Fog(OpenGL.GL_FOG_COLOR, fogcolor);
+            gl.Fog(OpenGL.GL_FOG_DENSITY, 0.0f);
+            gl.Fog(OpenGL.GL_FOG_END, -VIEWPORT_Z);
+            gl.Fog(OpenGL.GL_FOG_START, 0);
+
+            gl.Translate(0, 0, -_zCamera);
+            gl.Color(couleur.R * 3.0f / 256.0f, couleur.G * 3.0f / 256.0f, couleur.B * 3.0f / 256.0f, ALPHA);
+
+            //float taille = 1;
+            for (uint i = 0; i < NB_NUAGES; i++)
+            {
+                gl.PushMatrix();
+                gl.Translate(_nuages[i].x, _nuages[i].y, _nuages[i].z);
+                //texture[_nuages[i].iTexture].Bind(gl);
+
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.CallList(_nuages[i].iList);
+                gl.End();
+                gl.PopMatrix();
+            }
+
+
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+
+
 
 
         /// <summary>

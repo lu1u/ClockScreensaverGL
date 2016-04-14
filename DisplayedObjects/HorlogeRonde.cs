@@ -29,8 +29,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public const string CAT = "HorlogeRonde";
 
         private readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)200);
-        private static readonly int HAUTEUR_FONTE = conf.getParametre(CAT, "HauteurFonte1", (byte)38);
-        private static readonly int HAUTEUR_FONTE2 = conf.getParametre(CAT, "HauteurFonte2", (byte)16);
+        private static readonly int HAUTEUR_FONTE = 32;// conf.getParametre(CAT, "HauteurFonte1", (byte)38);
+        private static readonly int HAUTEUR_FONTE2 = 14;// conf.getParametre(CAT, "HauteurFonte2", (byte)16);
         public static readonly byte ALPHA_AIGUILLES = conf.getParametre(CAT, "AlphaAiguilles", (byte)250);
         public static readonly float EPAISSEUR_TROTTEUSE = conf.getParametre(CAT, "EpaisseurTrotteuse", 8.0f);
         public static readonly float EPAISSEUR_MINUTES = conf.getParametre(CAT, "EpaisseurMinutes", 15.0f);
@@ -426,10 +426,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _textureFondHorloge.Bind(gl);
             gl.Translate(CentreX, CentreY, 0);
             gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-_rayon, _rayon-1);
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-_rayon, _rayon);
             gl.TexCoord(0.0f, 1.0f); gl.Vertex(-_rayon, -_rayon);
-            gl.TexCoord(1.0f, 1.0f); gl.Vertex(_rayon-1, -_rayon);
-            gl.TexCoord(1.0f, 0.0f); gl.Vertex(_rayon-1, _rayon-1);
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(_rayon, -_rayon);
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(_rayon, _rayon);
             gl.End();
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);

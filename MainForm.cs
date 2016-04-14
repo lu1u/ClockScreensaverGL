@@ -10,6 +10,7 @@ using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
+using ClockScreenSaverGL.DisplayedObjects.PanneauActualites;
 using ClockScreenSaverGL.DisplayedObjects.Saisons;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
@@ -60,6 +61,8 @@ namespace ClockScreenSaverGL
         DateTime _debut = DateTime.Now;
         Temps _temps;
         private bool wireframe = false;
+        int INDICE_FOND;
+        int INDICE_TRANSITION;
 
         #region Fonds
         enum FONDS
@@ -215,11 +218,11 @@ namespace ClockScreenSaverGL
                 case FONDS.NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case FONDS.COURONNES: return new Couronnes(gl);
                 case FONDS.COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.ESPACE: return new EspaceOpenGL(gl);
+                case FONDS.ESPACE: return new Nuages2(gl);
                 case FONDS.TUNNEL: return new Tunnel(gl);
                 case FONDS.CARRE_ESPACE: return new CarresEspace(gl);
                 case FONDS.PARTICULES_GRAVITATION: return new GravitationParticules(gl);
-                case FONDS.NUAGES: return new NuagesOpenGL(gl);
+                case FONDS.NUAGES: return new Nuages2(gl);
                 case FONDS.TERRE: return new TerreOpenGL(gl);
                 case FONDS.PARTICULES1: return new ParticulesGalaxie(gl);
                 case FONDS.PARTICULES_PLUIE: return new FontaineParticulesPluie(gl);
@@ -504,7 +507,11 @@ namespace ClockScreenSaverGL
 
             _fondDeSaison = conf.getParametre(CAT, PARAM_FONDDESAISON, true);
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
+            INDICE_FOND = 0;
             _listeObjets.Add(createBackgroundObject((FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0), true));
+
+            INDICE_TRANSITION = 1;
+            _listeObjets.Add(new Transition(gl));
 
             if (conf.getParametre(CAT, "Copyright", true))
                 // Copyright
@@ -513,6 +520,7 @@ namespace ClockScreenSaverGL
             if (conf.getParametre(CAT, "Citation", true))
                 _listeObjets.Add(new Citations(gl, this, 200, 200));
 
+            _listeObjets.Add(new Actualites(gl));
             // Meteo
             if (conf.getParametre(CAT, "Meteo", true))
                 _listeObjets.Add(new PanneauInfos(gl, meteoADroite));
@@ -522,10 +530,7 @@ namespace ClockScreenSaverGL
         {
             FONDS Type = (FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0);
             Type = ProchainFond(Type);
-            conf.setParametre(CAT, PARAM_TYPEFOND, (int)Type);
-
-            // Remplacer le premier objet de la liste par le nouveau fond
-            _listeObjets[0] = createBackgroundObject(Type, false);
+            ChangeFond(Type);
         }
 
         private FONDS ProchainFond(FONDS type)
@@ -573,9 +578,7 @@ namespace ClockScreenSaverGL
                             timerChangeFond.Enabled = false;
                             FONDS Type = (FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0);
                             Type = ProchainFond(Type);
-                            conf.setParametre(CAT, PARAM_TYPEFOND, (int)Type);
-                            // Remplacer le premier objet de la liste par le nouveau fond
-                            _listeObjets[0] = createBackgroundObject(Type, false);
+                            ChangeFond(Type);                            
                         }
                         break;
 #if TRACER
@@ -602,6 +605,20 @@ namespace ClockScreenSaverGL
                         break;
                 }
             }
+        }
+
+        private void ChangeFond(FONDS type)
+        {
+            conf.setParametre(CAT, PARAM_TYPEFOND, (int)type);
+            // Remplacer le premier objet de la liste par le nouveau fond
+            DisplayedObject dO = _listeObjets[INDICE_FOND];
+            DisplayedObject tr = _listeObjets[INDICE_TRANSITION];
+            if ( tr is Transition)
+            {
+                ((Transition)tr).InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetRGB());
+            }
+
+            _listeObjets[INDICE_FOND] = createBackgroundObject(type, false);
         }
 
         //start off OriginalLoction with an X and Y of int.MaxValue, because

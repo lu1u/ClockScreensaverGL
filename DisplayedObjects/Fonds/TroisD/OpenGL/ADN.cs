@@ -79,11 +79,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _cylindre.BaseRadius = 0.5f;
             _cylindre.Height = LONGUEUR_RAYON ;
         }
-
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1f };
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_ALPHA_TEST);
             gl.Enable(OpenGL.GL_CULL_FACE);

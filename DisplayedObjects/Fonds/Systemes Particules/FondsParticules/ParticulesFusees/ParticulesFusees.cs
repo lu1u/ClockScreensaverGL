@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         readonly float ALPHA_MODIFIEUR = 0.6f;// conf.getParametre(CAT, "Modifieur Alpha", 0.5f);
         readonly float TAILLE_MODIFIEUR = 0.05f;// conf.getParametre(CAT, "Modifieur Taille", 1.05f);
         readonly float TAILLE_PARTICULE = conf.getParametre(CAT, "TailleParticule", 0.01f);
-        readonly float VITESSE_ANGLE = conf.getParametre(CAT, "VitesseAngle", 0.75f);
+        readonly float VITESSE_ANGLE = 0.5f;// conf.getParametre(CAT, "VitesseAngle", 0.75f);
         readonly float VITESSE_PARTICULE = conf.getParametre(CAT, "VitesseParticule", 0.2f);
         readonly float VITESSE_FUSEE = conf.getParametre(CAT, "VitesseParticule", 0.5f);
 

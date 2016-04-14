@@ -80,6 +80,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             _nbParticules = 0;
         }
 
+    
+
         public void AjouteTexture(Bitmap b)
         {
             Texture t = new Texture();
@@ -126,7 +128,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
             return 0;
         }
-
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            if (typeFond == TYPE_FOND.FOND_NOIR)
+                gl.ClearColor(0, 0, 0, 1);
+            else
+                gl.ClearColor(c.R / 512.0f, c.G / 512.0f, c.B / 512.0f, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -140,12 +149,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             
-            if (typeFond == TYPE_FOND.FOND_NOIR)
-                gl.ClearColor(0, 0, 0, 1);
-            else
-                gl.ClearColor(couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1);
             
             float[] col = new float[4];
             if (couleurParticules == COULEUR_PARTICULES.NOIR)

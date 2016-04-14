@@ -77,7 +77,6 @@ namespace ClockScreenSaverGL
             this.openGLControl.TabIndex = 0;
             this.openGLControl.OpenGLInitialized += new System.EventHandler(this.onOpenGLInitialized);
             this.openGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.onOpenGLDraw);
-            //this.openGLControl.GDIDraw += new SharpGL.RenderEventHandler(this.onGDIDraw);
             this.openGLControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
             this.openGLControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);
             // 

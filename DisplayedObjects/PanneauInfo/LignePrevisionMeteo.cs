@@ -1,40 +1,68 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    public class LignePrevisionMeteo
+    public class LignePrevisionMeteo : IDisposable
     {
-        public Bitmap bmp;
-        public string TMin;
-        public string TMax;
-        public string text;
-        public string day;
+        const int NB_HEURES_PREVI = 4;
+         private Image _bmp;
+        private string _date;
+        private string _temperature;
+        private string _texte;
+        private string _vent;
+        private string _pluie;
 
-        public LignePrevisionMeteo(Bitmap b, string min, string max, string t, string d)
+        public LignePrevisionMeteo(string icone, string date, string temperature, string texte, string vent, string pluie)
         {
-            bmp = b;
-            TMin = min;
-            TMax = max;
-            text = t;
-            if (d.Equals("Mon"))
-                day = Resources.Lundi;
-            else
-                if (d.Equals("Tue"))
-                    day = Resources.Mardi;
-                else
-                    if (d.Equals("Wed"))
-                        day = Resources.Mercredi;
-                    else
-                        if (d.Equals("Thu"))
-                            day = Resources.Jeudi;
-                        else if (d.Equals("Fri"))
-                            day = Resources.Vendredi;
-                        else if (d.Equals("Sat"))
-                            day = Resources.Samedi;
-                        else if (d.Equals("Sun"))
-                            day = Resources.Dimanche;
-                        else
-                            day = d;
+            if (icone.StartsWith("background-position:") || icone.StartsWith("BACKGROUND-POSITION:"))
+                icone = Regex.Match(icone, @"\d+").Value;
+            _texte = texte;
+
+            try
+            {
+                _bmp = Image.FromFile(Config.getImagePath(@"Meteo\" + icone + ".png"));
+            }
+            catch (Exception)
+            {
+                _bmp = Image.FromFile(Config.getImagePath(@"Meteo\inconnu.png"));
+                _texte = "{" + icone + "}" + _texte;
+            }
+            _date = date;
+            _temperature = temperature;
+            _vent = vent;
+            _pluie = pluie;
         }
-    }   ;
+
+        public void Dispose()
+        {
+            _bmp?.Dispose();
+        }
+        private float KelvinToCelsius(float v)
+        {
+            return v - 273.15f;
+        }
+        public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y)
+        {
+            if (_bmp != null)
+                g.DrawImage(_bmp, 0, Y, PanneauInfos.TAILLE_ICONE, PanneauInfos.TAILLE_ICONE);
+            float H = 0;
+            SizeF size = g.MeasureString(_date, fTitre);
+            g.DrawString(_date, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y);
+            H += size.Height;
+
+            g.DrawString(_temperature, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y + H);
+            size = g.MeasureString(_temperature, fSousTitre);
+            H += size.Height;
+
+            g.DrawString(_texte, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y + H);
+            size = g.MeasureString(_temperature, fSousTitre);
+            H += size.Height;
+
+            return H;
+        }
+
+
+    }
 }

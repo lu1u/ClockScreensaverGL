@@ -13,6 +13,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
     {
         #region PARAMETRES
         public const string CAT = "PanneauInfos";
+        private readonly int NB_MAX_LIGNES = 5;
+
         private static readonly float ORIGINE_X = conf.getParametre(CAT, "OrigineX", 1000.0f);
         private static readonly float ORIGINE_Y = conf.getParametre(CAT, "OrigineY", 500.0f);
         private static readonly float VITESSE_X = conf.getParametre(CAT, "VitesseX", 30.0f);
@@ -22,7 +24,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private static readonly string METEO_URL = conf.getParametre(CAT, "URL", @"http://weather.yahooapis.com/forecastrss?w=588014&u=c");
         private static readonly string EXE_DEEZERINFO = conf.getParametre(CAT, "DeezerInfo", getDeezerInfoDirectory());
         public static readonly bool EXE_KILL = conf.getParametre(CAT, "Tuer deezer info", false);
-        private static readonly int DIAMETRE_HORLOGE = conf.getParametre(CAT, "Diametre Horloge", 360);
+        private static readonly int DIAMETRE_HORLOGE = 300;// conf.getParametre(CAT, "Diametre Horloge", 360);
         private static readonly int MARGE_HORLOGE = 20;
         private static readonly int TAILLE_TEXTE_HEURE = 32;
         private static readonly int MARGE_TEXTE_HEURE = 20;
@@ -38,21 +40,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
         }
 
-        private static readonly int DELAI_DEEZER = conf.getParametre(CAT, "DeezerInfo Delai (secondes)", 5);
-        private static readonly int TAILLE_TITRE = conf.getParametre(CAT, "Taille Titre", 48);
-        private static readonly int TAILLE_ICONE = conf.getParametre(CAT, "Taille Icone", 56);
-        private static readonly int TAILLE_TEXTE = conf.getParametre(CAT, "Taille Texte", 32);
-        private static readonly int TAILLE_TEXTE_PETIT = conf.getParametre(CAT, "Taille Texte Petit", 12);
-        private static readonly int TAILLE_TEXTE_TITRE = conf.getParametre(CAT, "Taille Texte Titre", 12);
-        private static readonly float RATIO_INTERLIGNE = 0.99f; // conf.getParametre(CAT, "RatioInterligne", 1.2f);
-        private static readonly int MARGE_H = conf.getParametre(CAT, "MargeH", 12);
-        private static readonly int MARGE_V = conf.getParametre(CAT, "MargeV", 12);
-        private static readonly int LARGEUR_JAUGE = conf.getParametre(CAT, "LargeurJauge", 8);
-        private static readonly int TAILLE_TEXTE_LEVER_COUCHER = conf.getParametre(CAT, "Taille Texte Lever", 24);
+        public static readonly int DELAI_DEEZER = conf.getParametre(CAT, "DeezerInfo Delai (secondes)", 5);
+        public static readonly int TAILLE_TITRE = conf.getParametre(CAT, "Taille Titre", 24);
+        public static readonly int TAILLE_ICONE = conf.getParametre(CAT, "Taille Icone", 56);
+        public static readonly int TAILLE_TEXTE = conf.getParametre(CAT, "Taille Texte", 18);
+        public static readonly int TAILLE_TEXTE_PETIT = conf.getParametre(CAT, "Taille Texte Petit", 16);
+        public static readonly int TAILLE_TEXTE_TITRE = conf.getParametre(CAT, "Taille Texte Titre", 16);
+        public static readonly float RATIO_INTERLIGNE = conf.getParametre(CAT, "RatioInterligne", 0.99f);
+        public static readonly int MARGE_H = conf.getParametre(CAT, "MargeH", 12);
+        public static readonly int MARGE_V = conf.getParametre(CAT, "MargeV", 12);
+        public static readonly int LARGEUR_JAUGE = conf.getParametre(CAT, "LargeurJauge", 8);
+        public static readonly int TAILLE_TEXTE_LEVER_COUCHER = conf.getParametre(CAT, "Taille Texte Lever", 24);
 
         #endregion PARAMETRES ;
 
-        private MeteoInfo _infos;
+        private MeteoInfo _meteo;
         private DeezerInfo _deezer;
         private HorlogeRonde _horloge;
         private HeureTexte _heureTexte;
@@ -63,6 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private float _Y = 0;
         private Bitmap _bitmap;
         private Texture _texture = new Texture();
+
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -70,7 +73,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             _droite = droite;
             _taille = new SizeF(DIAMETRE_HORLOGE + MARGE_HORLOGE * 2, SystemInformation.VirtualScreen.Height);
-            _infos = new MeteoInfo(METEO_URL);
+            _meteo = new MeteoInfo(METEO_URL);
             _deezer = new DeezerInfo(EXE_DEEZERINFO, DELAI_DEEZER);
             _horloge = new HorlogeRonde(gl, _droite, DIAMETRE_HORLOGE, 0, 0);
             _heureTexte = new HeureTexte(gl, 0, 0, TAILLE_TEXTE_HEURE);
@@ -116,7 +119,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
                 gl.Translate(0, _taille.Height, 0);
                 // Jauge de duree de validite des previsions
-                float actuelle = _infos.validitePassee();
+                float actuelle = _meteo.validitePassee();
                 col[3] = 0.7f;
                 gl.Color(col);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -164,7 +167,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             _bitmap?.Dispose();
             _bitmap = null;
 
-            if (_infos?.donneesPretes == true)
+            if (_meteo?._donneesPretes == true)
             {
                 CalculeTaille();
                 if (_taille.Width < 1)
@@ -173,7 +176,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
             using (Font fonteTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold, GraphicsUnit.Pixel))
             using (Font fonteSousTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_PETIT, FontStyle.Regular, GraphicsUnit.Pixel))
-            using (Font fLever = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
+            using (Font fonteTexte = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
+            //using (Font fLever = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
             {
                 _bitmap = new Bitmap((int)Math.Ceiling(_taille.Width), (int)Math.Ceiling(_taille.Height), PixelFormat.Format32bppArgb);
                 float Y = MARGE_V + DIAMETRE_HORLOGE + MARGE_HORLOGE * 2 + TAILLE_TEXTE_HEURE + MARGE_TEXTE_HEURE + TAILLE_TEXTE_DATE;
@@ -182,60 +186,57 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                     g.Clear(Color.FromArgb(96, 64, 64, 64));
                     float LargeurMax = _taille.Width;
 
-                    if (_infos?.donneesPretes == true)
+                    if (_meteo?._donneesPretes == true)
                     // Titre
                     {
-                        g.DrawString(_infos._location, fonteTitre, Brushes.White, MARGE_H, Y);
-                        Y += TAILLE_TITRE;
-
                         using (Font fLocation = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_TITRE, FontStyle.Regular, GraphicsUnit.Pixel))
                         {
-                            g.DrawString(_infos._title, fLocation, Brushes.White, MARGE_H, Y);
+                            g.DrawString(_meteo._title, fLocation, Brushes.White, MARGE_H, Y);
                             Y += TAILLE_TEXTE_TITRE * RATIO_INTERLIGNE;
                         }
-
+                        /*
                         {
-                            g.DrawString(String.Format(Resources.Lever, _infos.lever), fLever, Brushes.White, MARGE_H, Y);
+                            g.DrawString(String.Format(Resources.Lever, _infos._lever), fLever, Brushes.White, MARGE_H, Y);
                             Y += TAILLE_TEXTE_LEVER_COUCHER;
-                            g.DrawString(String.Format(Resources.Coucher, _infos.coucher), fLever, Brushes.White, MARGE_H, Y);
+                            g.DrawString(String.Format(Resources.Coucher, _infos._coucher), fLever, Brushes.White, MARGE_H, Y);
                             Y += TAILLE_TEXTE_LEVER_COUCHER * RATIO_INTERLIGNE;
-                        }
+                        }*/
 
 
                         // Lignes de previsions
-                        using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
                         {
-                            foreach (LignePrevisionMeteo ligne in _infos._lignes)
+                            for (int i = 0; (i < _meteo._lignes.Count) && (i < NB_MAX_LIGNES); i++)
+                            //foreach (LignePrevisionMeteo ligne in _infos._lignes)
                             {
-                                g.DrawImage(ligne.bmp, MARGE_H, Y, TAILLE_ICONE, TAILLE_ICONE);
-                                string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
-                                float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
-                                g.DrawString(text, f, Brushes.White, MARGE_H + TAILLE_ICONE, Y);
-                                g.DrawString(ligne.text, fonteSousTitre, Brushes.White, MARGE_H + TAILLE_ICONE + TAILLE_TEXTE_PETIT, Y + TAILLE_TEXTE);
 
-                                Y += TAILLE_ICONE * RATIO_INTERLIGNE;
+                                //g.DrawImage(ligne.bmp, MARGE_H, Y, TAILLE_ICONE, TAILLE_ICONE);
+                                //string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
+                                //float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
+                                //g.DrawString(text, f, Brushes.White, MARGE_H + TAILLE_ICONE, Y);
+                                //g.DrawString(ligne.text, fonteSousTitre, Brushes.White, MARGE_H + TAILLE_ICONE + TAILLE_TEXTE_PETIT, Y + TAILLE_TEXTE);
+
+                                Y += _meteo._lignes[i].affiche(g, fonteTexte, fonteSousTitre, Y) * RATIO_INTERLIGNE + MARGE_V;
                             }
                         }
 
 
-
-                        // Chanson en cours de lecture dans deezer
-                        // Taille de l'information sur la chanson en cours de lecture
-                        if (_deezer != null)
+                    }
+                    // Chanson en cours de lecture dans deezer
+                    // Taille de l'information sur la chanson en cours de lecture
+                    if (_deezer != null)
+                    {
                         {
-                            using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
-                            {
-                                using (Pen p = new Pen(Color.White, 4))
-                                    g.DrawLine(p, MARGE_H, Y, LargeurMax - MARGE_H, Y);
+                            using (Pen p = new Pen(Color.White, 4))
+                                g.DrawLine(p, MARGE_H, Y, LargeurMax - MARGE_H, Y);
 
-                                Y += TAILLE_TITRE / 2;
-                                g.DrawImage(Resources.music_note, MARGE_H, Y, TAILLE_ICONE, TAILLE_ICONE);
+                            Y += TAILLE_TITRE / 2;
+                            g.DrawImage(Resources.music_note, MARGE_H, Y, TAILLE_ICONE, TAILLE_ICONE);
 
-                                g.DrawString(_deezer.Infos, fLever, Brushes.White, MARGE_H + TAILLE_ICONE, Y);
-                                Y += g.MeasureString(_deezer.Infos, f).Height * RATIO_INTERLIGNE;
-                            }
+                            g.DrawString(_deezer.Infos, fonteSousTitre, Brushes.White, MARGE_H + TAILLE_ICONE, Y);
+                            Y += g.MeasureString(_deezer.Infos, fonteTexte).Height * RATIO_INTERLIGNE;
                         }
                     }
+
                     float HauteurMax = Y - _Y;
                     _texture.Create(gl, _bitmap);
                 }
@@ -251,31 +252,30 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             float largeur = 0;
             float hauteur = 0;
 
-            if (_infos != null)
-                if (_infos.donneesPretes)
+            if (_meteo != null)
+                if (_meteo._donneesPretes)
                 {
                     hauteur = SystemInformation.VirtualScreen.Height;
+                    largeur = 200;
                     /*hauteur = TAILLE_TITRE + TAILLE_TEXTE_TITRE * RATIO_INTERLIGNE + TAILLE_TEXTE_LEVER_COUCHER * RATIO_INTERLIGNE
                          + (TAILLE_ICONE * RATIO_INTERLIGNE) * _infos._lignes.Count
                          + MARGE_V * 2;
                          */
-                    using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-                    using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
-                    using (Font fLever = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
-                    {
-                        // Taille des previsions meteo
-                        foreach (LignePrevisionMeteo ligne in _infos._lignes)
-                        {
-                            string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
-                            float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
-                            if (tailleTexte > largeur)
-                                largeur = tailleTexte;
-                        }
+                    /*
+               using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+               using (Font f = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE, FontStyle.Regular, GraphicsUnit.Pixel))
+               using (Font fLever = new Font(FontFamily.GenericSansSerif, TAILLE_TEXTE_LEVER_COUCHER, FontStyle.Regular, GraphicsUnit.Pixel))
+               {
+                   // Taille des previsions meteo
+                   foreach (LignePrevisionMeteo ligne in _infos._lignes)
+                   {
+                       string text = String.Format(Resources.Temperatures, ligne.day, ligne.TMin, ligne.TMax);
+                       float tailleTexte = g.MeasureString(text, f).Width + TAILLE_ICONE;
+                       if (tailleTexte > largeur)
+                           largeur = tailleTexte;
+                   }
 
-                        // Taille de l'information sur la chanson en cours de lecture
-                        /*if (_deezer != null)
-                            hauteur += g.MeasureString(_deezer.Infos, fLever, new SizeF(largeur, hauteur)).Height * RATIO_INTERLIGNE + TAILLE_TITRE;*/
-                    }
+              } */
                     largeur += MARGE_H * 2;
                     largeur = Math.Max(largeur, DIAMETRE_HORLOGE + MARGE_HORLOGE * 2);
                 }
@@ -287,13 +287,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            if (_infos.MustRefresh(maintenant))
-                _infos = new MeteoInfo(METEO_URL);
+            if (_meteo.MustRefresh(maintenant))
+                _meteo = new MeteoInfo(METEO_URL);
 
             if (_deezer.MustRefresh(maintenant))
                 _deezer.Refresh();
 
-            if (_infos.HasNewInfo() || _deezer.HasNewInfo())
+            if (_meteo.HasNewInfo() || _deezer.HasNewInfo())
                 _bitmap = null;
 
 

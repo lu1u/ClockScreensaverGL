@@ -10,7 +10,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class EspaceOpenGL : TroisD, IDisposable
+    public sealed class Espace : TroisD, IDisposable
     {
         #region Parametres
         public const string CAT = "Espace.OpenGL";
@@ -43,7 +43,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
         /// Constructeur
         /// </summary>
         /// <param name="gl"></param>
-        public EspaceOpenGL(OpenGL gl)
+        public Espace(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];

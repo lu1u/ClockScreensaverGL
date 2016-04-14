@@ -148,9 +148,9 @@
     <Compile Include="DisplayedObjects\Fonds\Couronnes.cs" />
     <Compile Include="DisplayedObjects\Fonds\Gravity\Asteroide.cs" />
     <Compile Include="DisplayedObjects\Fonds\Gravity\Material.cs" />
-    <Compile Include="DisplayedObjects\Fonds\LifeCube.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\EmetteurGravitation.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\GravitationParticules.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Nuages2.cs" />
     <Compile Include="DisplayedObjects\Fonds\ViellesTeles.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\MateriauGlobal.cs" />
     <Compile Include="DisplayedObjects\Fonds\Gravity\Modele3D.cs" />
@@ -208,27 +208,26 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Espace.cs" />
     <Compile Include="DisplayedObjects\Fonds\Saisons\Automne.cs" />
     <Compile Include="DisplayedObjects\Fonds\Saisons\Neige.cs" />
-    <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Nuages.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\TerreOpenGL.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\TroisD.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\OpenGL\Tunnel.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Vecteur3D.cs" />
     <Compile Include="DisplayedObjects\HorlogeRonde.cs" />
     <Compile Include="DisplayedObjects\Lune.cs" />
+    <Compile Include="DisplayedObjects\PanneauActualites\Actualites.cs" />
+    <Compile Include="DisplayedObjects\PanneauActualites\LigneActu.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\DeezerInfo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\LignePrevisionMeteo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\PanneauInfo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\MeteoInfo.cs" />
     <Compile Include="DisplayedObjects\MultipleChaines.cs" />
     <Compile Include="DisplayedObjects\Textes\Citations.cs" />
-    <Compile Include="DisplayedObjects\Textes\Citations.Donnees.cs">
-      <DependentUpon>Citations.cs</DependentUpon>
-    </Compile>
     <Compile Include="DisplayedObjects\Textes\DateTexte.cs" />
     <Compile Include="DisplayedObjects\Textes\HeureTexte.cs" />
     <Compile Include="DisplayedObjects\Textes\Texte.cs" />
     <Compile Include="DisplayedObjects\Textes\TexteBande.cs" />
     <Compile Include="DisplayedObjects\Textes\TexteCopyright.cs" />
+    <Compile Include="DisplayedObjects\Transition.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -524,9 +523,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Release\images\terre.png" />
-    <Content Include="NDde.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Resources\music-note.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

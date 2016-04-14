@@ -18,11 +18,9 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public class Lune
 	{
-		//private Bitmap _bitmapLune = null ;
 		private int _ageLune = -1 ;
 		DateTime _maintenant ;
-
-		
+        		
 		private static int JulianDate(int d, int m, int y)
 		{
 			int mm, yy;
@@ -86,21 +84,7 @@ namespace ClockScreenSaverGL
 			_maintenant = maintenant ;
 			int lune = (int)Math.Round(CalcMoonAge(_maintenant) / 29.530588853 * 26) ;
 
-            //if ((lune == _ageLune) && (_bitmapLune != null))
-            //    return _bitmapLune;
-            /*
-            if  (lune != _ageLune)
-			{
-				_ageLune = lune ;
-				if  (_bitmapLune != null )
-				{
-					// On va changer de lune
-					_bitmapLune.Dispose() ;
-					_bitmapLune = null ;
-				}				
-			}
-			*/
-			Bitmap bmp ;
+            Bitmap bmp ;
 			switch( lune )
 			{
 					case 0:  bmp = Resources.Lune00 ; break ;
@@ -155,7 +139,7 @@ namespace ClockScreenSaverGL
                 imgAttribs.SetColorMatrix(clrMatrix, ColorMatrixFlag.Default, ColorAdjustType.Default);
 
                 gMem.DrawImage(bmp,
-                               new Rectangle(0, 0, bmp.Width, bmp.Height),
+                               new Rectangle(0, 0, (int)(bmp.Width*0.8f), (int)(bmp.Height*0.8f)),
                                0, 0, bmp.Width, bmp.Height,
                                GraphicsUnit.Pixel, imgAttribs);
             }

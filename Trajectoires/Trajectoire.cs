@@ -6,15 +6,10 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 namespace ClockScreenSaverGL
 {
-	public abstract class Trajectoire
+    public abstract class Trajectoire
 	{
 		public float _Px, _Py, _Vx, _Vy;
 		
@@ -33,8 +28,6 @@ namespace ClockScreenSaverGL
 				_Px = value.X ;
 				_Py = value.Y ;
 			}
-		}	
-		
-		
+		}			
 	}
 }

@@ -1,41 +1,38 @@
 ﻿///
 /// Exploite l'API Yahoo Weather
-/// https://developer.yahoo.com/weather/documentation.html
+/// https://developer.yahoo.com/weather/documentation.html  (annulee par yahoo depuis mars 2016)
+/// 
+// 
 
 using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Text;
-using System.Xml.XPath;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Threading;
+using System.Windows.Forms;
+
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     class MeteoInfo
     {
         #region MEMBRES_PUBLICS
-        public bool donneesPretes;
-           
+        const int NB_JOURS_PREVISIONS = 4;
+        public bool _donneesPretes;
+
         public List<LignePrevisionMeteo> _lignes = new List<LignePrevisionMeteo>();
-        public string _location;
-        public string lever;
-        public string coucher;
         public string _title;
         public bool _hasNewInfo;
-
         #endregion MEMBRES_PUBLICS
 
         private string _url;
         private DateTime _datePrevisions;
         private DateTime _finPrevisions;
+        WebBrowser _wb;
 
         public MeteoInfo(string url)
         {
-            donneesPretes = false;
+            _donneesPretes = false;
             _hasNewInfo = false;
-            _url = url ;
-            new Thread(new ThreadStart(ChargeDonnees)).Start();
+            _url = @"http://www.my-meteo.fr/previsions+meteo+france/crolles+12+jours.html";
+            ChargeDonnees();
         }
 
         /// <summary>
@@ -43,6 +40,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// </summary>
         public void ChargeDonnees()
         {
+            try
+            {
+                _wb = new WebBrowser();
+                _wb.DocumentCompleted += onDocumentCompleted;
+                _wb.ScriptErrorsSuppressed = true;
+                _wb.Navigate(_url);
+
+            }
+            catch (Exception)
+            {
+            }
+            #region YAHOO_WEATHER // Obsolete
+            /*
             // Create a new XmlDocument  
             try
             {
@@ -111,8 +121,107 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                 donneesPretes = false;
                 _hasNewInfo = false;             
             }
+            */
+            #endregion
         }
 
+        private void onDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs ex)
+        {
+            if (_hasNewInfo)
+                return;
+
+            var doc = _wb.Document;
+            if (doc == null)
+                return;
+
+            _title = "Crolles my-meteo.fr";
+            _datePrevisions = DateTime.Now;
+            _finPrevisions = _datePrevisions.AddDays(1);
+            _lignes.Clear();
+
+            HtmlElement colprev = doc.GetElementById("col_previsions");
+            if (colprev == null)
+                return;
+
+            try
+            {
+                foreach (HtmlElement e in colprev.All)
+                {
+                    string classe = e.GetAttribute("className");
+                    if (classe.StartsWith("item"))
+                    {
+                        HtmlElementCollection souselements = e.GetElementsByTagName("span");
+                        DecodeLigne(souselements);
+
+                        if (_lignes.Count > 4)
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            _hasNewInfo = true;
+            _donneesPretes = true;
+        }
+
+        /// <summary>
+        /// Decode une ligne du site my meteo
+        /// </summary>
+        /// <param name="elems"></param>
+        private void DecodeLigne(HtmlElementCollection elems)
+        {
+            try
+            {
+                string icone = "inconnu";
+                string date = "?";
+                string tmin = "?";
+                string tmax = "?";
+                string temps = "?";
+                string vent = "?";
+                string pluie = "?";
+                foreach (HtmlElement el in elems)
+                {
+                    string cl = el.GetAttribute("className");
+                    if ("icone-meteo grand p1".Equals(cl))
+                        icone = el.Style;
+                    else
+                    if ("date".Equals(cl))
+                        date = el.InnerText;
+                    else
+                        if ("t_min".Equals(cl))
+                        tmin = el.InnerText;
+                    else
+                    if ("t_max".Equals(cl))
+                        tmax = el.InnerText;
+                    else
+                    if ("temps".Equals(cl))
+                        temps = el.InnerText;
+                    else
+                                if ("vent".Equals(cl))
+                        vent = el.InnerText;
+                    else
+                                if ("pluie".Equals(cl))
+                        pluie = el.InnerText;
+                }
+
+                _lignes.Add(new LignePrevisionMeteo(icone, date, ToTemp(tmin, tmax), temps, vent, pluie));
+            }
+            catch (Exception e)
+            {
+                _lignes.Add(new LignePrevisionMeteo("", e.Message, "", "", "", ""));
+            }
+        }
+
+        private string ToTemp(string tmin, string tmax)
+        {
+            return tmin + "°/" + tmax + "°";
+        }
+
+        
         /// <summary>
         /// Traduire une heure HH.MM PM en heure 24
         /// </summary>
@@ -147,7 +256,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         public float validitePassee()
         {
             DateTime now = DateTime.Now;
-            double dureeTotale = _finPrevisions.Subtract(_datePrevisions).TotalSeconds ;
+            double dureeTotale = _finPrevisions.Subtract(_datePrevisions).TotalSeconds;
             double dureeActuelle = _finPrevisions.Subtract(now).TotalSeconds;
 
             return (float)dureeActuelle / (float)dureeTotale;
@@ -155,7 +264,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
         public bool MustRefresh(Temps maintenant)
         {
-            if (!donneesPretes)
+            if (!_donneesPretes)
                 return false;
 
             return maintenant._temps > _finPrevisions;
@@ -169,6 +278,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// </summary>
         /// <param name="p">Code Yahoo, voir </param>
         /// <returns></returns>
+        /*
         private Bitmap getIcone(string p)
         {
             int Code;
@@ -299,7 +409,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                     return Resources.Meteo_44; // Indeterminee
             }
         }
-
+        */
         internal bool HasNewInfo()
         {
             if (_hasNewInfo)

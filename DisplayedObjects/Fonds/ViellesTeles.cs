@@ -29,8 +29,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         protected float[] LIG_DIFFUSE = { 1.0f, 1.0f, 1.0f };
         protected float RATIO_COULEUR = 1.0f / 256.0f;
 
-        const int LARGEUR_TEXTURE = 128;
-        const int HAUTEUR_TEXTURE = 128;
+        const int LARGEUR_TEXTURE = 256;
+        const int HAUTEUR_TEXTURE = 256;
         protected uint texture = 0;
         protected DisplayedObject _objet;
         protected Texture tv;
@@ -46,7 +46,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public ViellesTeles(OpenGL gl) : base(gl)
         {
             _objet = InitObjet(gl);
-            texture = EmptyTexture(gl, LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
+            texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
 
             Quad quad = new Quad();
             quad.position = new Vecteur3D(5f, 0.8f, -3);
@@ -70,28 +70,31 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             tv.Create(gl, Config.getImagePath(r.Next(2) == 0? "tv1.png" : "tv2.png"));
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            deleteEmptyTexture(texture);
+        }
         protected DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(19))
+            switch (r.Next(16))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 2: return new Bacteries(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 3: return new Life(gl);
                 case 4: return new Couronnes(gl);
-                case 5: return new EspaceOpenGL(gl);
+                case 5: return new Nuages2(gl);
                 case 6: return new Tunnel(gl);
                 case 7: return new CarresEspace(gl);
                 case 8: return new GravitationParticules(gl);
-                case 9: return new NuagesOpenGL(gl);
-                case 10: return new TerreOpenGL(gl);
-                case 11: return new ParticulesGalaxie(gl);
-                case 12: return new ParticulesFusees(gl);
-                case 13: return new FeuDArtifice(gl);
-                case 14: return new AttracteurParticules(gl);
-                case 15: return new Gravitation(gl);
-                case 16: return new Engrenages(gl);
-                case 17: return new ADN(gl);
+                case 9: return new TerreOpenGL(gl);
+                case 10: return new ParticulesGalaxie(gl);
+                case 11: return new ParticulesFusees(gl);
+                case 12: return new FeuDArtifice(gl);
+                case 13: return new AttracteurParticules(gl);
+                case 14: return new Engrenages(gl);
+                case 15: return new ADN(gl);
                 default:
                     return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
@@ -121,8 +124,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.ClearColor(0, 0, 0, 0);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);      // Clear The Screen And Depth Buffer
 
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.ClearColor(0, 0, 0, 1);
             gl.LoadIdentity();
             gl.Enable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
@@ -181,10 +182,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Begin(OpenGL.GL_QUADS);
             // Front Face
             gl.Normal(0.0f, 0.0f, 1.0f);                  // Normal Pointing Towards Viewer
-            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-1.0f, -1.0f, 1.0f);  // Point 1 (Front)
-            gl.TexCoord(1.0f, 0.0f); gl.Vertex(1.0f, -1.0f, 1.0f);  // Point 2 (Front)
-            gl.TexCoord(1.0f, 1.0f); gl.Vertex(1.0f, 1.0f, 1.0f);  // Point 3 (Front)
-            gl.TexCoord(0.0f, 1.0f); gl.Vertex(-1.0f, 1.0f, 1.0f);  // Point 4 (Front)
+            gl.TexCoord(0.0f, 1.0f); gl.Vertex(-1.0f, -1.0f, 1.0f);  // Point 1 (Front)
+            gl.TexCoord(1.0f, 1.0f); gl.Vertex(1.0f, -1.0f, 1.0f);  // Point 2 (Front)
+            gl.TexCoord(1.0f, 0.0f); gl.Vertex(1.0f, 1.0f, 1.0f);  // Point 3 (Front)
+            gl.TexCoord(0.0f, 0.0f); gl.Vertex(-1.0f, 1.0f, 1.0f);  // Point 4 (Front)
             gl.End();
             gl.PopMatrix();
         }
@@ -237,7 +238,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             Rectangle r = new Rectangle(0, 0, LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
             gl.Viewport(0, 0, r.Width, r.Height);                    // Set Our Viewport (Match Texture Size)
-            gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
+            gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_COLOR_BUFFER_BIT);
 
             _objet.AfficheOpenGL(gl, maintenant, r, couleur);
 

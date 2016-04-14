@@ -65,13 +65,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     cellules[x, y] = r.Next(11) > 5 ? MORT : NAISSANCE;
         }
 
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
+
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.ClearColor(0, 0, 0, 1);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);

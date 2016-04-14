@@ -26,20 +26,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         static readonly int NB_FACES_PAR_DENT = 3;// conf.getParametre(CAT, "Nb faces par dent", 6);
         static readonly float EPAISSEUR = conf.getParametre(CAT, "Epaisseur", 0.5f);
         static readonly float TAILLE_DENT = conf.getParametre(CAT, "Taille dent", 0.05f);
-        /*static readonly float[] COL_SPECULAR = { 0.5f, 0.5f, 0.5f, 1.0f };//{
-        static readonly float[] COL_AMBIENT = { 0.0f, 0.0f, 0.0f, 1.0f };//{ 
-        static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
-        static readonly float[] COL_DIFFUSE = { 0.4f, 0.4f, 0.4f, 1.0f };         
-        static readonly float[] COL_LIGHTPOS = { -3f, 2f, 3, 1 };*/
-        /*static readonly float[] COL_SPECULAR_AXE = { 0.1f, 0.1f, 0.1f, 1.0f };//{ SPEC, SPEC, SPEC, 1 };
-        static readonly float[] COL_AMBIENT_AXE = { 0.0f, 0.0f, 0.0f, 1.0f };//{ AMB, AMB, AMB, 1 };
-        static readonly float[] COL_EMISSION_AXE = { 0.00f, 0.00f, 0.00f, 0.0f };//{ AMB, AMB, AMB, 1 };
-        static readonly float[] COL_DIFFUSE_AXE = { 0.0f, 0.0f, 0.0f, 1.0f };//{ DIF, DIF, DIF, 1 };
-        */
-        /*
-        static readonly float[] SPECULAR_LIGHT = { 0.8f, 0.8f, 0.8f }; //set the 
-        static readonly float[] AMBIENT_LIGHT = { 0.01f, 0.01f, 0.01f }; //set the 
-        static readonly float[] DIFFUSE_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the */
+        
         TimerIsole timer = new TimerIsole(500);
         private class Engrenage
         {
@@ -116,8 +103,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1f };
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_ALPHA_TEST);
             //gl.Enable(OpenGL.GL_CULL_FACE);
@@ -127,28 +116,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Enable(OpenGL.GL_DEPTH);
             gl.CullFace(OpenGL.GL_BACK);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-
-            /*gl.LineWidth(2.5f);
-            gl.Begin(OpenGL.GL_LINES);
-            gl.Color(1.0f, 1.0f, 0.0, 1.0f);
-            gl.Vertex(COL_LIGHTPOS[0] - 2, COL_LIGHTPOS[1], COL_LIGHTPOS[2]);
-            gl.Vertex(COL_LIGHTPOS[0] + 2, COL_LIGHTPOS[1], COL_LIGHTPOS[2]);
-            gl.Vertex(COL_LIGHTPOS[0], COL_LIGHTPOS[1] - 2, COL_LIGHTPOS[2]);
-            gl.Vertex(COL_LIGHTPOS[0], COL_LIGHTPOS[1] + 2, COL_LIGHTPOS[2]);
-            gl.Vertex(COL_LIGHTPOS[0], COL_LIGHTPOS[1], COL_LIGHTPOS[2] - 2);
-            gl.Vertex(COL_LIGHTPOS[0], COL_LIGHTPOS[1], COL_LIGHTPOS[2] + 2);
-            gl.End();
-            */
-            //
-            /*Lumiere
-            gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_LIGHT0);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, COL_LIGHTPOS);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_COLOR, col);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, SPECULAR_LIGHT);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, AMBIENT_LIGHT);
-            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, DIFFUSE_LIGHT);
-            */
 
             setGlobalMaterial(gl, couleur);
             // Aspect de la surface
@@ -171,6 +138,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             }
 
             fillConsole(gl);
+
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
+        }
+
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(0, 0, 0, 1.0f);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
         }
 
         private void DessineRoue(OpenGL gl, Engrenage e)
@@ -302,6 +279,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
+
+#if TRACER
+            RenderStart(CHRONO_TYPE.DEPLACE);
+#endif
             _angleVue += VITESSE_ROTATION * maintenant._intervalle;
 
             xCible += (_engrenages[(int)_nbEngrenages - 1].x - xCible) * 0.1f * maintenant._intervalle;
@@ -344,7 +325,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
                     premier.x = dernier.x + (_engrenages[0].diametre1 + dernier.diametre2) * (float)Math.Sin(_angle);
                     premier.y = dernier.y + (_engrenages[0].diametre1 + dernier.diametre2) * (float)Math.Cos(_angle);
-                    premier.z = dernier.z + 0.25f * -_engrenages[0].epaisseur;// * SigneRandom() ;
+                    premier.z = dernier.z + 0.25f * -_engrenages[0].epaisseur;
                     premier.vitesse = -dernier.vitesse * dernier.diametre1 / _engrenages[0].diametre1;
                     premier.angle = dernier.angle;
                     premier.echelle = 0.01f;
@@ -353,6 +334,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     _engrenages.Add(premier);
                 }
             }
+
+#if TRACER
+            RenderStop(CHRONO_TYPE.DEPLACE);
+#endif
         }
     }
 }

@@ -169,7 +169,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 
 
             }
-            catch
+            catch (Exception)
             {
 
             }

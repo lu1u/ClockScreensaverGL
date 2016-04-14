@@ -166,6 +166,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_bitmap")]
         public override void Dispose()
         {
+            base.Dispose();
             _fonte?.Dispose();
             _bitmap?.Dispose();
             _texture?.Destroy(_gl);

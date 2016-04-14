@@ -100,14 +100,19 @@ namespace ClockScreenSaverGL
             }
         }
 
-        private static string getImagesDirectory()
+        public static string getDataDirectory()
         {
-            return Path.Combine(new FileInfo((Assembly.GetExecutingAssembly().Location)).Directory.FullName, "images");
+            return Path.Combine(new FileInfo((Assembly.GetExecutingAssembly().Location)).Directory.FullName, "Donnees") ;
+        }
+
+        public static string getImagesDirectory()
+        {
+            return Path.Combine(getDataDirectory(), "Images");
         }
 
         public static string getImagePath(string imgName)
         {
-            return Path.Combine(getImagesDirectory(), imgName);//.Replace("\\\\","\\");
+            return Path.Combine(getImagesDirectory(), imgName);
         }
 
         /// <summary>
@@ -190,7 +195,7 @@ namespace ClockScreenSaverGL
         /// Lit le fichier de configuration et donne leur valeur aux parametres
         /// </summary>
         void LireFichierConf()
-        {
+        {         
             // Parcours les fichiers conf dans le repertoire
             string rep = getRepertoire();
             try
@@ -219,7 +224,26 @@ namespace ClockScreenSaverGL
                             line = file.ReadLine();
                             string valeur = line.Substring(line.IndexOf(VALUE_SEPARATOR) + 1);
                             line = file.ReadLine();
-                            string defaut = line.Substring(line.IndexOf(VALUE_SEPARATOR) + 1);
+
+                            string defaut;
+                            if (line == null)
+                                defaut = "";
+                            else
+                            {
+                                int indice = line.IndexOf(VALUE_SEPARATOR);
+                                try
+                                {
+                                    if (indice > 0)
+                                        defaut = line.Substring(line.IndexOf(VALUE_SEPARATOR) + 1);
+                                    else
+                                        defaut = "";
+                                }
+                                catch (Exception)
+                                {
+
+                                    throw;
+                                }
+                            }
 
                             if (type.Equals(TYPE_BOOL))
                                 setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString(defaut));
@@ -246,9 +270,9 @@ namespace ClockScreenSaverGL
             {
                 // C'est normal: par encore de fichier de configuration (premier lancement)
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw e;
             }
 
         }
