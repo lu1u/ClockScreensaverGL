@@ -25,31 +25,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         #region Parametres
         const string CAT = "Citation";
-        List<string> _citations;
-        // Classe pour melanger un tableau
-        private class Melangeur : IComparer
-        {
-            private static Random rnd;
-
-            static Melangeur()
-            {
-                rnd = new Random();
-            }
-
-            public int Compare(object x, object y)
-            {
-
-                if (x.Equals(y))
-                    return 0;
-                else
-                    return rnd.Next(-1, 1);
-            }
-
-        }
-
+        public static readonly float RATIO_TAILLE_FONTE = conf.getParametre(CAT, "RatioTailleFonte", 0.4f);
         private static readonly int DELAI_CHANGEMENT = 1000 * 60 * conf.getParametre(CAT, "DelaiChange", 1);	// x minutes entre les changements de citation
         private static readonly int TailleMax = conf.getParametre(CAT, "TailleMax", 48);
+        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)250);
+        private static readonly float VX = conf.getParametre(CAT, "VX", -15);
+        private static readonly float VY = 0;// conf.getParametre(CAT, "VX", 0);
+        private static readonly int TAILLE_FONTE = conf.getParametre(CAT, "Taille Fonte", 30);
         #endregion
+        List<string> _citations;
+        
         private String _citation;
         private String _auteur;
         private DateTime _changement;
@@ -58,13 +43,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private bool _citationChangee = false;
         private int _tailleFonte, _tailleFonteAuteur;
         public Citations(OpenGL gl, Form f, int Px, int Py)
-            : base(gl, Px, Py,
-                   conf.getParametre(CAT, "VX", -15),
-                   conf.getParametre(CAT, "VY", 12),
-                   10,
-                   100/*conf.getParametre(CAT, "Alpha", (byte)150)*/)
+            : base(gl, Px, SystemInformation.VirtualScreen.Height, VX, VY, 10, ALPHA)
         {
-            _trajectoire = new TrajectoireDiagonale(10, SystemInformation.VirtualScreen.Height, conf.getParametre(CAT, "VX", -15), 0);
             LireCitations();
             MelangerCitations();
 
@@ -72,6 +52,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             ChoisitCitation(f);
         }
 
+        public override void Dispose()
+        {
+            base.Dispose();
+            _bitmap?.Dispose();
+        }
 
         protected override bool TexteChange() { return _citationChangee; }
 
@@ -118,7 +103,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         /// </summary>
         private void MelangerCitations()
         {
-            Random r = new Random();
             int DeuxiemeIndice;
             for (int i = 0; i < _citations.Count; i++)
             {
@@ -166,7 +150,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             // Choisir une taille de texte adequate
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
             {
-                _tailleFonte = Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
+                _tailleFonte = TAILLE_FONTE;// Math.Min(calculeTailleTexte(g, _citation), calculeTailleTexte(g, _auteur));
                 _tailleFonteAuteur = _tailleFonte;
 
                 // Calculer la taille du texte affiche
@@ -192,10 +176,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         /// <param name="g"></param>
         /// <param name="s"></param>
         /// <returns></returns>
-        private int calculeTailleTexte(Graphics g, String s)
+        /*private int calculeTailleTexte(Graphics g, String s)
         {
 
-            int LargeurEcran = (int)(SystemInformation.VirtualScreen.Width * conf.getParametre(CAT, "RatioTailleFonte", 0.4f));
+            int LargeurEcran = (int)(SystemInformation.VirtualScreen.Width * RATIO_TAILLE_FONTE);
             int TailleFonte = 30;
 
             Font f = new Font(FontFamily.GenericSansSerif, TailleFonte, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -212,7 +196,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             f.Dispose();
             return TailleFonte;
         }
-
+        */
         /// <summary>
         ///  Pas utilisee
         /// </summary>
@@ -241,7 +225,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             using (Graphics g = Graphics.FromImage(_bitmap))
             {
                 RectangleF rect = new RectangleF(0, 0, _rectCitation.Width, _rectCitation.Height);
-                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Italic, GraphicsUnit.Pixel))
+                using (Font fonte = new Font(FontFamily.GenericSansSerif, _tailleFonte, FontStyle.Regular, GraphicsUnit.Pixel))
                     g.DrawString(_citation, fonte, Brushes.White, rect);
 
                 rect.Offset(0, _rectCitation.Height);
@@ -253,38 +237,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             _citationChangee = false;
             _trajectoire._Py = SystemInformation.VirtualScreen.Height - _taille.Height;
         }
-        /*
-        /// <summary>
-        /// Affiche cet objet
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        /// <param name="couleur"></param>
-        public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
-        {
-#if TRACER
-            RenderStart(CHRONO_TYPE.RENDER);
-#endif
-
-            RectangleF rect = new RectangleF(_trajectoire._Px, _trajectoire._Py, _rectCitation.Width, _rectCitation.Height);
-
-            using (Brush brush = new SolidBrush(getCouleurAvecAlpha(couleur, _alpha)))
-                g.DrawString(_citation, _fonte, brush, rect);
-
-            rect.Offset(0, _rectCitation.Height);
-
-            using (Brush brush = new SolidBrush(getCouleurAvecAlpha(couleur, (byte)(_alpha >> 1))))
-                g.DrawString(_auteur, _fonteAuteur, brush, rect.Left, rect.Top);
-
-            // Changer la citation toutes les 5 minutes
-            if (DateTime.Now.Subtract(_changement).TotalMilliseconds > DELAI_CHANGEMENT)
-                prochaineCitation(g);
-#if TRACER
-            RenderStop(CHRONO_TYPE.RENDER);
-#endif
-        }
-        */
+        
         /// <summary>
         /// Pression sur une touche, si c'est 'C' : changer de citation et signaler qu'on a utilise la touche
         /// </summary>

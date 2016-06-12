@@ -1,16 +1,11 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
+using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using SharpGL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using System.Windows.Forms;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -78,7 +73,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <returns></returns>
         protected DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(16))
+            switch (r.Next(18))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -96,6 +91,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 13: return new AttracteurParticules(gl);
                 case 14: return new Engrenages(gl);
                 case 15: return new ADN(gl);
+                case 16: return new Cubes(gl);
+                case 17: return new Grille(gl);
                 default:
                     return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
@@ -198,15 +195,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             for (int i = 0; i < NB_CHAINES; i++)
             {
-                gl.PushAttrib(OpenGL.GL_ENABLE_BIT|OpenGL.GL_COLOR_BUFFER_BIT);
+                gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
 
                 _objets[i].ClearBackGround(gl, couleur);
                 _objets[i].AfficheOpenGL(gl, maintenant, r, couleur);
 
                 gl.Enable(OpenGL.GL_TEXTURE_2D);
-                gl.BindTexture(OpenGL.GL_TEXTURE_2D, textures[i]);          // Bind To The Blur Texture
-
-                // Copy Our ViewPort To The Blur Texture (From 0,0 To 128,128... No Border)
+                gl.BindTexture(OpenGL.GL_TEXTURE_2D, textures[i]);
                 gl.CopyTexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGB16, 0, 0, LARGEUR_TEXTURE, HAUTEUR_TEXTURE, 0);
 
                 gl.PopAttrib();

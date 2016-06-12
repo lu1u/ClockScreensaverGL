@@ -3,7 +3,7 @@ using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of Neige.
@@ -88,8 +88,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
 
         public override void ClearBackGround(OpenGL gl, Color couleur)
         {
-            gl.Clear(OpenGL.GL_DEPTH_BUFFER_BIT);
-            //gl.LoadIdentity();
+            gl.ClearColor(couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_COLOR_MATERIAL);

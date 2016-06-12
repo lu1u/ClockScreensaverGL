@@ -10,7 +10,7 @@ using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Evaluators;
 using System.Windows.Forms;
 
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     class TerreOpenGL : MateriauGlobal, IDisposable
     {

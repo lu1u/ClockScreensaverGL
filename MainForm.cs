@@ -7,7 +7,7 @@ using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
 using ClockScreenSaverGL.DisplayedObjects.PanneauActualites;
@@ -67,33 +67,10 @@ namespace ClockScreenSaverGL
         #region Fonds
         enum FONDS
         {
-            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, TUNNEL, NEIGE_META, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, VIELLES_TELES, GRAVITE, ENGRENAGES, ADN
+            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, GRILLE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, TUNNEL, NEIGE_META, LIFE, TERRE,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, ADN
         };
-        /*const int TYPE_FOND_ESPACE = 0;
-        const int TYPE_FOND_COURONNES = 1;
-        const int TYPE_FOND_METABALLES = 2;
-        const int TYPE_FOND_NUAGES = 3;
-        const int TYPE_FOND_PARTICULES_PLUIE = 4;
-        const int TYPE_FOND_CARRES_ESPACE = 5;
-        const int TYPE_FOND_ENCRE = 6;
-        const int TYPE_FOND_TUNNEL = 7;
-        const int TYPE_FOND_NEIGE_META = 8;
-        const int TYPE_FOND_LIFE = 9;
-        const int TYPE_FOND_TERRE = 10;
-        const int TYPE_FOND_BACTERIES = 11;
-        const int TYPE_FOND_PARTICULES1 = 12;
-        const int TYPE_FOND_COULEUR = 13;
-        const int TYPE_FOND_FUSEES = 14;
-        const int TYPE_FOND_ARTIFICE = 15;
-        const int TYPE_FOND_NOIR = 16;
-        const int TYPE_FOND_ATTRACTEUR = 17;
-        const int TYPE_FOND_GRAVITE = 18;
-        const int TYPE_FOND_ENGRENAGES = 19;
-        const int TYPE_FOND_ADN = 20;
-        
 
-        const int NB_FONDS = TYPE_FOND_ADN + 1;*/
         const FONDS PREMIER_FOND = FONDS.ESPACE;
         const FONDS DERNIER_FOND = FONDS.ADN;
         #endregion
@@ -185,7 +162,7 @@ namespace ClockScreenSaverGL
         {
 
             OpenGL gl = openGLControl.OpenGL;
-
+            
             if (!initial)
                 gl.PopAttrib();
 
@@ -218,7 +195,7 @@ namespace ClockScreenSaverGL
                 case FONDS.NOIR: return new Noir(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case FONDS.COURONNES: return new Couronnes(gl);
                 case FONDS.COULEUR: return new Couleur(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                case FONDS.ESPACE: return new Nuages2(gl);
+                case FONDS.ESPACE: return new Espace(gl);
                 case FONDS.TUNNEL: return new Tunnel(gl);
                 case FONDS.CARRE_ESPACE: return new CarresEspace(gl);
                 case FONDS.PARTICULES_GRAVITATION: return new GravitationParticules(gl);
@@ -233,11 +210,14 @@ namespace ClockScreenSaverGL
                 case FONDS.ATTRACTEUR: return new AttracteurParticules(gl);
                 case FONDS.GRAVITE: return new Gravitation(gl);
                 case FONDS.ENGRENAGES: return new Engrenages(gl);
+                case FONDS.CUBES: return new Cubes(gl);
                 case FONDS.ADN: return new ADN(gl);
-                default:
-                    return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                case FONDS.GRILLE: return new Grille(gl);
+                    
+                        default:
+                            return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    }
             }
-        }
 
 
         /// <summary>
@@ -283,12 +263,7 @@ namespace ClockScreenSaverGL
             try
             {
                 UpdateStyles();
-                /* switch (conf.getParametre(CAT, "PreferedRenderMode. 0 DIBSECTION, 1 FBO, 2 NATIVE", RENDERMODE_FBO))
-                 {
-                     case RENDERMODE_DIBSECTION: openGLControl.RenderContextType = RenderContextType.DIBSection; break;
-                     case RENDERMODE_FBO: openGLControl.RenderContextType = RenderContextType.FBO; break;
-                     case RENDERMODE_NATIVE: openGLControl.RenderContextType = RenderContextType.NativeWindow; break;
-                 }*/
+                Cursor.Hide();
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
                 timerChangeFond.Interval = conf.getParametre(CAT, PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
@@ -361,10 +336,10 @@ namespace ClockScreenSaverGL
         */
 
 #if TRACER
-        /// <summary>
-        /// Affichage des informations de debug et performance
-        /// </summary>
-        /// <param name="g"></param>
+                    /// <summary>
+                    /// Affichage des informations de debug et performance
+                    /// </summary>
+                    /// <param name="g"></param>
         private void remplitDebug(OpenGL gl)
         {
             double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
@@ -547,14 +522,16 @@ namespace ClockScreenSaverGL
             {
                 switch ((Keys)e.KeyValue)
                 {
-                    /*case Keys.Insert: _couleur.ChangeHue(1); break;
-                    case Keys.Delete: _couleur.ChangeHue(-1); break;
-                    case Keys.Home: _couleur.ChangeSaturation(1); break;
-                    case Keys.End: _couleur.ChangeSaturation(-1); break;
-                    case Keys.PageUp: _couleur.ChangeValue(1); break;
-                    case Keys.PageDown: _couleur.ChangeValue(-1); break;*/
+                    //case Keys.Up: _couleur.ChangeHue(1); break;
+                    //case Keys.Down: _couleur.ChangeHue(-1); break;
+                    case Keys.Left: _couleur.ChangeSaturation(1); break;
+                    case Keys.Right: _couleur.ChangeSaturation(-1); break;
+                    case Keys.Up: _couleur.ChangeValue(1); break;
+                    case Keys.Down: _couleur.ChangeValue(-1); break;
+
                     //case Keys.H: _afficherAide = !_afficherAide; break;
                     case DisplayedObject.TOUCHE_REINIT:
+                        _listeObjets[0].Dispose();
                         _listeObjets[0] = createBackgroundObject((FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0), _fondDeSaison);
                         timerChangeFond.Stop();
                         timerChangeFond.Start();
@@ -639,6 +616,7 @@ namespace ClockScreenSaverGL
                 //see if the mouse has moved more than 20 pixels in any direction. If it has, close the application.
                 if (Math.Abs(e.X - OriginalLocation.X) > 20 | Math.Abs(e.Y - OriginalLocation.Y) > 20)
                 {
+                    Cursor.Show();
                     Application.Exit();
                 }
             }

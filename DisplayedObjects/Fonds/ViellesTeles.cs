@@ -1,7 +1,6 @@
 ﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using SharpGL;
 using System;
@@ -11,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using SharpGL.SceneGraph.Assets;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -77,7 +77,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         }
         protected DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(16))
+            switch (r.Next(18))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -95,6 +95,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 13: return new AttracteurParticules(gl);
                 case 14: return new Engrenages(gl);
                 case 15: return new ADN(gl);
+                case 16: return new Cubes(gl);
+                case 17: return new Grille(gl);
                 default:
                     return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }

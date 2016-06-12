@@ -1,17 +1,19 @@
 ﻿///
 /// Exploite l'API Yahoo Weather
 /// https://developer.yahoo.com/weather/documentation.html  (annulee par yahoo depuis mars 2016)
+/// http://www.meteofrance.com/previsions-meteo-france/crolles/38920
 /// 
 // 
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
-    class MeteoInfo
+    class MeteoInfo : IDisposable
     {
         #region MEMBRES_PUBLICS
         const int NB_JOURS_PREVISIONS = 4;
@@ -26,13 +28,68 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private DateTime _datePrevisions;
         private DateTime _finPrevisions;
         WebBrowser _wb;
+        static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
         public MeteoInfo(string url)
         {
             _donneesPretes = false;
             _hasNewInfo = false;
-            _url = @"http://www.my-meteo.fr/previsions+meteo+france/crolles+12+jours.html";
+
+            // MyMeteo.fr
+            //_url = @"http://www.my-meteo.fr/previsions+meteo+france/crolles+12+jours.html";
+            _url = @"http://www.meteofrance.com/previsions-meteo-france/crolles/38920";
+            _title = "Crolles - http://www.meteofrance.com";
+
+            LitCorrespondancesMeteo();
             ChargeDonnees();
+        }
+
+        /// <summary>
+        /// Lecture de la table de correspondance qui fait le lien entre les nom utilises sur le site meteo
+        /// et les icones utilisees par le programme
+        /// </summary>
+        private static void LitCorrespondancesMeteo()
+        {
+            _liensIcones.Clear();
+            string fichierSources = Path.Combine(Config.getDataDirectory(), "icones meteo.txt");
+            // Lire le fichier des sources d'actualite
+            StreamReader file = new StreamReader(fichierSources);
+            string line;
+            while ((line = file.ReadLine()) != null)
+            {
+                line = line.Trim();
+                if (!line.StartsWith("#")) // Commentaire a ignorer ?
+                {
+                    string[] tokens = line.Split('>');
+                    if (tokens?.Length == 2)
+                        _liensIcones.Add(tokens[0], tokens[1]);
+                }
+            }
+
+            file.Close();
+        }
+
+        /// <summary>
+        /// Retrouve le nom de l'image a utiliser par ce programme en fonction de l'information
+        /// trouvee sur la page du site meteo
+        /// </summary>
+        /// <param name="imageSurLeSite"></param>
+        /// <returns></returns>
+        public static string getIcone(string imageSurLeSite)
+        {
+            string valeur ;
+            if (_liensIcones.TryGetValue(imageSurLeSite, out valeur))
+                return valeur;
+
+            return imageSurLeSite;
+        }
+
+        public void Dispose()
+        {
+            if (_lignes != null)
+                foreach (LignePrevisionMeteo l in _lignes)
+                    l.Dispose();
+            _wb.Dispose();
         }
 
         /// <summary>
@@ -42,11 +99,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             try
             {
-                _wb = new WebBrowser();
-                _wb.DocumentCompleted += onDocumentCompleted;
-                _wb.ScriptErrorsSuppressed = true;
-                _wb.Navigate(_url);
+                if (_wb == null)
+                {
+                    _wb = new WebBrowser();
+                    _wb.DocumentCompleted += onDocumentCompleted;
 
+                    _wb.ScriptErrorsSuppressed = true;
+                    _wb.Navigate(_url);
+                }
             }
             catch (Exception)
             {
@@ -125,15 +185,48 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             #endregion
         }
 
-        private void onDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs ex)
+        /// <summary>
+        /// Page meteo recue: l'interpreter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="wex"></param>
+        private void onDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs wex)
         {
             if (_hasNewInfo)
                 return;
+
+            _datePrevisions = DateTime.Now;
+            _finPrevisions = _datePrevisions.AddHours(2);
+            _lignes.Clear();
 
             var doc = _wb.Document;
             if (doc == null)
                 return;
 
+            // meteofrance.com
+            HtmlElement prev = doc.GetElementById("seven-days");
+            if (prev == null)
+                return;
+
+            HtmlElementCollection div = prev.GetElementsByTagName("div");
+            try
+            {
+                foreach (HtmlElement e in div)
+                {
+                    String classe = e.GetAttribute("className");
+                    if ("group-days-summary".Equals(classe))
+                    {
+                        ParseGroupDays(e);
+
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            /* my-meteo.fr
             _title = "Crolles my-meteo.fr";
             _datePrevisions = DateTime.Now;
             _finPrevisions = _datePrevisions.AddDays(1);
@@ -163,11 +256,135 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
                 throw;
             }
-
+            */
             _hasNewInfo = true;
             _donneesPretes = true;
+            _wb = null;
         }
 
+        private void ParseGroupDays(HtmlElement e)
+        {
+            HtmlElementCollection articles = e.GetElementsByTagName("article");
+            foreach (HtmlElement article in articles)
+            {
+                String date = "?";
+                String temperature = "?";
+                String icone = "?";
+                String texte = "?";
+                String vent = "?";
+                String pluie = "?";
+                foreach (HtmlElement el in article.Children)
+                {
+                    String tagName = el.TagName?.ToLower();
+
+                    if ("header".Equals(tagName))
+                    {
+                        // Header: date
+                        date = el.InnerText;
+                    }
+                    else
+                        if ("ul".Equals(tagName))
+                    {
+                        // Boucle dans les <LI>
+                        foreach (HtmlElement li in el.Children)
+                        {
+                            String classe = li.GetAttribute("className");
+
+                            // temperature
+                            if ("day-summary-temperature".Equals(classe))
+                            {
+                                HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
+                                if (spans != null)
+                                {
+                                    temperature = filtreMin(spans[0]?.InnerText) + ", " + filtreMax(spans[1]?.InnerText);
+                                }
+                            }
+
+                            // image et etxte de prevision
+                            if ("day-summary-image".Equals(classe))
+                            {
+                                HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
+                                if (spans != null)
+                                {
+                                    icone = getIcone(spans[0]?.GetAttribute("className"));
+                                    texte = spans[0]?.InnerText;
+                                }
+                            }
+
+                            // Vent
+                            if ("day-summary-wind".Equals(classe))
+                            {
+                                HtmlElementCollection P = li.GetElementsByTagName("P");
+                                if (P != null)
+                                {
+                                    vent = P[0]?.InnerText + ' ' + filtreVent(P[1]?.InnerText);
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+                _lignes.Add(new LignePrevisionMeteo(icone, date, temperature, texte, vent, pluie));
+                if (_lignes.Count >= PanneauInfos.NB_LIGNES_INFO_MAX)
+                    return;
+            }
+        }
+
+        private string filtreMax(string texte)
+        {
+            return texte.Replace("Maximale", "Max");
+        }
+
+        private string filtreMin(string texte)
+        {
+            return texte.Replace("Minimale", "Min");
+        }
+
+        private string filtreVent(string texte)
+        {
+            return texte.Replace("Vent ", "");
+        }
+        /// <summary>
+        /// Calcule le nom de l'image a afficher en fonction du nom donne par meteo france
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        /*private string decodeImage(string mf)
+        {
+            if ("picTemps J_W1_0-N_0".Equals(mf))
+                return "ensoleille";
+            if ("picTemps J_W1_0-N_1".Equals(mf))
+                return "eclaircies";
+            if ("picTemps J_W1_0-N_2".Equals(mf))
+                return "eclaircies";
+            if ("picTemps J_W1_0-N_3".Equals(mf))
+                return "tres_nuageux";
+            if ("picTemps J_W1_0-N_5".Equals(mf))
+                return "ciel_voile";
+
+            if ("picTemps J_W1_18-N_1".Equals(mf))
+                return "rares_averses";
+            if ("picTemps J_W1_18-N_2".Equals(mf))
+                return "rares_averses";
+            if ("picTemps J_W1_12-N_3".Equals(mf))
+                return "orages";
+            if ("picTemps J_W1_32-N_2".Equals(mf))
+                return "averses_orageuses";
+            if ("picTemps J_W1_25-N_3".Equals(mf))
+                return "orages";
+            if ("picTemps J_W1_32-N_4".Equals(mf))
+                return "averses_orageuses";
+
+            if ("picTemps J_W2_18".Equals(mf))
+                return "risques_orages";
+            if ("picTemps N_W2_8".Equals(mf))
+                return "pluie";
+
+            return mf;
+        }*/
+
+        /*
         /// <summary>
         /// Decode une ligne du site my meteo
         /// </summary>
@@ -221,7 +438,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             return tmin + "°/" + tmax + "°";
         }
 
-        
+
         /// <summary>
         /// Traduire une heure HH.MM PM en heure 24
         /// </summary>
@@ -246,7 +463,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             {
                 return p;
             }
-        }
+        }*/
 
         /// <summary>
         /// Retourne le pourcentage present de validite des previsions, en fonction de la longueur de

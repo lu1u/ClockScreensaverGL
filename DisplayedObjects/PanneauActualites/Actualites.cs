@@ -8,6 +8,9 @@ using System.Xml;
 using System.Windows.Forms;
 using System.Threading;
 using System.IO;
+using System.Net;
+using System.Net.Cache;
+using System.Globalization;
 
 namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
@@ -15,49 +18,33 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
     {
         public const string CAT = "Actualites";
 
-        private static readonly int HAUTEUR_BANDEAU = conf.getParametre(CAT, "Hauteur bandeau",150);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 75.0f);
-        private static readonly int MIN_LIGNES = conf.getParametre(CAT, "Nb lignes min", 50);
-        private static readonly int MAX_LIGNES = conf.getParametre(CAT, "Nb lignes max", 100);
-        private static readonly int TAILLE_SOURCE = conf.getParametre(CAT, "Taille fonte source", 16);
-        private static readonly int TAILLE_TITRE = conf.getParametre(CAT, "Taille fonte titre", 30);
-        private static readonly int TAILLE_DESCRIPTION = conf.getParametre(CAT, "Taille fonte source", 14);
-        private static bool AFFICHE_DESCRIPTION = conf.getParametre(CAT, "Affiche Description", true);
+        public static readonly int NB_JOURS_MAX_INFO = conf.getParametre(CAT, "Nb jours info max", 4);
+        public static readonly int HAUTEUR_BANDEAU = conf.getParametre(CAT, "Hauteur bandeau", 150);
+        public static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 75.0f);
+        public static readonly int MIN_LIGNES = conf.getParametre(CAT, "Nb lignes min", 50);
+        public static readonly int MAX_LIGNES = conf.getParametre(CAT, "Nb lignes max", 100);
+        public static readonly int MAX_LIGNES_PAR_SOURCE = conf.getParametre(CAT, "Nb lignes max par source", 10);
+        public static readonly int TAILLE_SOURCE = conf.getParametre(CAT, "Taille fonte source", 16);
+        public static readonly int TAILLE_TITRE = conf.getParametre(CAT, "Taille fonte titre", 30);
+        public static readonly int TAILLE_DESCRIPTION = conf.getParametre(CAT, "Taille fonte source", 14);
+        public static bool AFFICHE_DESCRIPTION = conf.getParametre(CAT, "Affiche Description", true);
+        public static bool AFFICHE_IMAGES = conf.getParametre(CAT, "Affiche Images", true);
         private int derniereSource = conf.getParametre(CAT, "Derniere Source", 0);
 
         private float _decalageX = SystemInformation.VirtualScreen.Width;
-        private int _derniereAffichee;
-        public readonly Font _fonteSource = new Font(FontFamily.GenericSansSerif, TAILLE_SOURCE, FontStyle.Italic);
-        public readonly Font _fonteTitre = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE, FontStyle.Bold);
-        public readonly Font _fonteDescription = new Font(FontFamily.GenericSansSerif, TAILLE_DESCRIPTION, FontStyle.Regular);
-        List<LigneActu> _lignes = new List<LigneActu>();
-        private string _source_a_charger;
-        private string _url_a_charger;
-
-        private List<string> _sourcesActualite = new List<string>();
-        char[] SEPARATEURS = { '|' };
+        public static int _derniereAffichee;
+        
+        private ActuFactory _actuFactory;
 
         public Actualites(OpenGL gl) : base(gl)
         {
-            string fichierSources = Path.Combine(Config.getDataDirectory(), "actualites.txt");
-            StreamReader file = new StreamReader(fichierSources);
-            string line;
-            while ((line = file.ReadLine()) != null)
-            {
-                line = line.Trim();
-                if (! line.StartsWith("#"))
-                    _sourcesActualite.Add(line);
-            }
-
-            file.Close();
+            _actuFactory = new ActuFactory();
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            _fonteSource.Dispose();
-            _fonteTitre.Dispose();
-            _fonteDescription.Dispose();
+            _actuFactory.Dispose();
         }
 
         /// <summary>
@@ -88,11 +75,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             gl.Rect(tailleEcran.Left, tailleEcran.Top + HAUTEUR_BANDEAU, tailleEcran.Right, tailleEcran.Top);
 
             float x = tailleEcran.Left + _decalageX;
-            _derniereAffichee = 1;
-            lock (_lignes)
-            foreach (LigneActu l in _lignes)
+            _derniereAffichee = 0;
+            List<LigneActu> lignes = _actuFactory.getLignes();
+            lock (lignes)
+            foreach (LigneActu l in lignes)
                 {
-                    l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, _fonteSource, _fonteTitre, _fonteDescription, couleur, AFFICHE_DESCRIPTION);
+                    l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, couleur, AFFICHE_DESCRIPTION);
                     x += l.largeur;
                     _derniereAffichee++;
                     if (x > tailleEcran.Right)
@@ -106,113 +94,67 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
             Console c = Console.getInstance(gl);
             c.AddLigne(Color.Green, "Decalage" + _decalageX.ToString("f2"));
-            c.AddLigne(Color.Green, "Nb Lignes " + _lignes.Count);
-            c.AddLigne(Color.Green, _sourcesActualite[derniereSource]);
+            c.AddLigne(Color.Green, "Nb Lignes " + lignes.Count);
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            if (_lignes.Count < MIN_LIGNES)
-                GetNextLigne();
-
+            /*   if (_lignes.Count < MIN_LIGNES)
+                   GetNextLigne();
+                   */
             _decalageX -= VITESSE * maintenant._intervalle;
 
-            lock (_lignes)
+            List<LigneActu> lignes = _actuFactory.getLignes();
+            lock (lignes)
             {
-                if (_lignes.Count > 1)
-                    if (_decalageX + _lignes[0].largeur < 0)
+                if (lignes.Count > 1)
+                    if (_decalageX + lignes[0].largeur < 0)
                     {
                         // Suppression de la premiere annonce qui ne sera plus affichee
-                        _decalageX += _lignes[0].largeur;
-                        _lignes[0].Dispose();
-                        _lignes.RemoveAt(0);
+                        _decalageX += lignes[0].largeur;
+                        lignes[0].Dispose();
+                        lignes.RemoveAt(0);
                     }
             }
         }
 
-        /// <summary>
-        /// Retrouve de nouvelles lignes d'information
-        /// </summary>
-        private void GetNextLigne()
+        public static int SourceCourante()
         {
-            derniereSource++;
-            if (derniereSource >= _sourcesActualite.Count)
-                derniereSource = 0;
-
-            conf.setParametre(CAT, "Derniere Source", derniereSource);
+            return conf.getParametre(CAT, "Derniere Source", 0);
+        }
+        public static void SourceCourante(int source)
+        {
+            conf.setParametre(CAT, "Derniere Source", source);
             conf.flush(CAT);
-
-            string[] tokens = _sourcesActualite[derniereSource].Split(SEPARATEURS);
-            _source_a_charger = tokens[0];
-            _url_a_charger = tokens[1];
-            new Thread(new ThreadStart(GetInfos)).Start();
         }
 
-        private void GetInfos()
-        {
-            XmlDocument RSSXml = new XmlDocument();
-            try
-            {
-                RSSXml.Load(_url_a_charger);
 
-                XmlNodeList RSSNodeList = RSSXml.SelectNodes("rss/channel/item");
-                StringBuilder sb = new StringBuilder();
-                foreach (XmlNode RSSNode in RSSNodeList)
-                {
-                    XmlNode RSSSubNode;
-                    RSSSubNode = RSSNode.SelectSingleNode("title");
-                    string title = RSSSubNode != null ? RSSSubNode.InnerText : "";
-                    RSSSubNode = RSSNode.SelectSingleNode("description");
-                    string desc = RSSSubNode != null ? RSSSubNode.InnerText : "";
-                    lock (_lignes)
-                    {
-                        if (!Existe(title))
-                        {
-                            if (_lignes.Count < 2)
-                                _lignes.Add(new LigneActu(_source_a_charger, title, desc));
-                            else
-                            {
-                                int indice = r.Next(_derniereAffichee, _lignes.Count);
-                                _lignes.Insert(indice, new LigneActu(_source_a_charger, title, desc));
-                            }                            
-                        }
-                    }
 
-                    if (_lignes.Count >= MAX_LIGNES)
-                        break;
-                }
-            }
-            catch (Exception )
-            {
-                //_lignes.Add(new LigneActu(_source_a_charger, "Impossible de charger les informations", e.Message));
-            }
-        }
-
-        /// <summary>
-        /// Determine si une actualite existe deja dans la liste
-        /// </summary>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        private bool Existe(string title)
-        {
-            foreach (LigneActu la in _lignes)
-                if (title.Equals(la.titre))
-                    return true;
-            return false;
-        }
 
         public override bool KeyDown(Form f, Keys k)
         {
             if (Keys.J.Equals(k))
             {
-                _lignes.RemoveAt(0);
+                List<LigneActu> lignes = _actuFactory.getLignes();
+                if (lignes?.Count >= 1)
+                    lock (lignes) lignes.RemoveAt(0);
                 return true;
             }
-            if ( Keys.E.Equals(k))
+            if (Keys.E.Equals(k))
             {
-                _lignes.Clear();
+                List<LigneActu> lignes = _actuFactory.getLignes();
+                lock (lignes) lignes.Clear();
                 AFFICHE_DESCRIPTION = !AFFICHE_DESCRIPTION;
                 conf.setParametre(CAT, "Affiche Description", AFFICHE_DESCRIPTION);
+                conf.flush(CAT);
+                return true;
+            }
+            if (Keys.I.Equals(k))
+            {
+                List<LigneActu> lignes = _actuFactory.getLignes();
+                lock (lignes) lignes.Clear();
+                AFFICHE_IMAGES = !AFFICHE_IMAGES;
+                conf.setParametre(CAT, "Affiche Images", AFFICHE_DESCRIPTION);
                 conf.flush(CAT);
                 return true;
             }

@@ -79,8 +79,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             gl.TexCoord(1.0f, 1.0f); gl.Vertex(_taille.Width, 0);
             gl.TexCoord(1.0f, 0.0f); gl.Vertex(_taille.Width, _taille.Height);
             gl.End();
-
         }
+
+
         protected virtual void CreateBitmap(OpenGL gl, Temps maintenant)
         {
             _bitmap?.Dispose();
@@ -100,31 +101,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         {
             return new Font(FontFamily.GenericSansSerif, tailleFonte, FontStyle.Bold, GraphicsUnit.Pixel);
         }
-
-        /// <summary>
-        /// Affiche cet objet
-        /// </summary>
-        /// <param name="g"></param>
-        /// <param name="maintenant"></param>
-        /// <param name="tailleEcran"></param>
-        /// <param name="couleur"></param>
-        /*public override void AfficheGDI( Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur )
-		{
-			#if TRACER
-			RenderStart(CHRONO_TYPE.RENDER) ;
-			#endif
-			if ( _taille.Width == -1)
-				_taille = getTailleTexte(g) ;
-			
-			string texte = getTexte(maintenant) ;
-			
-			using (Brush brush = new SolidBrush( getCouleurAvecAlpha(couleur, _alpha) ))
-				g.DrawString( texte, _fonte, brush, _trajectoire._Px, _trajectoire._Py ) ;
-			
-			#if TRACER
-			RenderStop(CHRONO_TYPE.RENDER) ;
-			#endif
-		}*/
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
@@ -160,10 +136,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
-
         }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_bitmap")]
+        
         public override void Dispose()
         {
             base.Dispose();

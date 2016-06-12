@@ -43,20 +43,35 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             return v - 273.15f;
         }
+
+
         public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y)
         {
             if (_bmp != null)
-                g.DrawImage(_bmp, 0, Y, PanneauInfos.TAILLE_ICONE, PanneauInfos.TAILLE_ICONE);
+            {
+                g.DrawImage(_bmp, 0, Y, PanneauInfos.TAILLE_ICONE_METEO, PanneauInfos.TAILLE_ICONE_METEO);
+                //_bmp.Dispose();
+                //_bmp = null;
+            }
+
             float H = 0;
+            // Date
             SizeF size = g.MeasureString(_date, fTitre);
-            g.DrawString(_date, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y);
+            g.DrawString(_date, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE_METEO, Y);
             H += size.Height;
 
-            g.DrawString(_temperature, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y + H);
+            // Temperature
+            g.DrawString(_temperature, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE_METEO, Y + H);
             size = g.MeasureString(_temperature, fSousTitre);
             H += size.Height;
 
-            g.DrawString(_texte, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE, Y + H);
+            // Vent
+            g.DrawString(_vent, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE_METEO, Y + H);
+            size = g.MeasureString(_vent, fSousTitre);
+            H += size.Height;
+
+            // Texte
+            g.DrawString(_texte, fTitre, Brushes.White, PanneauInfos.TAILLE_ICONE_METEO, Y + H);
             size = g.MeasureString(_temperature, fSousTitre);
             H += size.Height;
 

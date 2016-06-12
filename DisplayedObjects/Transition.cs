@@ -68,7 +68,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _objetTransition.ClearBackGround(gl, couleur);
             _objetTransition.AfficheOpenGL(gl, maintenant, r, couleur);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture);          // Bind To The Blur Texture
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, _texture);
 
             gl.CopyTexImage2D(OpenGL.GL_TEXTURE_2D, 0, OpenGL.GL_RGB16, 0, 0, LARGEUR_TEXTURE, HAUTEUR_TEXTURE, 0);
             gl.PopMatrix();

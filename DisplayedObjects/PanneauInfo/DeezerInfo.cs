@@ -34,6 +34,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             LitFichier();
         }
 
+        /// <summary>
+        /// Retourne true si les infos doivent etre relues
+        /// </summary>
+        /// <param name="maintenant"></param>
+        /// <returns></returns>
         internal bool MustRefresh(Temps maintenant)
         {
             return maintenant._temps.Subtract(_derniereMaj).TotalSeconds > _delai;
@@ -44,11 +49,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             LitFichier();
         }
 
+        /// <summary>
+        /// Lance le thread pour lire le fichier qui contient les infos de Deezer
+        /// </summary>
         private void LitFichier()
         {
-            new Thread(new ThreadStart(ChargeDonnees)).Start();
+            Thread t = new Thread(ChargeDonnees);
+            t.Name = "DeezerInfo";
+            t.Start();
         }
 
+        /// <summary>
+        /// Methode thread pour lire les infos depuis le fichier
+        /// </summary>
         private void ChargeDonnees()
         {
             if (!isDeezerInfoRunning())
@@ -80,6 +93,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             _process = null;
         }
 
+        /// <summary>
+        /// Lancement du programme qui est charge de lire les informations de Deezer
+        /// </summary>
+        /// <returns></returns>
         private bool LanceDeezerInfo()
         {
             try

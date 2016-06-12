@@ -171,6 +171,29 @@ namespace ClockScreenSaverGL.DisplayedObjects
         }
 
         /// <summary>
+        /// Retourne la copie de la bitmap, version niveaux de gris
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        static public Bitmap BitmapNiveauDeGris(Bitmap source)
+        {
+            Bitmap destination = new Bitmap(source.Width, source.Height);
+
+            for (int i = 0; i < source.Width; i++)
+            {
+                for (int x = 0; x < source.Height; x++)
+                {
+                    Color oc = source.GetPixel(i, x);
+                    int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
+                    //int grayScale = (int)((oc.R * 0.33) + (oc.G * 0.33) + (oc.B * 0.33));
+                    destination.SetPixel(i, x, Color.FromArgb(oc.A, grayScale, grayScale, grayScale));
+                }
+            }
+
+            return destination;
+        }
+        /// <summary>
         /// Affiche une bitmap monochrome en lui faisant prendre une couleur donnee
         /// </summary>
         /// <param name="g"></param>

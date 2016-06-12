@@ -9,7 +9,7 @@ using SharpGL;
 using GLfloat = System.Single;
 using System.Windows.Forms;
 
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of Tunnel.

@@ -7,21 +7,22 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Textes
 {
-	/// <summary>
-	/// Description of TexteCopyright.
-	/// </summary>
-	public class TexteCopyright: Texte
+    /// <summary>
+    /// Un objet graphique Texte qui contient un texte fixe de copyright
+    /// </summary>
+    public class TexteCopyright: Texte
 	{
 		const string CAT = "TexteCopyright" ;
 		private const string _texte = "Lucien Pilloni 2014" ;
-		
+        private SizeF _taille;
 		public TexteCopyright(OpenGL gl, int Px, int Py):
 			base( gl, Px, Py, conf.getParametre(CAT, "VX", 4), 
 			     		conf.getParametre(CAT, "VY", 4), 
 			     		conf.getParametre(CAT, "TailleFonte", 32),
 			     		conf.getParametre(CAT, "Alpha", (byte)10))
 		{
-
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+                _taille = g.MeasureString(_texte, _fonte);
         }
 		
 
@@ -29,9 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 		protected override SizeF getTexte(Temps maintenant, out string texte )
 		{
 			texte = _texte ;
-            //using (Bitmap bmp = new Bitmap(1, 1))
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-                return g.MeasureString(texte, _fonte);
+            return _taille;
         }
 
         public override void DateChangee(OpenGL gl, Temps maintenant)

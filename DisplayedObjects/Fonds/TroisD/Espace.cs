@@ -5,7 +5,7 @@ using System.Drawing;
 
 using GLfloat = System.Single;
 using GLuint = System.UInt32;
-namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Opengl
+namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of Neige.
