@@ -176,7 +176,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="g"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        static public Bitmap BitmapNiveauDeGris(Bitmap source)
+        static public Bitmap BitmapNiveauDeGris(Bitmap source, float ratioR = 1.0f)
         {
             Bitmap destination = new Bitmap(source.Width, source.Height);
 
@@ -185,12 +185,68 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 for (int x = 0; x < source.Height; x++)
                 {
                     Color oc = source.GetPixel(i, x);
-                    int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
+                    int grayScale = (int)((oc.R * 0.3f * ratioR) + (oc.G * 0.59f) + (oc.B * 0.11f)) %255;
                     //int grayScale = (int)((oc.R * 0.33) + (oc.G * 0.33) + (oc.B * 0.33));
                     destination.SetPixel(i, x, Color.FromArgb(oc.A, grayScale, grayScale, grayScale));
                 }
             }
 
+            return destination;
+        }
+
+        /// <summary>
+        /// Retourne la copie de la bitmap, version desaturee
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        static public Bitmap BitmapDesaturee(Bitmap source, float saturation )
+        {
+            Bitmap destination = new Bitmap(source.Width, source.Height);
+
+            float rWeight = 0.3086f;
+            float gWeight = 0.6094f;
+            float bWeight = 0.0820f;
+
+            float a = (1.0f - saturation) * rWeight + saturation;
+            float b = (1.0f - saturation) * rWeight;
+            float c = (1.0f - saturation) * rWeight;
+            float d = (1.0f - saturation) * gWeight;
+            float e = (1.0f - saturation) * gWeight + saturation;
+            float f = (1.0f - saturation) * gWeight;
+            float g = (1.0f - saturation) * bWeight;
+            float h = (1.0f - saturation) * bWeight;
+            float i = (1.0f - saturation) * bWeight + saturation;
+
+            // Create a Graphics
+            using (Graphics gr = Graphics.FromImage(destination) )
+            {
+                {
+                    // ColorMatrix elements
+                    float[][] ptsArray = {
+                                     new float[] {a,  b,  c,  0, 0},
+                                     new float[] {d,  e,  f,  0, 0},
+                                     new float[] {g,  h,  i,  0, 0},
+                                     new float[] {0,  0,  0,  1, 0},
+                                     new float[] {0, 0, 0, 0, 1}
+                                 };
+                    // Create ColorMatrix
+                    ColorMatrix clrMatrix = new ColorMatrix(ptsArray);
+                    // Create ImageAttributes
+                    ImageAttributes imgAttribs = new ImageAttributes();
+                    // Set color matrix
+                    imgAttribs.SetColorMatrix(clrMatrix,
+                        ColorMatrixFlag.Default,
+                        ColorAdjustType.Default);
+                    // Draw Image with no effects
+                    gr.DrawImage(source, 0, 0);
+                    // Draw Image with image attributes
+                    gr.DrawImage(source, new Rectangle(0, 0, source.Width, source.Height),
+                        0, 0, source.Width, source.Height,
+                        GraphicsUnit.Pixel, imgAttribs);
+                }
+            }
+                
             return destination;
         }
         /// <summary>

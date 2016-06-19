@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace ClockScreenSaverGL {
         ///   Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ClockScreenSaverGL.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace ClockScreenSaverGL {
         ///   les recherches de ressources à l'aide de cette classe de ressource fortement typée.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à C: changer la citation.
         /// </summary>
-        internal static string AideCitation {
+        public static string AideCitation {
             get {
                 return ResourceManager.GetString("AideCitation", resourceCulture);
             }
@@ -73,7 +73,7 @@ namespace ClockScreenSaverGL {
         ///   Recherche une chaîne localisée semblable à I: Afficher/cacher fond herbeux
         ///R: réinitialiser le fond.
         /// </summary>
-        internal static string AideEte {
+        public static string AideEte {
             get {
                 return ResourceManager.GetString("AideEte", resourceCulture);
             }
@@ -84,7 +84,7 @@ namespace ClockScreenSaverGL {
         ///N: négatif
         ///R: réinitialiser le fond.
         /// </summary>
-        internal static string AideMetaballes {
+        public static string AideMetaballes {
             get {
                 return ResourceManager.GetString("AideMetaballes", resourceCulture);
             }
@@ -93,59 +93,9 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à I: inverser la position des nuages (haut/bas).
         /// </summary>
-        internal static string AideNuages {
+        public static string AideNuages {
             get {
                 return ResourceManager.GetString("AideNuages", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automne_feuille1 {
-            get {
-                object obj = ResourceManager.GetObject("automne_feuille1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automne_feuille2 {
-            get {
-                object obj = ResourceManager.GetObject("automne_feuille2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automne_feuille3 {
-            get {
-                object obj = ResourceManager.GetObject("automne_feuille3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automne_feuille4 {
-            get {
-                object obj = ResourceManager.GetObject("automne_feuille4", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap automne_feuille5 {
-            get {
-                object obj = ResourceManager.GetObject("automne_feuille5", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -162,7 +112,7 @@ namespace ClockScreenSaverGL {
         ///
         ///.
         /// </summary>
-        internal static string c {
+        public static string c {
             get {
                 return ResourceManager.GetString("c", resourceCulture);
             }
@@ -171,7 +121,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Coucher: {0}.
         /// </summary>
-        internal static string Coucher {
+        public static string Coucher {
             get {
                 return ResourceManager.GetString("Coucher", resourceCulture);
             }
@@ -180,7 +130,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Dimanche.
         /// </summary>
-        internal static string Dimanche {
+        public static string Dimanche {
             get {
                 return ResourceManager.GetString("Dimanche", resourceCulture);
             }
@@ -189,7 +139,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap feuille1 {
+        public static System.Drawing.Bitmap feuille1 {
             get {
                 object obj = ResourceManager.GetObject("feuille1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -199,7 +149,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap feuille2 {
+        public static System.Drawing.Bitmap feuille2 {
             get {
                 object obj = ResourceManager.GetObject("feuille2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -209,7 +159,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flare1 {
+        public static System.Drawing.Bitmap flare1 {
             get {
                 object obj = ResourceManager.GetObject("flare1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -219,7 +169,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flare2 {
+        public static System.Drawing.Bitmap flare2 {
             get {
                 object obj = ResourceManager.GetObject("flare2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -229,7 +179,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flare3 {
+        public static System.Drawing.Bitmap flare3 {
             get {
                 object obj = ResourceManager.GetObject("flare3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -239,7 +189,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flare4 {
+        public static System.Drawing.Bitmap flare4 {
             get {
                 object obj = ResourceManager.GetObject("flare4", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -249,7 +199,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flocon1 {
+        public static System.Drawing.Bitmap flocon1 {
             get {
                 object obj = ResourceManager.GetObject("flocon1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -259,7 +209,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flocon2 {
+        public static System.Drawing.Bitmap flocon2 {
             get {
                 object obj = ResourceManager.GetObject("flocon2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -269,7 +219,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap flocon3 {
+        public static System.Drawing.Bitmap flocon3 {
             get {
                 object obj = ResourceManager.GetObject("flocon3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -279,7 +229,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Jeudi.
         /// </summary>
-        internal static string Jeudi {
+        public static string Jeudi {
             get {
                 return ResourceManager.GetString("Jeudi", resourceCulture);
             }
@@ -288,7 +238,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Le saviez-vous?.
         /// </summary>
-        internal static string LeSaviezVous {
+        public static string LeSaviezVous {
             get {
                 return ResourceManager.GetString("LeSaviezVous", resourceCulture);
             }
@@ -297,26 +247,16 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Lever:  {0}.
         /// </summary>
-        internal static string Lever {
+        public static string Lever {
             get {
                 return ResourceManager.GetString("Lever", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap life {
-            get {
-                object obj = ResourceManager.GetObject("life", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Lundi.
         /// </summary>
-        internal static string Lundi {
+        public static string Lundi {
             get {
                 return ResourceManager.GetString("Lundi", resourceCulture);
             }
@@ -325,7 +265,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune00 {
+        public static System.Drawing.Bitmap Lune00 {
             get {
                 object obj = ResourceManager.GetObject("Lune00", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -335,7 +275,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune01 {
+        public static System.Drawing.Bitmap Lune01 {
             get {
                 object obj = ResourceManager.GetObject("Lune01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -345,7 +285,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune02 {
+        public static System.Drawing.Bitmap Lune02 {
             get {
                 object obj = ResourceManager.GetObject("Lune02", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -355,7 +295,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune03 {
+        public static System.Drawing.Bitmap Lune03 {
             get {
                 object obj = ResourceManager.GetObject("Lune03", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -365,7 +305,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune04 {
+        public static System.Drawing.Bitmap Lune04 {
             get {
                 object obj = ResourceManager.GetObject("Lune04", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -375,7 +315,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune05 {
+        public static System.Drawing.Bitmap Lune05 {
             get {
                 object obj = ResourceManager.GetObject("Lune05", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -385,7 +325,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune06 {
+        public static System.Drawing.Bitmap Lune06 {
             get {
                 object obj = ResourceManager.GetObject("Lune06", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -395,7 +335,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune07 {
+        public static System.Drawing.Bitmap Lune07 {
             get {
                 object obj = ResourceManager.GetObject("Lune07", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -405,7 +345,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune08 {
+        public static System.Drawing.Bitmap Lune08 {
             get {
                 object obj = ResourceManager.GetObject("Lune08", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -415,7 +355,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune09 {
+        public static System.Drawing.Bitmap Lune09 {
             get {
                 object obj = ResourceManager.GetObject("Lune09", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -425,7 +365,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune10 {
+        public static System.Drawing.Bitmap Lune10 {
             get {
                 object obj = ResourceManager.GetObject("Lune10", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -435,7 +375,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune11 {
+        public static System.Drawing.Bitmap Lune11 {
             get {
                 object obj = ResourceManager.GetObject("Lune11", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -445,7 +385,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune12 {
+        public static System.Drawing.Bitmap Lune12 {
             get {
                 object obj = ResourceManager.GetObject("Lune12", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -455,7 +395,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune13 {
+        public static System.Drawing.Bitmap Lune13 {
             get {
                 object obj = ResourceManager.GetObject("Lune13", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -465,7 +405,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune14 {
+        public static System.Drawing.Bitmap Lune14 {
             get {
                 object obj = ResourceManager.GetObject("Lune14", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -475,7 +415,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune15 {
+        public static System.Drawing.Bitmap Lune15 {
             get {
                 object obj = ResourceManager.GetObject("Lune15", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -485,7 +425,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune16 {
+        public static System.Drawing.Bitmap Lune16 {
             get {
                 object obj = ResourceManager.GetObject("Lune16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -495,7 +435,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune17 {
+        public static System.Drawing.Bitmap Lune17 {
             get {
                 object obj = ResourceManager.GetObject("Lune17", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -505,7 +445,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune18 {
+        public static System.Drawing.Bitmap Lune18 {
             get {
                 object obj = ResourceManager.GetObject("Lune18", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -515,7 +455,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune19 {
+        public static System.Drawing.Bitmap Lune19 {
             get {
                 object obj = ResourceManager.GetObject("Lune19", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -525,7 +465,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune20 {
+        public static System.Drawing.Bitmap Lune20 {
             get {
                 object obj = ResourceManager.GetObject("Lune20", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -535,7 +475,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune21 {
+        public static System.Drawing.Bitmap Lune21 {
             get {
                 object obj = ResourceManager.GetObject("Lune21", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -545,7 +485,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune22 {
+        public static System.Drawing.Bitmap Lune22 {
             get {
                 object obj = ResourceManager.GetObject("Lune22", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -555,7 +495,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune23 {
+        public static System.Drawing.Bitmap Lune23 {
             get {
                 object obj = ResourceManager.GetObject("Lune23", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -565,7 +505,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune24 {
+        public static System.Drawing.Bitmap Lune24 {
             get {
                 object obj = ResourceManager.GetObject("Lune24", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -575,7 +515,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Lune25 {
+        public static System.Drawing.Bitmap Lune25 {
             get {
                 object obj = ResourceManager.GetObject("Lune25", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -585,7 +525,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Mardi.
         /// </summary>
-        internal static string Mardi {
+        public static string Mardi {
             get {
                 return ResourceManager.GetString("Mardi", resourceCulture);
             }
@@ -594,7 +534,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Mercredi.
         /// </summary>
-        internal static string Mercredi {
+        public static string Mercredi {
             get {
                 return ResourceManager.GetString("Mercredi", resourceCulture);
             }
@@ -603,17 +543,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap music_note {
-            get {
-                object obj = ResourceManager.GetObject("music_note", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap nuage1 {
+        public static System.Drawing.Bitmap nuage1 {
             get {
                 object obj = ResourceManager.GetObject("nuage1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -623,7 +553,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nuage2 {
+        public static System.Drawing.Bitmap nuage2 {
             get {
                 object obj = ResourceManager.GetObject("nuage2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -633,7 +563,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nuage3 {
+        public static System.Drawing.Bitmap nuage3 {
             get {
                 object obj = ResourceManager.GetObject("nuage3", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -643,7 +573,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap particleTexture {
+        public static System.Drawing.Bitmap particleTexture {
             get {
                 object obj = ResourceManager.GetObject("particleTexture", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -653,26 +583,16 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Samedi.
         /// </summary>
-        internal static string Samedi {
+        public static string Samedi {
             get {
                 return ResourceManager.GetString("Samedi", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap soleil {
-            get {
-                object obj = ResourceManager.GetObject("soleil", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à {0}:  {1}°/{2}°.
         /// </summary>
-        internal static string Temperatures {
+        public static string Temperatures {
             get {
                 return ResourceManager.GetString("Temperatures", resourceCulture);
             }
@@ -681,7 +601,7 @@ namespace ClockScreenSaverGL {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Vendredi.
         /// </summary>
-        internal static string Vendredi {
+        public static string Vendredi {
             get {
                 return ResourceManager.GetString("Vendredi", resourceCulture);
             }

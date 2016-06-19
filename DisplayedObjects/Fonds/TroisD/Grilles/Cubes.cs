@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using SharpGL;
+﻿using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 {
@@ -34,14 +31,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
             float ORIGINE_X = -(NB_CUBES_X * 0.5f) * ECART_CUBE;
             float ORIGINE_Y = -(NB_CUBES_Y * 0.5f) * ECART_CUBE;
             float ORIGINE_Z = -(NB_CUBES_Z * 0.5f) * ECART_CUBE;
+            gl.Begin(OpenGL.GL_QUADS);
 
-            // Afficher la grille 3D de cubes
             for (int x = 0; x < NB_CUBES_X; x++)
                 for (int y = 0; y < NB_CUBES_Y; y++)
                     for (int z = 0; z < NB_CUBES_Z; z++)
-                        Cube(gl, ORIGINE_X + (float)x * ECART_CUBE, ORIGINE_Y + (float)y * ECART_CUBE, ORIGINE_Z + (float)z * ECART_CUBE, TAILLE_CUBE, TAILLE_CUBE, TAILLE_CUBE);
+                        Brique(gl, ORIGINE_X + (float)x * ECART_CUBE, ORIGINE_Y + (float)y * ECART_CUBE, ORIGINE_Z + (float)z * ECART_CUBE,
+                            TAILLE_CUBE, TAILLE_CUBE, TAILLE_CUBE);
+
+            gl.End();
         }
-      
+
 
     }
 }

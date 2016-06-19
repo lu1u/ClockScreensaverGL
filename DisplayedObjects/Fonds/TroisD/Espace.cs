@@ -23,6 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 50f);
         private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
         private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 8f);
+        private static readonly float DELTA_COULEUR = conf.getParametre(CAT, "Delta Couleur", 0.1f);
         #endregion
         const float VIEWPORT_X = 5f;
         const float VIEWPORT_Y = 5f;
@@ -73,9 +74,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.x = FloatRandom(-VIEWPORT_X * 6, VIEWPORT_X * 6);
             f.z = -VIEWPORT_Z;
             f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
-            f.r = FloatRandom(0.8f, 1.2f);
-            f.g = FloatRandom(0.8f, 1.2f);
-            f.b = FloatRandom(0.8f, 1.2f);
+            f.r = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
+            f.g = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
+            f.b = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
         }
 
         /// <summary>

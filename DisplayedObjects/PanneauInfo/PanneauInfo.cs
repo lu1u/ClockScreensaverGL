@@ -208,7 +208,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                         g.DrawLine(p, MARGE_H, Y, _bitmap.Width - MARGE_H, Y);
 
                     Y += TAILLE_TITRE_METEO / 2;
-                    g.DrawImage(Resources.music_note, MARGE_H, Y, TAILLE_ICONE_METEO, TAILLE_ICONE_METEO);
+                    g.DrawImage(Image.FromFile(Config.getImagePath("music-note.png")), MARGE_H, Y, TAILLE_ICONE_METEO, TAILLE_ICONE_METEO);
 
                     g.DrawString(_deezer.Infos, fonteTexteMeteo, Brushes.White, MARGE_H + TAILLE_ICONE_METEO, Y);
                     Y += g.MeasureString(_deezer.Infos, fonteTexte).Height * RATIO_INTERLIGNE;

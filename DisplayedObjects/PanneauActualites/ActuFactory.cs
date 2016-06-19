@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
@@ -18,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
     class ActuFactory : IDisposable
     {
-        private List<string> _sourcesActualite = new List<string>();
+        private List<string> _sourcesActualite;
         bool _continuerThread;
         Thread _thread;
         private static readonly string RFC822 = "ddd, dd MMM yyyy HH:mm:ss zzz";
@@ -27,9 +25,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
         public ActuFactory()
         {
-            // Lecture de la liste des url
-            LitSourcesActu();
-            
             // Lancement du thread qui va lire les actualites en tache de fond
             LanceTacheDeFond();
         }
@@ -46,12 +41,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         }
 
         /// <summary>
-        /// Lecture de la liste des sources RSS d'actualite
+        /// Lecture de la liste des sources RSS d'actualite dans le fichier {install}/{donnees}/actualites.txt
         /// </summary>
-        private void LitSourcesActu()
+        private void LireFichierSources()
         {
+            _sourcesActualite = new List<string>();
             string fichierSources = Path.Combine(Config.getDataDirectory(), "actualites.txt");
-
 
             // Lire le fichier des sources d'actualite
             StreamReader file = new StreamReader(fichierSources);
@@ -59,13 +54,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             while ((line = file.ReadLine()) != null)
             {
                 line = line.Trim();
-                if (!line.StartsWith("#"))
+                if (!line.StartsWith("#"))  // Ligne mise en commentaire
                     _sourcesActualite.Add(line);
             }
 
-            // Melanger
+            // Melanger les sources
             int DeuxiemeIndice;
-            for (int i = 0; i < _sourcesActualite.Count; i++)
+            for (int i = 1; i < _sourcesActualite.Count; i++)
             {
                 do
                 {
@@ -86,8 +81,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         /// </summary>
         private void LireSources()
         {
+            // Lecture de la liste des url
+            LireFichierSources();
+
             WebRequest.DefaultCachePolicy = new RequestCachePolicy(RequestCacheLevel.Revalidate);
 
+            // repete tant qu'on signale pas la fin de ce thread
             while (_continuerThread)
             {
                 int sourceALire = Actualites.SourceCourante();
@@ -102,30 +101,39 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 // Attendre un petit peu
                 do
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
                 while (_continuerThread && _sourcesActualite.Count >= Actualites.MAX_LIGNES);
             }
+
+            // Ce thread est fini
+            _thread = null;
         }
 
         /// <summary>
-        /// Lit un flux RSS
+        /// Lit un flux RSS et ajoute les objets LigneActu
         /// </summary>
         /// <param name="source">URL du flux RSS</param>
         private void LitRSS(string source)
         {
+            string[] tokens = source.Split(SEPARATEURS);
+            if (tokens == null || tokens.Length < 2)
+                return;
+
+            String source_a_charger = tokens[0];
+            String url_a_charger = tokens[1];
+            if (source_a_charger == null || url_a_charger == null)
+                return;
+
             try
             {
-                string[] tokens = source.Split(SEPARATEURS);
-                String source_a_charger = tokens[0];
-                String url_a_charger = tokens[1];
                 XmlDocument RSSXml = new XmlDocument();
-                XmlDocument xmlDocument = new XmlDocument();
                 RSSXml.Load(url_a_charger);
                 if (!_continuerThread)
                     return;
 
                 XmlNodeList RSSNodeList = RSSXml.SelectNodes("rss/channel/item");
+
                 StringBuilder sb = new StringBuilder();
                 int nbLignesPourCetteSource = 0;
                 foreach (XmlNode RSSNode in RSSNodeList)
@@ -144,7 +152,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
                         if (!existeDeja(title))
                         {
-                            Image image = Actualites.AFFICHE_IMAGES ?  chargeBitmap(RSSNode) : null ; 
+                            Image image = Actualites.AFFICHE_IMAGES ? chargeBitmap(RSSNode) : null;
                             ajoute(new LigneActu(source_a_charger, title, date, desc, image));
 
                             nbLignesPourCetteSource++;
@@ -154,29 +162,32 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                             if (_lignes.Count >= Actualites.MAX_LIGNES)
                                 return;
                         }
+
+                        if (!_continuerThread)
+                            return;
                     }
-                    
-                    if (!_continuerThread)
-                        return;
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //_lignes.Add(new LigneActu(_source_a_charger, "Impossible de charger les informations", e.Message));
+                _lignes.Add(new LigneActu(url_a_charger, "Impossible de charger les informations", DateTime.Now, e.Message, null));
             }
-
-            // Ce thread est fini
-            _thread = null;
         }
 
+        /// <summary>
+        /// Ajoute une ligne d'actualite
+        /// </summary>
+        /// <param name="ligneActu"></param>
         private void ajoute(LigneActu ligneActu)
         {
             lock (_lignes)
             {
-                if (_lignes.Count < 2)
+                // Peu d'actualites: on ajoute a la fin
+                if (_lignes.Count < 3)
                     _lignes.Add(ligneActu);
                 else
                 {
+                    // Ajoute au hasard pour melanger les actualites de differentes sources
                     int indice = DisplayedObject.r.Next(Actualites._derniereAffichee, _lignes.Count);
                     _lignes.Insert(indice, ligneActu);
                 }
@@ -184,7 +195,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         }
 
         /// <summary>
-        /// Charge une bitmap a partir d'une URL
+        /// Charge une bitmap a partir d'un element d'actualite RSS, si possible
         /// </summary>
         /// <param name="innerText"></param>
         /// <returns></returns>
@@ -206,10 +217,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 var request = WebRequest.Create(URL);
                 var response = request.GetResponse();
                 var stream = response.GetResponseStream();
-                Image i = retaille( Bitmap.FromStream(stream));
-                return DisplayedObject.BitmapNiveauDeGris( (Bitmap)i );
+                Image i = retailleImage(Bitmap.FromStream(stream));
+                return DisplayedObject.BitmapDesaturee((Bitmap)i, Actualites.SATURATION_IMAGES);                
             }
-            catch( Exception )
+            catch (Exception)
             {
                 return null;
             }
@@ -220,14 +231,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         /// </summary>
         /// <param name="image"></param>
         /// <returns></returns>
-        private Image retaille(Image image)
+        private Image retailleImage(Image image)
         {
-            int hauteur = image.Height;
-            //if (hauteur < Actualites.HAUTEUR_BANDEAU - (Actualites.TAILLE_SOURCE + Actualites.TAILLE_TITRE) * 0.9f)
-            //    return image;
-
             int nouvelleHauteur = (int)(Actualites.HAUTEUR_BANDEAU - (Actualites.TAILLE_SOURCE + Actualites.TAILLE_TITRE) * 0.9);
-            int nouvelleLargeur = (int)(image.Width * ((float)nouvelleHauteur / (float)hauteur));
+            int nouvelleLargeur = (int)(image.Width * ((float)nouvelleHauteur / (float)image.Height));
 
             var destRect = new Rectangle(0, 0, nouvelleLargeur, nouvelleHauteur);
             var destImage = new Bitmap(nouvelleLargeur, nouvelleHauteur);
@@ -264,6 +271,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     return true;
             return false;
         }
+
         /// <summary>
         /// Retourne true si l'article est suffisament recent pour etre pris en compte
         /// </summary>
@@ -285,6 +293,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         {
             return _lignes;
         }
+
         /// <summary>
         /// Converti une date RSS en date C#
         /// </summary>
@@ -294,9 +303,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         {
             try
             {
-                return DateTime.ParseExact(RSSDate, RFC822,
-                                                       DateTimeFormatInfo.InvariantInfo,
-                                                       DateTimeStyles.None);
+                return DateTime.ParseExact(RSSDate, RFC822, DateTimeFormatInfo.InvariantInfo, DateTimeStyles.None);
             }
             catch (Exception)
             {
@@ -304,10 +311,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 return DateTime.MinValue;
             }
         }
+
         public void Dispose()
         {
             _continuerThread = false;
-            _thread.Abort();
+            _thread?.Abort();
+
             foreach (LigneActu l in _lignes)
                 l.Dispose();
 

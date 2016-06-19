@@ -43,7 +43,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
         private uint _attributBlend = PARTICULES_BLEND_NORMAL;
         public TYPE_FOND typeFond = TYPE_FOND.FOND_NOIR;
         public COULEUR_PARTICULES couleurParticules = COULEUR_PARTICULES.BLANC;
+
+        // Texture de toutes les particules
+        private Texture _texture;
+        private int _nbImages;
+        public int nbImages
+        {
+            get { return _nbImages; }
+            private set { _nbImages = value; }
+        } 
         
+        // Nombres d'images differentes contenues dans la texture
         public uint AttributBlend
         {
             get
@@ -70,7 +80,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             }
         }
 
-        public SystemeParticules2D(OpenGL gl, int NbMaxParticules): base(gl)
+        public SystemeParticules2D(OpenGL gl, int NbMaxParticules) : base(gl)
         {
             NB_MAX_PARTICULES = NbMaxParticules;
             _particules = new Particule2D[NB_MAX_PARTICULES];
@@ -80,13 +90,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             _nbParticules = 0;
         }
 
-    
 
-        public void AjouteTexture(Bitmap b)
+
+        public void AjouteTexture(string imagePath, int nb)
         {
-            Texture t = new Texture();
-            t.Create(_gl, b);
-            _listeTextures.Add(t);
+            _texture = new Texture();
+            _texture.Create(_gl, imagePath);
+            nbImages = nb;
         }
 
         public void AjouteEmetteur(Emetteur2D e)
@@ -144,13 +154,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             DeplaceParticules(maintenant, couleur);
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
-#endif
 
-#if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
-            
-            
+
+
             float[] col = new float[4];
             if (couleurParticules == COULEUR_PARTICULES.NOIR)
             {
@@ -181,39 +189,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, _attributBlend);
 
-            if (_listeTextures.Count > 0)
+            if (_texture != null)
             {
                 gl.Enable(OpenGL.GL_TEXTURE_2D);
-                int derniereTexture = -1;
+                _texture.Bind(gl);
+                gl.Begin(OpenGL.GL_QUADS);
+
                 foreach (Particule2D p in _particules)
                 {
                     // Particule active?
                     if (p.active && p.alpha > SEUIL_ALPHA)
                         // Particule sur l'ecran ?
-                        if ((p.x+p.taille)>MIN_X && (p.x-p.taille)<MAX_X && (p.y+p.taille)>MIN_Y && (p.y-p.taille)<MAX_Y)
-                    {
-                        if (p._couleurIndividuelle)
-                            gl.Color(p._couleur);
-                        else
+                        if ((p.x + p.taille) > MIN_X && (p.x - p.taille) < MAX_X && (p.y + p.taille) > MIN_Y && (p.y - p.taille) < MAX_Y)
                         {
-                            col[3] = p.alpha;
-                            gl.Color(col);
-                        }
+                            if (p._couleurIndividuelle)
+                                gl.Color(p._couleur);
+                            else
+                            {
+                                col[3] = p.alpha;
+                                gl.Color(col);
+                            }
 
-                        if (p.textureIndex != derniereTexture)
-                        {
-                            _listeTextures[p.textureIndex].Bind(gl);
-                            derniereTexture = p.textureIndex;
+                            gl.TexCoord((float)p.textureIndex / nbImages, 0.0f); gl.Vertex(p.x - p.taille, p.y + p.taille);
+                            gl.TexCoord((float)p.textureIndex / nbImages, 1.0f); gl.Vertex(p.x - p.taille, p.y - p.taille);
+                            gl.TexCoord((float)(p.textureIndex + 1) / nbImages, 1.0f); gl.Vertex(p.x + p.taille, p.y - p.taille);
+                            gl.TexCoord((float)(p.textureIndex + 1) / nbImages, 0.0f); gl.Vertex(p.x + p.taille, p.y + p.taille);
                         }
-
-                        gl.Begin(OpenGL.GL_QUADS);
-                        gl.TexCoord(0.0f, 0.0f); gl.Vertex(p.x - p.taille, p.y + p.taille);
-                        gl.TexCoord(0.0f, 1.0f); gl.Vertex(p.x - p.taille, p.y - p.taille);
-                        gl.TexCoord(1.0f, 1.0f); gl.Vertex(p.x + p.taille, p.y - p.taille);
-                        gl.TexCoord(1.0f, 0.0f); gl.Vertex(p.x + p.taille, p.y + p.taille);
-                        gl.End();
-                    }
                 }
+                gl.End();
             }
             else
             {
@@ -244,7 +247,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 
             Console.getInstance(gl).AddLigne(Color.Green, "Max particules " + NB_MAX_PARTICULES);
 
-            if  (afficheDebug)
+            if (afficheDebug)
             {
                 gl.Color(1.0f, 1.0f, 1.0f, 0.2f);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -259,7 +262,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
             gl.PopMatrix();
 #if TRACER
-            RenderStop(CHRONO_TYPE.DEPLACE);
+            RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
 
@@ -284,6 +287,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
         public override void Dispose()
         {
             base.Dispose();
+            _texture?.Destroy(_gl);
             foreach (Texture t in _listeTextures)
                 t.Destroy(_gl);
         }

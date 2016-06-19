@@ -16,6 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
     class Actualites : DisplayedObject, IDisposable
     {
+        #region Parametres
         public const string CAT = "Actualites";
 
         public static readonly int NB_JOURS_MAX_INFO = conf.getParametre(CAT, "Nb jours info max", 4);
@@ -29,11 +30,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         public static readonly int TAILLE_DESCRIPTION = conf.getParametre(CAT, "Taille fonte source", 14);
         public static bool AFFICHE_DESCRIPTION = conf.getParametre(CAT, "Affiche Description", true);
         public static bool AFFICHE_IMAGES = conf.getParametre(CAT, "Affiche Images", true);
+        public static float SATURATION_IMAGES = conf.getParametre(CAT, "Saturation images", 0.5f);
+        #endregion
         private int derniereSource = conf.getParametre(CAT, "Derniere Source", 0);
 
         private float _decalageX = SystemInformation.VirtualScreen.Width;
         public static int _derniereAffichee;
-        
+
         private ActuFactory _actuFactory;
 
         public Actualites(OpenGL gl) : base(gl)
@@ -56,6 +59,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         /// <param name="couleur"></param>
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
+#if TRACER
+            RenderStart(CHRONO_TYPE.RENDER);
+#endif
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
@@ -65,27 +71,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Color(0.1f, 0.1f, 0.1f, 0.55f);
-
+            gl.Color(0.1f, 0.1f, 0.1f, 0.55f); // Fond sombre
             gl.Rect(tailleEcran.Left, tailleEcran.Top + HAUTEUR_BANDEAU, tailleEcran.Right, tailleEcran.Top);
 
             float x = tailleEcran.Left + _decalageX;
             _derniereAffichee = 0;
+
+            #region LignesActu
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
+            
             List<LigneActu> lignes = _actuFactory.getLignes();
-            lock (lignes)
-            foreach (LigneActu l in lignes)
-                {
-                    l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, couleur, AFFICHE_DESCRIPTION);
-                    x += l.largeur;
-                    _derniereAffichee++;
-                    if (x > tailleEcran.Right)
-                        break;
-                }
+            if (lignes != null)
+                lock (lignes)
+                foreach (LigneActu l in lignes)
+                    {
+                        l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, couleur, AFFICHE_DESCRIPTION);
+                        x += l.largeur;
+                        _derniereAffichee++;
+                        if (x > tailleEcran.Right)
+                            break;
+                    }
+
+            
+            #endregion
 
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
@@ -95,27 +108,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             Console c = Console.getInstance(gl);
             c.AddLigne(Color.Green, "Decalage" + _decalageX.ToString("f2"));
             c.AddLigne(Color.Green, "Nb Lignes " + lignes.Count);
+#if TRACER
+            RenderStop(CHRONO_TYPE.RENDER);
+#endif
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            /*   if (_lignes.Count < MIN_LIGNES)
-                   GetNextLigne();
-                   */
             _decalageX -= VITESSE * maintenant._intervalle;
 
             List<LigneActu> lignes = _actuFactory.getLignes();
-            lock (lignes)
-            {
-                if (lignes.Count > 1)
-                    if (_decalageX + lignes[0].largeur < 0)
-                    {
-                        // Suppression de la premiere annonce qui ne sera plus affichee
-                        _decalageX += lignes[0].largeur;
-                        lignes[0].Dispose();
-                        lignes.RemoveAt(0);
-                    }
-            }
+            if (lignes != null)
+                lock (lignes)
+                {
+                    if (lignes.Count > 1)
+                        if (_decalageX + lignes[0].largeur < 0)
+                        {
+                            // Suppression de la premiere annonce qui ne sera plus affichee
+                            _decalageX += lignes[0].largeur;
+                            lignes[0].Dispose();
+                            lignes.RemoveAt(0);
+                        }
+                }
         }
 
         public static int SourceCourante()

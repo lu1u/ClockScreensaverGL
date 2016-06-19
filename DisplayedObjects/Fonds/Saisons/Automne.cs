@@ -83,15 +83,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             }
 
             texture[0] = new Texture();
-            texture[0].Create(gl, Resources.automne_feuille1);
+            texture[0].Create(gl, Config.getImagePath("feuille1.png"));
             texture[1] = new Texture();
-            texture[1].Create(gl, Resources.automne_feuille2);
+            texture[1].Create(gl, Config.getImagePath("feuille2.png"));
             texture[2] = new Texture();
-            texture[2].Create(gl, Resources.automne_feuille3);
+            texture[2].Create(gl, Config.getImagePath("feuille3.png"));
             texture[3] = new Texture();
-            texture[3].Create(gl, Resources.automne_feuille4);
+            texture[3].Create(gl, Config.getImagePath("feuille4.png"));
             texture[4] = new Texture();
-            texture[4].Create(gl, Resources.automne_feuille5);
+            texture[4].Create(gl, Config.getImagePath("feuille5.png"));
         }
 
         private void NouvelleFeuille(ref Feuille f)

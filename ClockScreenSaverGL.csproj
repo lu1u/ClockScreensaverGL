@@ -150,6 +150,9 @@
     <Compile Include="DisplayedObjects\Fonds\Gravity\Material.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\EmetteurGravitation.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\GravitationParticules.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\Rebond\RebondParticules.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurCollisions.cs" />
+    <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurRebond.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\FrustumCulling.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Grille.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Cubes.cs" />
@@ -265,7 +268,7 @@
       <DependentUpon>MainForm.Designer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -528,7 +531,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Release\images\terre.png" />
-    <None Include="Resources\music-note.png" />
+    <None Include="packages\Resources\music-note.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Lune00.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\Lunes\Lune00.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

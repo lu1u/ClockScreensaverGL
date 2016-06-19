@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using SharpGL;
-using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
+﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs;
-using SharpGL.SceneGraph.Assets;
+using SharpGL;
+using System;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
@@ -29,16 +24,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur(new EmetteurFusee(TAILLE_PARTICULE, VITESSE_ANGLE, VITESSE_PARTICULE, VITESSE_FUSEE));
 
-            AttributBlend = SystemeParticules2D.SystemeParticules2D.PARTICULES_BLEND_ADDITIVE;
-            typeFond = SystemeParticules2D.SystemeParticules2D.TYPE_FOND.FOND_COULEUR;
-            couleurParticules = SystemeParticules2D.SystemeParticules2D.COULEUR_PARTICULES.BLANC;
-            AjouteTexture(Resources.particleTexture);
-            AjouteTexture(Resources.nuage1);
-            AjouteTexture(Resources.nuage2);
-            AjouteTexture(Resources.nuage3);
+            AttributBlend = PARTICULES_BLEND_ADDITIVE;
+            typeFond = TYPE_FOND.FOND_COULEUR;
+            couleurParticules = COULEUR_PARTICULES.BLANC;
+            AjouteTexture(Config.getImagePath("nuages_petits.png"), 3);
 
-            AjouteModificateur(new ModificateurExclusion(SystemeParticules2D.SystemeParticules2D.MIN_X,
-                SystemeParticules2D.SystemeParticules2D.MIN_Y, SystemeParticules2D.SystemeParticules2D.MAX_X, SystemeParticules2D.SystemeParticules2D.MAX_Y,
+            AjouteModificateur(new ModificateurExclusion(MIN_X, MIN_Y, MAX_X, MAX_Y,
                 ModificateurExclusion.Exclusions.EXCLURE_AU_DESSUS | ModificateurExclusion.Exclusions.EXCLURE_A_DROITE| ModificateurExclusion.Exclusions.EXCLURE_A_GAUCHE));
             AjouteModificateur(new ModificateurLife());
             AjouteModificateur(new ModificateurVitesseLineaire());

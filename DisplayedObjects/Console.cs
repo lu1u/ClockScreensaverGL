@@ -37,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         private Console(OpenGL gl)
         {
             
-            _fonte = new OpenGLFonte(gl, CARACTERES, 10, FontFamily.GenericSansSerif, FontStyle.Regular);
+            _fonte = new OpenGLFonte(gl, CARACTERES, 12, FontFamily.GenericSansSerif, FontStyle.Regular);
             _lignes = new List<LIGNE>();
         }
 
@@ -62,7 +62,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PushMatrix();
             gl.LoadIdentity();
-            gl.Ortho2D(0, tailleEcran.Width, 0, tailleEcran.Height);
+            gl.Ortho2D(0, tailleEcran.Width-1, 0, tailleEcran.Height-1);
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
             gl.Disable(OpenGL.GL_LIGHTING);

@@ -218,24 +218,6 @@
         EpafpRgG3Lm+a/deP/0XldgWgm7jkNBtHA4mVrwLmxkhbnJP8gAAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="Lune00" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADIAAAAwCAYAAABT9ym6AAAABGdBTUEAALGPC/xhBQAAAspJREFUaEPd
-        mYtxgzAQRNNCWkgLacEtpIW04BbSQlpwC2khLaSFtODsCi1ziAULf0DkZt5YukFwC3cSyE/n8/lfYJ17
-        xDr3iHXeA9gBHMEH+ALfAfoIj3l245dindcCewcMmp0l/ACKfnHnrcE6lwB7Bry7MbAafgvkP4HFgqyz
-        FtgbiEHcAgXEp/kJqtPOOi/BCwBeWBe9JxQgQbxJry6GEuucA0YRzGld+BFwQmC9qf/uYolY5xSwV3Cv
-        VLoEbxavp5s2K8Y6HbA1nkQJr/eSf9mfFGOdJbAtRIhSjK2ZkcMBe1Rh18Li581UWo9ms0HHAeMUqxNu
-        CYufNcP21yjO0lECW6u4a+BT0eJ7GMQZOyVhUCswHqXY7yDW2CnJA+KJWoBCtMa89bHGwCM8KB/cGhRB
-        MWz3tTISIGBbz1RTfBfxpRnMiiD5oFbhE1HGpPSaEqFprlXSjJXbn6kdBQhYq/UhPnKcXO27VIsCBA8E
-        GtQiEsK35DQN71WICp7fLmiireAjOqBhJCTd8NRW8BFYq1OvqBayl9TavZBuyu2KHU20FXwExj0mDWqR
-        OGvNTr/cAdSgFulW8659Su0oIJIPahV++urt45jiLQUI2DVbn2vwk+PTEpF2Ja0IAov7Si2h+uC3UhKV
-        +mqUwPTO3xpMK70L9ttDIwERWGsLY1fYedoF/W7KKPgIjOrZaAXGo5RPKdbHGjsODsgDt4ZxKN0HGw8p
-        ztLhgG21yyh4fYpQSo12GwedKWBbpxjXDNVrWjdGMTqnI59MJ16TKCIVu8M6p4CtvbZUiSDWOQdsje95
-        Lna8jmpzVgSxzkvAeKcetQvJV6M4U9qaKLHOGmCcRe75ScwZiWmkG8SnUfX/IbHOJcD4yq9p8RoYeBzP
-        /sX/DEus8xpgFHTLKw3FLBYgrPNWYBTFPGe+u6eVNtYAUzNtSrvzLME698f56Q8XTZc8J8/OCwAAAABJ
-        RU5ErkJggg==
-</value>
-  </data>
   <data name="Lune01" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADIAAAAwCAYAAABT9ym6AAAABGdBTUEAALGPC/xhBQAAAudJREFUaEPd
@@ -766,39 +748,9 @@ R: réinitialiser le fond</value>
   <data name="Temperatures" xml:space="preserve">
     <value>{0}:  {1}°/{2}°</value>
   </data>
-  <data name="flare1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\flare1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flare2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\flare2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="soleil" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\soleil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flare3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\flare3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="flare4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\ete\flare4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="AideEte" xml:space="preserve">
     <value>I: Afficher/cacher fond herbeux
 R: réinitialiser le fond</value>
-  </data>
-  <data name="automne_feuille1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\automne\feuille1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="automne_feuille2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\automne\feuille2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="automne_feuille3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\automne\feuille3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="automne_feuille4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\automne\feuille4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="automne_feuille5" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\automne\feuille5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="flocon1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\flocon1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -806,10 +758,19 @@ R: réinitialiser le fond</value>
   <data name="flocon2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Ressources\flocon2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="life" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Ressources\life.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Lune00" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\Lunes\Lune00.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="music_note" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\music-note.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="flare1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="flare4" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Ressources\ete\flare4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

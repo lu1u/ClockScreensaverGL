@@ -50,7 +50,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-            textureCellule.Create(gl, Resources.life);
+            textureCellule.Create(gl, Config.getImagePath("particule.png"));
         }
 
 
@@ -80,13 +80,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.Disable(OpenGL.GL_BLEND);
 
             Color Naissance = getCouleurOpaqueAvecAlpha(couleur, 70);
             byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
             Color Normal = getCouleurOpaqueAvecAlpha(couleur, 150);
             byte[] cNormal = { Normal.R, Normal.G, Normal.B };
-
-
+            
             gl.LookAt(LOOK_AT_X, LOOK_AT_Y, LOOK_AT_Z, 0,-0.1f, 0, 0, -1, 0);
             gl.Scale(1.7f / LARGEUR, 1.7f / HAUTEUR, 1);
             gl.Rotate(0, 0, _angle);
@@ -118,12 +118,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                    
                 }
             gl.End();
-
-            //gl.MatrixMode(OpenGL.GL_PROJECTION);
-            // gl.PopMatrix();
-            // gl.MatrixMode(OpenGL.GL_MODELVIEW);
-            //gl.PopMatrix();
-
 
             Console.getInstance(gl).AddLigne(Color.Green, "Largeur " + LARGEUR + "x Hauteur " + HAUTEUR);
 #if TRACER
@@ -230,6 +224,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             return val;
         }
+
         private int Voisine(int x, int y)
         {
             if (cellules[x, y] == MORT)

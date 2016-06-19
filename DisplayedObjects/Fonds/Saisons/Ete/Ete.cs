@@ -12,20 +12,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
     {
         #region PARAMETRES
         const string CAT = "Ete";
+        static private readonly string REPERTOIRE_ETE = conf.getParametre(CAT, "Repertoire", "ete");
         static private readonly int NB_HERBES = conf.getParametre(CAT, "Nb Herbes", 80);
-        private readonly int NB_FLARES = 12;// conf.getParametre(CAT, "Nb Flares", 6);
-        private readonly float VX_SOLEIL = conf.getParametre(CAT, "VX Soleil", 5f);
-        private readonly float VY_SOLEIL = conf.getParametre(CAT, "VY Soleil", 5f);
-        private readonly int TAILLE_SOLEIL = conf.getParametre(CAT, "Taille Soleil", 300);
-        private readonly float RATIO_FLARE_MIN = conf.getParametre(CAT, "Ratio Flare Min", 0.5f);
-        private readonly float RATIO_FLARE_MAX = conf.getParametre(CAT, "Ratio Flare Max", 0.9f);
-        private readonly byte ALPHA = (byte)conf.getParametre(CAT, "Alpha", 64);
-        private readonly byte ALPHA_FLARE_MIN = (byte)conf.getParametre(CAT, "Alpha Flare Min", 3);
-        private readonly byte ALPHA_FLARE_MAX = (byte)conf.getParametre(CAT, "Alpha Flare Max", 16);
-        private readonly int HAUTEUR_TOUFFE = conf.getParametre(CAT, "Hauteur touffe", 200);
-        private bool AFFICHE_FOND = conf.getParametre(CAT, "Affiche Fond", true);
-        private readonly float DISTANCE_FLARE_MIN = conf.getParametre(CAT, "Distance Flare Min", 0.1f);
-        private readonly float DISTANCE_FLARE_MAX = conf.getParametre(CAT, "Distance Flare Max", 1.7f);
+        static private readonly int NB_FLARES = conf.getParametre(CAT, "Nb Flares", 6);
+        static private readonly float VX_SOLEIL = conf.getParametre(CAT, "VX Soleil", 5f);
+        static private readonly float VY_SOLEIL = conf.getParametre(CAT, "VY Soleil", -5f);
+        static private readonly int TAILLE_SOLEIL = conf.getParametre(CAT, "Taille Soleil", 300);
+        static private readonly float RATIO_FLARE_MIN = conf.getParametre(CAT, "Ratio Flare Min", 0.7f);
+        static private readonly float RATIO_FLARE_MAX = conf.getParametre(CAT, "Ratio Flare Max", 1.3f);
+        static private readonly byte ALPHA = (byte)conf.getParametre(CAT, "Alpha", 64);
+        static private readonly byte ALPHA_FLARE_MIN = (byte)conf.getParametre(CAT, "Alpha Flare Min", 3);
+        static private readonly byte ALPHA_FLARE_MAX = (byte)conf.getParametre(CAT, "Alpha Flare Max", 16);
+        static private readonly int HAUTEUR_TOUFFE = conf.getParametre(CAT, "Hauteur touffe", 200);
+        static private bool AFFICHE_FOND = conf.getParametre(CAT, "Affiche Fond", true);
+        static private readonly float DISTANCE_FLARE_MIN = conf.getParametre(CAT, "Distance Flare Min", 0.1f);
+        static private readonly float DISTANCE_FLARE_MAX = conf.getParametre(CAT, "Distance Flare Max", 1.7f);
+
+        const int NB_IMAGES_FLARES = 4;
+        const float DECALAGE_TEXTURE = 1.0f / NB_IMAGES_FLARES;
         #endregion
         private readonly int LARGEUR_TOUFFE;
         private readonly int LARGEUR;
@@ -35,20 +39,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         static DateTime debut = DateTime.Now;
         // Soleil
         private Texture _textureSoleil;
+        private Texture _textureFond;
+        private Texture _textureFlares;
+
         private float _xSoleil, _ySoleil;
         // Herbes
         private float _vent = 0;
-        //private Bitmap _fond = Resources.fondEte;
         private List<Herbe> _herbes;
-        private Texture _textureFond;
+        
         // Lens Flares (reflets du soleil sur l'objectif
         private class Flare
         {
             public float _distance;
             public int _taille;
             public byte _alpha;
-            //public Bitmap _bmp;
-            public Texture _texture;
+            public int _texture;
+            public float rR, rG, rB;
         };
         private Flare[] _flares;
         /**
@@ -61,11 +67,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             LARGEUR_TOUFFE = LARGEUR / 2;
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
-            NB_FLARES = r.Next(NB_FLARES - 2, NB_FLARES + 2);
             _textureSoleil = new Texture();
-            _textureSoleil.Create(gl, Resources.soleil);
+            _textureSoleil.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\soleil.png"));
             _textureFond = new Texture();
-            _textureFond.Create(gl, Config.getImagePath("fondEte.png"));
+            _textureFond.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\fondEte.png"));
+            _textureFlares = new Texture();
+            _textureFlares.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\flares.png"));
             Init(gl);
         }
         /**
@@ -82,24 +89,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
                 _flares[i]._distance = FloatRandom(DISTANCE_FLARE_MIN, DISTANCE_FLARE_MAX);
                 _flares[i]._taille = r.Next((int)(TAILLE_SOLEIL * RATIO_FLARE_MIN), (int)(TAILLE_SOLEIL * RATIO_FLARE_MAX));
                 _flares[i]._alpha = (byte)r.Next(ALPHA_FLARE_MIN, ALPHA_FLARE_MAX);
-                _flares[i]._texture = new Texture();
-                _flares[i]._texture.Create(gl, RandomFlare());
+                _flares[i]._texture = r.Next(0, NB_IMAGES_FLARES);
+                _flares[i].rR = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
+                _flares[i].rG = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
+                _flares[i].rB = FloatRandom(RATIO_FLARE_MIN, RATIO_FLARE_MAX);
             }
             GenereBrinsHerbe();
         }
-        /***
-         * Choisit un lens flare au hasard
-         */
-        private Bitmap RandomFlare()
-        {
-            switch (r.Next(0, 4))
-            {
-                case 0: return Resources.flare2;
-                case 1: return Resources.flare3;
-                case 3: return Resources.flare4;
-                default: return Resources.flare1;
-            }
-        }
+
         /// <summary>
         /// Genere les brins d'herbe
         /// </summary>
@@ -165,22 +162,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             foreach (Herbe h in _herbes)
                 h.Affiche(gl, _vent);
 
-            gl.Color(col);
+            //gl.Color(col);
             gl.Enable(OpenGL.GL_BLEND);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
-
+            _textureFlares.Bind(gl);
+            gl.Begin(OpenGL.GL_QUADS);
             foreach (Flare f in _flares)
             {
-                f._texture.Bind(gl);
-                gl.Begin(OpenGL.GL_QUADS);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
-                gl.TexCoord(0.0f, 0.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
-                gl.End();
-            }
+                gl.Color(col[0] * f.rR, col[1] * f.rG, col[2] * f.rB, f._alpha);
+                gl.TexCoord(DECALAGE_TEXTURE * f._texture, 1.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
+                gl.TexCoord(DECALAGE_TEXTURE * f._texture, 0.0f); gl.Vertex(_xSoleil + dx * f._distance - f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
+                gl.TexCoord(DECALAGE_TEXTURE * (f._texture + 1), 0.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance + f._taille / 2);
+                gl.TexCoord(DECALAGE_TEXTURE * (f._texture + 1), 1.0f); gl.Vertex(_xSoleil + dx * f._distance + f._taille / 2, _ySoleil + dy * f._distance - f._taille / 2);
 
+            }
+            gl.End();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
             gl.MatrixMode(OpenGL.GL_MODELVIEW);

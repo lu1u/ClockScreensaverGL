@@ -14,7 +14,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 	{
 		const string CAT = "TexteCopyright" ;
 		private const string _texte = "Lucien Pilloni 2014" ;
-        private SizeF _taille;
+        private SizeF _Taille;
 		public TexteCopyright(OpenGL gl, int Px, int Py):
 			base( gl, Px, Py, conf.getParametre(CAT, "VX", 4), 
 			     		conf.getParametre(CAT, "VY", 4), 
@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 			     		conf.getParametre(CAT, "Alpha", (byte)10))
 		{
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-                _taille = g.MeasureString(_texte, _fonte);
+                _Taille = g.MeasureString(_texte, _fonte);
         }
 		
 
@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 		protected override SizeF getTexte(Temps maintenant, out string texte )
 		{
 			texte = _texte ;
-            return _taille;
+            return _Taille;
         }
 
         public override void DateChangee(OpenGL gl, Temps maintenant)

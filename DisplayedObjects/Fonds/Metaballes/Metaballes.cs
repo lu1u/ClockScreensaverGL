@@ -323,10 +323,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             return bmp;
         }
 
-        public override void AppendHelpText(StringBuilder s)
-        {
-            s.Append(Resources.AideMetaballes);
-        }
 
 #if TRACER
         public override string DumpRender()

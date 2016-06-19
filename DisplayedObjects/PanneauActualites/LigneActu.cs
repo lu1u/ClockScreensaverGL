@@ -51,21 +51,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             if (_texture == null)
                 CreerTexture(gl, afficheDesc);
 
-            gl.PushAttrib(OpenGL.GL_CURRENT_BIT);
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_BLEND);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
-            gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
-
             _texture.Bind(gl);
             gl.Begin(OpenGL.GL_QUADS);
             gl.TexCoord(0.0f, 0.0f); gl.Vertex(x, y);
             gl.TexCoord(0.0f, 1.0f); gl.Vertex(x, y - hauteur);
             gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + largeur, y - hauteur);
             gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + largeur, y);
-            gl.End();
-            gl.PopAttrib();
+            gl.End();            
         }
 
         private void CreerTexture(OpenGL gl, bool afficheDesc)
@@ -97,7 +89,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                         hauteurDesc = sz.Height * 2.0f;
                     }
 
-                    largeur = Math.Max(largeurSource, Math.Max(largeurTitre, largeurDesc));
+                    largeur = Math.Max(largeurSource, Math.Max(largeurTitre, largeurDesc)) + 50 ;
                     hauteur = (hauteurSource + hauteurTitre + hauteurDesc) * 1.1f;
 
                     if (_bitmap != null)

@@ -67,7 +67,7 @@ namespace ClockScreenSaverGL
         #region Fonds
         enum FONDS
         {
-            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, GRILLE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, TUNNEL, NEIGE_META, LIFE, TERRE,
+            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, GRILLE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
             BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, ADN
         };
 
@@ -162,7 +162,6 @@ namespace ClockScreenSaverGL
         {
 
             OpenGL gl = openGLControl.OpenGL;
-            
             if (!initial)
                 gl.PopAttrib();
 
@@ -209,15 +208,15 @@ namespace ClockScreenSaverGL
                 case FONDS.ARTIFICE: return new FeuDArtifice(gl);
                 case FONDS.ATTRACTEUR: return new AttracteurParticules(gl);
                 case FONDS.GRAVITE: return new Gravitation(gl);
+                case FONDS.REBOND: return new RebondParticules(gl);
                 case FONDS.ENGRENAGES: return new Engrenages(gl);
                 case FONDS.CUBES: return new Cubes(gl);
                 case FONDS.ADN: return new ADN(gl);
                 case FONDS.GRILLE: return new Grille(gl);
-                    
-                        default:
-                            return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
-                    }
+                default:
+                    return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
             }
+        }
 
 
         /// <summary>
@@ -336,10 +335,10 @@ namespace ClockScreenSaverGL
         */
 
 #if TRACER
-                    /// <summary>
-                    /// Affichage des informations de debug et performance
-                    /// </summary>
-                    /// <param name="g"></param>
+        /// <summary>
+        /// Affichage des informations de debug et performance
+        /// </summary>
+        /// <param name="g"></param>
         private void remplitDebug(OpenGL gl)
         {
             double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
@@ -555,7 +554,7 @@ namespace ClockScreenSaverGL
                             timerChangeFond.Enabled = false;
                             FONDS Type = (FONDS)conf.getParametre(CAT, PARAM_TYPEFOND, 0);
                             Type = ProchainFond(Type);
-                            ChangeFond(Type);                            
+                            ChangeFond(Type);
                         }
                         break;
 #if TRACER
@@ -590,7 +589,7 @@ namespace ClockScreenSaverGL
             // Remplacer le premier objet de la liste par le nouveau fond
             DisplayedObject dO = _listeObjets[INDICE_FOND];
             DisplayedObject tr = _listeObjets[INDICE_TRANSITION];
-            if ( tr is Transition)
+            if (tr is Transition)
             {
                 ((Transition)tr).InitTransition(openGLControl.OpenGL, dO, _temps, Bounds, _couleur.GetRGB());
             }
