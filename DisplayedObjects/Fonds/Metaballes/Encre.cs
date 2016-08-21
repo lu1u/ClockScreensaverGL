@@ -26,7 +26,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		static DateTime derniereCreation = DateTime.Now ;
 		
 		int NbMax = 0 ;
-		public Encre(OpenGL gl, int cx, int cy): base( gl, cx, cy)
+		public Encre(OpenGL gl, int cx, int cy): base( gl)
 		{
 			
 		}

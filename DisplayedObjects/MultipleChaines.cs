@@ -71,7 +71,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// </summary>
         /// <param name="gl"></param>
         /// <returns></returns>
-        protected DisplayedObject InitObjet(OpenGL gl)
+        protected static DisplayedObject InitObjet(OpenGL gl)
         {
             switch (r.Next(18))
             {
@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 16: return new Cubes(gl);
                 case 17: return new Grille(gl);
                 default:
-                    return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    return new Metaballes.Metaballes(gl);
             }
         }
 

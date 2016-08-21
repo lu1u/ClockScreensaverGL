@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="OpenGL Material Editor" Label="OpenGL Material Editor" Category="Project" />
+    <Node Id="SharpGLCore 2.3.0.1" Label="SharpGLCore 2.3.0.1" Category="Package" />
+    <Node Id="SharpGLforWinForms 2.3.0.1" Label="SharpGLforWinForms 2.3.0.1" Category="Package" />
+  </Nodes>
+  <Links>
+    <Link Source="SharpGLforWinForms 2.3.0.1" Target="SharpGLCore 2.3.0.1" Category="Package Dependency" />
+    <Link Source="OpenGL Material Editor" Target="SharpGLforWinForms 2.3.0.1" Category="Installed Package" />
+  </Links>
+  <Categories>
+    <Category Id="Project" />
+    <Category Id="Package" />
+  </Categories>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Project" ValueLabel="True">
+      <Condition Expression="HasCategory('Project')" />
+      <Setter Property="Background" Value="Blue" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Package Dependency" ValueLabel="True">
+      <Condition Expression="HasCategory('Package Dependency')" />
+      <Setter Property="Background" Value="Yellow" />
+    </Style>
+  </Styles>
+</DirectedGraph>

@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public const float MAX_COORD = Int32.MaxValue;
         public const float MIN_COORD = Int32.MinValue;
         
-        public TroisD(OpenGL gl, float vpX, float vpY, float vpZ, float zCam): base(gl)
+        protected TroisD(OpenGL gl, float vpX, float vpY, float vpZ, float zCam): base(gl)
         {
             _tailleCubeX = vpX;
             _tailleCubeY = vpY;

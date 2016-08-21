@@ -20,13 +20,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         readonly float ALPHA_MODIFIEUR = 0.4f;// conf.getParametre(CAT, "Modifieur Alpha", 0.05f);
         readonly float TAILLE_MODIFIEUR = 0.001f;// conf.getParametre(CAT, "Modifieur Taille", 1.1f);
         readonly float TAILLE_PARTICULE = 0.002f;// conf.getParametre(CAT, "TailleParticule", 0.02f);
-        readonly float VITESSE_ANGLE = 1.0f;// conf.getParametre(CAT, "VitesseAngle", 2.0f);
         readonly float VITESSE_PARTICULE = 0.5f;// conf.getParametre(CAT, "VitesseParticule", 0.2f);
 
         public FeuDArtifice(OpenGL gl) : base(gl, NB_PARTICULES)
         {
             for (int i = 0; i < NB_EMETTEURS; i++)
-                AjouteEmetteur(new EmetteurFeuArtifice(TAILLE_PARTICULE, VITESSE_ANGLE, VITESSE_PARTICULE, 2000));
+                AjouteEmetteur(new EmetteurFeuArtifice(TAILLE_PARTICULE, VITESSE_PARTICULE, 2000));
 
             AttributBlend = SystemeParticules2D.SystemeParticules2D.PARTICULES_BLEND_ADDITIVE;
 

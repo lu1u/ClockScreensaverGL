@@ -43,7 +43,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
         /// <param name="tX"></param>
         /// <param name="tY"></param>
         /// <param name="tZ"></param>
-        protected void Brique(OpenGL gl, float dx, float dy, float dz, float tX, float tY, float tZ)
+        protected static void Brique(OpenGL gl, float dx, float dy, float dz, float tX, float tY, float tZ)
         {
             //Bas
             gl.Normal(0.0f, -1.0f, 0.0f);

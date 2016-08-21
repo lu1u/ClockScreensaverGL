@@ -38,27 +38,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 
         protected override void GenererListe(OpenGL gl)
         {
-            
             float ORIGINE_X = -(NB_BARRES_X * 0.5f) * ECART_GRILLE;
             float ORIGINE_Y = -(NB_BARRES_Y * 0.5f) * ECART_GRILLE;
             float ORIGINE_Z = -(NB_BARRES_Z * 0.5f) * ECART_GRILLE;
             gl.Begin(OpenGL.GL_QUADS);
 
             // Barres de l'axe des X
+            if ( conf.getParametre(CAT, "X", true))
             for (int y = 0; y < NB_BARRES_Y; y++)
                 for (int z = 0; z < NB_BARRES_Z; z++)
                     Brique(gl, 0, ORIGINE_Y + (float)y * ECART_GRILLE, ORIGINE_Z + (float)z * ECART_GRILLE, NB_BARRES_X * ECART_GRILLE, EPAISSEUR_GRILLE, EPAISSEUR_GRILLE);
 
             // Barres de l'axe des Y
-            for (int x = 0; x < NB_BARRES_X; x++)
+            if (conf.getParametre(CAT, "Y", true))
+                for (int x = 0; x < NB_BARRES_X; x++)
                 for (int z = 0; z < NB_BARRES_Z; z++)
                    Brique(gl, ORIGINE_X + (float)x * ECART_GRILLE, 0, ORIGINE_Z + (float)z * ECART_GRILLE, EPAISSEUR_GRILLE, NB_BARRES_Y * ECART_GRILLE, EPAISSEUR_GRILLE);
-            
-            for (int x = 0; x < NB_BARRES_X; x++)
+
+            // Barres de l'axe des Z
+            if (conf.getParametre(CAT, "Z", true))
+                for (int x = 0; x < NB_BARRES_X; x++)
                 for (int y = 0; y < NB_BARRES_Y; y++)
                     Brique( gl, ORIGINE_X + (float)x * ECART_GRILLE, ORIGINE_Y + (float)y * ECART_GRILLE, 0, EPAISSEUR_GRILLE, EPAISSEUR_GRILLE, NB_BARRES_Z * ECART_GRILLE);
-
-
+            
             gl.End();
         }
 

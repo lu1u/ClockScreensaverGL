@@ -84,20 +84,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             #region LignesActu
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Color(couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1.0f);
-            
-            List<LigneActu> lignes = _actuFactory.getLignes();
-            if (lignes != null)
-                lock (lignes)
-                foreach (LigneActu l in lignes)
-                    {
-                        l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, couleur, AFFICHE_DESCRIPTION);
-                        x += l.largeur;
-                        _derniereAffichee++;
-                        if (x > tailleEcran.Right)
-                            break;
-                    }
 
-            
+            if (_actuFactory._lignes != null)
+                try
+                {
+                    lock (_actuFactory._lignes) foreach (LigneActu l in _actuFactory._lignes)
+                        {
+                            l.affiche(gl, x, tailleEcran.Top + HAUTEUR_BANDEAU, AFFICHE_DESCRIPTION);
+                            x += l.largeur;
+                            _derniereAffichee++;
+                            if (x > tailleEcran.Right)
+                                break;
+                        }
+                }
+                catch (Exception)
+                {
+                }
+
+
             #endregion
 
             gl.MatrixMode(OpenGL.GL_PROJECTION);
@@ -105,9 +109,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
             gl.PopMatrix();
 
-            Console c = Console.getInstance(gl);
-            c.AddLigne(Color.Green, "Decalage" + _decalageX.ToString("f2"));
-            c.AddLigne(Color.Green, "Nb Lignes " + lignes.Count);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -117,17 +118,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         {
             _decalageX -= VITESSE * maintenant._intervalle;
 
-            List<LigneActu> lignes = _actuFactory.getLignes();
-            if (lignes != null)
-                lock (lignes)
+            if (_actuFactory._lignes != null)
+                lock (_actuFactory._lignes)
                 {
-                    if (lignes.Count > 1)
-                        if (_decalageX + lignes[0].largeur < 0)
+                    if (_actuFactory._lignes.Count > 1)
+                        if (_decalageX + _actuFactory._lignes[0].largeur < 0)
                         {
                             // Suppression de la premiere annonce qui ne sera plus affichee
-                            _decalageX += lignes[0].largeur;
-                            lignes[0].Dispose();
-                            lignes.RemoveAt(0);
+                            _decalageX += _actuFactory._lignes[0].largeur;
+                            _actuFactory._lignes[0].Dispose();
+                            _actuFactory._lignes.RemoveAt(0);
                         }
                 }
         }
@@ -149,15 +149,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         {
             if (Keys.J.Equals(k))
             {
-                List<LigneActu> lignes = _actuFactory.getLignes();
-                if (lignes?.Count >= 1)
-                    lock (lignes) lignes.RemoveAt(0);
+                if (_actuFactory._lignes?.Count >= 1)
+                    lock (_actuFactory._lignes)
+                        _actuFactory._lignes.RemoveAt(0);
                 return true;
             }
             if (Keys.E.Equals(k))
             {
-                List<LigneActu> lignes = _actuFactory.getLignes();
-                lock (lignes) lignes.Clear();
+                lock (_actuFactory._lignes)
+                    _actuFactory._lignes?.Clear();
                 AFFICHE_DESCRIPTION = !AFFICHE_DESCRIPTION;
                 conf.setParametre(CAT, "Affiche Description", AFFICHE_DESCRIPTION);
                 conf.flush(CAT);
@@ -165,8 +165,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             }
             if (Keys.I.Equals(k))
             {
-                List<LigneActu> lignes = _actuFactory.getLignes();
-                lock (lignes) lignes.Clear();
+                lock (_actuFactory._lignes)
+                    _actuFactory._lignes?.Clear();
                 AFFICHE_IMAGES = !AFFICHE_IMAGES;
                 conf.setParametre(CAT, "Affiche Images", AFFICHE_DESCRIPTION);
                 conf.flush(CAT);

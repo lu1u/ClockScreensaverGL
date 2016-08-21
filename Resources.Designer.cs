@@ -157,76 +157,6 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flare1 {
-            get {
-                object obj = ResourceManager.GetObject("flare1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flare2 {
-            get {
-                object obj = ResourceManager.GetObject("flare2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flare3 {
-            get {
-                object obj = ResourceManager.GetObject("flare3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flare4 {
-            get {
-                object obj = ResourceManager.GetObject("flare4", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flocon1 {
-            get {
-                object obj = ResourceManager.GetObject("flocon1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flocon2 {
-            get {
-                object obj = ResourceManager.GetObject("flocon2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap flocon3 {
-            get {
-                object obj = ResourceManager.GetObject("flocon3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Jeudi.
         /// </summary>
         public static string Jeudi {
@@ -537,46 +467,6 @@ namespace ClockScreenSaverGL {
         public static string Mercredi {
             get {
                 return ResourceManager.GetString("Mercredi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap nuage1 {
-            get {
-                object obj = ResourceManager.GetObject("nuage1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap nuage2 {
-            get {
-                object obj = ResourceManager.GetObject("nuage2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap nuage3 {
-            get {
-                object obj = ResourceManager.GetObject("nuage3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap particleTexture {
-            get {
-                object obj = ResourceManager.GetObject("particleTexture", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

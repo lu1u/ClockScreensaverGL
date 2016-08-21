@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         bool _continuerThread;
         Thread _thread;
         private static readonly string RFC822 = "ddd, dd MMM yyyy HH:mm:ss zzz";
-        List<LigneActu> _lignes = new List<LigneActu>();
+        public List<LigneActu> _lignes = new List<LigneActu>();
         private static readonly char[] SEPARATEURS = { '|' };
 
         public ActuFactory()
@@ -58,7 +58,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     _sourcesActualite.Add(line);
             }
 
+            file.Close();
             // Melanger les sources
+            /*
             int DeuxiemeIndice;
             for (int i = 1; i < _sourcesActualite.Count; i++)
             {
@@ -72,8 +74,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 _sourcesActualite[i] = _sourcesActualite[DeuxiemeIndice];
                 _sourcesActualite[DeuxiemeIndice] = temp;
             }
-
-            file.Close();
+            */
         }
 
         /// <summary>
@@ -85,15 +86,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             LireFichierSources();
 
             WebRequest.DefaultCachePolicy = new RequestCachePolicy(RequestCacheLevel.Revalidate);
+            int sourceALire = Actualites.SourceCourante();
 
             // repete tant qu'on signale pas la fin de ce thread
             while (_continuerThread)
             {
-                int sourceALire = Actualites.SourceCourante();
                 sourceALire++;
                 if (sourceALire >= _sourcesActualite.Count)
                     sourceALire = 0;
-                Actualites.SourceCourante(sourceALire);
 
                 // Lire une source
                 LitRSS(_sourcesActualite[sourceALire]);
@@ -105,6 +105,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 }
                 while (_continuerThread && _sourcesActualite.Count >= Actualites.MAX_LIGNES);
             }
+            Actualites.SourceCourante(sourceALire);
 
             // Ce thread est fini
             _thread = null;
@@ -218,7 +219,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 var response = request.GetResponse();
                 var stream = response.GetResponseStream();
                 Image i = retailleImage(Bitmap.FromStream(stream));
-                return DisplayedObject.BitmapDesaturee((Bitmap)i, Actualites.SATURATION_IMAGES);                
+                return DisplayedObject.BitmapDesaturee((Bitmap)i, Actualites.SATURATION_IMAGES);
             }
             catch (Exception)
             {
@@ -289,11 +290,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             return DateTime.Now.Subtract(rss).Days < Actualites.NB_JOURS_MAX_INFO;
         }
 
-        public List<LigneActu> getLignes()
-        {
-            return _lignes;
-        }
-
         /// <summary>
         /// Converti une date RSS en date C#
         /// </summary>
@@ -315,12 +311,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         public void Dispose()
         {
             _continuerThread = false;
-            _thread?.Abort();
+            //_thread?.Abort();
 
-            foreach (LigneActu l in _lignes)
-                l.Dispose();
+            lock (_lignes)
+            {
+                foreach (LigneActu l in _lignes)
+                    l.Dispose();
 
-            _lignes.Clear();
+                _lignes.Clear();
+            }
         }
     }
 }

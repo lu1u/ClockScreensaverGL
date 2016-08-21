@@ -24,7 +24,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		//static DateTime derniereCreation = DateTime.Now ;
         TimerIsole _timer = new TimerIsole(800);
 		
-		public Neige(OpenGL gl, int cx, int cy) : base(gl, cx, cy)
+		public Neige(OpenGL gl, int cx, int cy) : base(gl)
         {
 		}
 		

@@ -21,7 +21,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseY", -21.0f);
         private static readonly byte ALPHA = (byte)conf.getParametre(CAT, "Alpha", 200);
         private static readonly float DELTA_ALPHA = conf.getParametre(CAT, "DeltaAlpha", 0.7f);
-        private static readonly string METEO_URL = conf.getParametre(CAT, "URL", @"http://weather.yahooapis.com/forecastrss?w=588014&u=c");
         private static readonly string EXE_DEEZERINFO = conf.getParametre(CAT, "DeezerInfo", getDeezerInfoDirectory());
         public static readonly bool EXE_KILL = conf.getParametre(CAT, "Tuer deezer info", false);
         private static readonly int DIAMETRE_HORLOGE = 300;// conf.getParametre(CAT, "Diametre Horloge", 360);
@@ -60,9 +59,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private HeureTexte _heureTexte;
         private DateTexte _dateTexte;
 
-        private bool _droite;
         private float _X = 0;
-        private float _Y = 0;
         private Bitmap _bitmap;
         private Texture _texture = new Texture();
 
@@ -71,11 +68,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// </summary>
         public PanneauInfos(OpenGL gl, bool droite) : base(gl)
         {
-            _droite = droite;
             _taille = new SizeF(DIAMETRE_HORLOGE + MARGE_HORLOGE * 2, SystemInformation.VirtualScreen.Height);
-            _meteo = new MeteoInfo(METEO_URL);
+            _meteo = new MeteoInfo();
             _deezer = new DeezerInfo(EXE_DEEZERINFO, DELAI_DEEZER);
-            _horloge = new HorlogeRonde(gl, _droite, DIAMETRE_HORLOGE, 0, 0);
+            _horloge = new HorlogeRonde(gl, DIAMETRE_HORLOGE, 0, 0);
             _heureTexte = new HeureTexte(gl, 0, 0, TAILLE_TEXTE_HEURE);
             _dateTexte = new DateTexte(gl, 0, 0, TAILLE_TEXTE_DATE);
             CreerBitmap(gl);
@@ -277,7 +273,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
             if (_meteo.MustRefresh(maintenant))
-                _meteo = new MeteoInfo(METEO_URL);
+                _meteo = new MeteoInfo();
 
             if (_deezer.MustRefresh(maintenant))
                 _deezer.Refresh();
@@ -286,13 +282,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                 _bitmap = null;
 
 
-            if (_droite)
-                _X = tailleEcran.Width - _taille.Width;
-            else
-                _X = 0;
-
-            _Y = tailleEcran.Top;
-
+            _X = tailleEcran.Width - _taille.Width;
             _horloge._pX = _X + (_taille.Width - DIAMETRE_HORLOGE) / 2;
             _horloge._pY = tailleEcran.Bottom - DIAMETRE_HORLOGE - MARGE_HORLOGE;
             _heureTexte._trajectoire._Px = _X + MARGE_TEXTE_HEURE;

@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         float _vitesseParticule;
         TimerIsole _timer;
 
-        public EmetteurFeuArtifice(float taille, float vitesseAngle,float vitesseParticule, int nbParticules)
+        public EmetteurFeuArtifice(float taille, float vitesseParticule, int nbParticules)
         {
             NB_PARTICULES = nbParticules;
             _taille = taille;

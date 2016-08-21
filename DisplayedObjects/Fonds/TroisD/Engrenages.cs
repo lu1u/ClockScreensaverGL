@@ -267,7 +267,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             #endregion
         }
 
-        private void CalculeXY(float angle, int nbdents, float diametre1, float diametre2, out float x, out float y)
+        private static void CalculeXY(float angle, int nbdents, float diametre1, float diametre2, out float x, out float y)
         {
             // Sinusoide correspondant a l'ecart de diametre entre le haut et le bas des dents
             double ecart = diametre1 - diametre2;

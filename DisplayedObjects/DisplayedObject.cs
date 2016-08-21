@@ -143,7 +143,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 return -1;
         }
 
-        static protected Bitmap BitmapNuance(Graphics g, Bitmap bmp, Color couleur)
+        static protected Bitmap BitmapNuance(Graphics g, Image bmp, Color couleur)
         {
             Bitmap bp = new Bitmap(bmp.Width, bmp.Height, g);
             using (Graphics gMem = Graphics.FromImage(bp))
@@ -200,7 +200,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="g"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        static public Bitmap BitmapDesaturee(Bitmap source, float saturation )
+        static public Bitmap BitmapDesaturee(Image source, float saturation )
         {
             Bitmap destination = new Bitmap(source.Width, source.Height);
 
@@ -256,7 +256,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="bmp"></param>
         /// <param name="couleur"></param>
         /// <returns></returns>
-        static protected void DrawBitmapNuance(Graphics g, Bitmap bmp, int x, int y, int l, int h, Color couleur)
+        static protected void DrawBitmapNuance(Graphics g, Image bmp, int x, int y, int l, int h, Color couleur)
         {
 
             float[][] ptsArray =

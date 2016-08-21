@@ -69,11 +69,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public override void Dispose()
         {
             base.Dispose();
-            //for (int i = 0; i < NB_TEXTURES; i++)
             _texture.Destroy(_gl);
         }
 
-        private void NouveauNuage(ref Nuage f)
+        private static void NouveauNuage(ref Nuage f)
         {
             if (f == null)
                 f = new Nuage();

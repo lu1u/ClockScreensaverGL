@@ -64,7 +64,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         private Lune lune = new Lune();
 
-        public HorlogeRonde(OpenGL gl, bool adroite, int d, float Px, float Py): base(gl)
+        public HorlogeRonde(OpenGL gl, int d, float Px, float Py): base(gl)
         {
             //_aDroite = adroite;
             //_date = new DateTexte(gl, (int)Px, (int)Py, 30);
@@ -288,7 +288,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="Jour"></param>
         /// <param name="b"></param>
         /// <param name="p"></param>
-        public void DessineJourDuMois(Graphics g, float CentreX, float CentreY, float Rayon, int Jour, Brush b, Pen p)
+        public static void DessineJourDuMois(Graphics g, float CentreX, float CentreY, float Rayon, int Jour, Brush b, Pen p)
         {
             using (Font fonte = new Font(FontFamily.GenericMonospace, (HAUTEUR_FONTE / 2), FontStyle.Bold, GraphicsUnit.Pixel))
             {
@@ -322,7 +322,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="Rayon"></param>
         /// <param name="maintenant"></param>
         /// <param name="brush"></param>
-        public void DessinePhaseLunaire(Graphics g, float CentreX, float CentreY, float Rayon, DateTime maintenant, Brush brush)
+        public void DessinePhaseLunaire(Graphics g, float CentreX, float CentreY, float Rayon, DateTime maintenant)
         {
             using (Bitmap bmpLune = lune.getImageLune(g, maintenant))
                 if (bmpLune != null)
@@ -481,7 +481,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             DateTime maintenant = DateTime.Now;
 
             DessineJourDuMois(g, CentreX, CentreY, _rayon, maintenant.Day, Brushes.Black, new Pen(Color.Black, EPAISSEUR_TROTTEUSE_CONTINUE));
-            DessinePhaseLunaire(g, CentreX, CentreY, _rayon, maintenant, Brushes.White);
+            DessinePhaseLunaire(g, CentreX, CentreY, _rayon, maintenant);
 
             using (Brush bTexte = new SolidBrush(COULEUR_GRADUATIONS))
             using (Pen pinceauNoir = new Pen(COULEUR_GRADUATIONS, 8), pinceauNoir2 = new Pen(COULEUR_GRADUATIONS, 6),

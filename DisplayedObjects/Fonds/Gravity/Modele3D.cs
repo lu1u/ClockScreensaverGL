@@ -124,12 +124,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             }
         }
 
-        private double DEG_TO_RAD(double angleX)
+        private static double DEG_TO_RAD(double angleX)
         {
             return angleX * Math.PI / 180.0;
         }
 
-        private float max(float rY, float rZ)
+        private static float max(float rY, float rZ)
         {
             return rY > rZ ? rY : rZ;
         }

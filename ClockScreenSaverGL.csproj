@@ -153,6 +153,7 @@
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\Rebond\RebondParticules.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurCollisions.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\Particules2D\Modificateurs\ModificateurRebond.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\Nebuleuse.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\FrustumCulling.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Grille.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Cubes.cs" />
@@ -296,9 +297,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Ressources\Crate.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Ressources\nuage2.png" />
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +316,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\flocon3.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ressources\earth.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\terre.png" />
@@ -532,9 +527,6 @@
   <ItemGroup>
     <None Include="bin\Release\images\terre.png" />
     <None Include="packages\Resources\music-note.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Lune00.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\Lunes\Lune00.png" />

@@ -46,7 +46,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             _texture?.Destroy(_gl);
         }
 
-        internal void affiche(OpenGL gl, float x, float y, Color couleur, bool afficheDesc)
+        internal void affiche(OpenGL gl, float x, float y, bool afficheDesc)
         {
             if (_texture == null)
                 CreerTexture(gl, afficheDesc);
@@ -60,6 +60,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             gl.End();            
         }
 
+        /// <summary>
+        /// Creation de la texture OpenGL qui permet d'afficher cette actualite
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="afficheDesc"></param>
         private void CreerTexture(OpenGL gl, bool afficheDesc)
         {
             _gl = gl;
@@ -142,6 +147,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 return "null";
 
             s = Regex.Replace(s, @"<[^>]*>", String.Empty);
+            s = s.Replace("&nbsp;", " ");
             s = WebUtility.HtmlDecode(s);
             s = s.Trim(TRIM_CARACTERES);
             return s;

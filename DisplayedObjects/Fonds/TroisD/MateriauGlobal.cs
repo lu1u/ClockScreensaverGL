@@ -139,7 +139,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.SHININESS) + "Shininess    " + SHININESS);
         }
 
-        private string Tableau(float[] tab)
+        private static string Tableau(float[] tab)
         {
             return tab[0].ToString("0.000") + " : " + tab[1].ToString("0.000") + " : " + tab[2].ToString("0.000") ;
         }

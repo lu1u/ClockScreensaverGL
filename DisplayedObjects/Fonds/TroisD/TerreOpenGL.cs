@@ -19,7 +19,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         static readonly int NB_TRANCHES = 256;// conf.getParametre(CAT, "NbTranches", 64);
         static readonly int NB_MERIDIENS = 256;// conf.getParametre(CAT, "NbMeridiens", 64);
         static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5f);
-        static readonly float INITIAL_ROTATION = conf.getParametre(CAT, "Rotation initiale", 270); // Ajuster pour montrer le pays qu'on veut au depart
         static readonly float LONGITUDE_DRAPEAU = 270 + conf.getParametre(CAT, "Longitude", 5.97f); // Longitude du drapeau + correction en fonction de la texture
         static readonly float LATITUDE_DRAPEAU = 0 + conf.getParametre(CAT, "Latitude", 45.28f); // Latitude du drapeau
         static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);

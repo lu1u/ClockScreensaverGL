@@ -47,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             }
         }
 
-        private void InitPens()
+        private static void InitPens()
         {
             _pens = new Pen[NbSegments];
             float l = largeurInitiale;

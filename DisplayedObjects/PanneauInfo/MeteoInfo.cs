@@ -30,7 +30,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         WebBrowser _wb;
         static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
-        public MeteoInfo(string url)
+        public MeteoInfo()
         {
             _donneesPretes = false;
             _hasNewInfo = false;
@@ -331,17 +331,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             }
         }
 
-        private string filtreMax(string texte)
+        private static string filtreMax(string texte)
         {
             return texte.Replace("Maximale", "Max");
         }
 
-        private string filtreMin(string texte)
+        private static string filtreMin(string texte)
         {
             return texte.Replace("Minimale", "Min");
         }
 
-        private string filtreVent(string texte)
+        private static string filtreVent(string texte)
         {
             return texte.Replace("Vent ", "");
         }

@@ -75,7 +75,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             base.Dispose();
             deleteEmptyTexture(texture);
         }
-        protected DisplayedObject InitObjet(OpenGL gl)
+
+        protected static DisplayedObject InitObjet(OpenGL gl)
         {
             switch (r.Next(18))
             {
@@ -98,7 +99,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 16: return new Cubes(gl);
                 case 17: return new Grille(gl);
                 default:
-                    return new Metaballes.Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    return new Metaballes.Metaballes(gl);
             }
         }
 
@@ -158,7 +159,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 #endif
         }
 
-        private void DessineRectangle(OpenGL gl, Quad q)
+        private static void DessineRectangle(OpenGL gl, Quad q)
         {
             gl.PushMatrix();
             gl.Translate(q.position.x, q.position.y, q.position.z);
@@ -175,7 +176,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.PopMatrix();
         }
 
-        private void DessineRectangleTV(OpenGL gl, Quad q)
+        private static void DessineRectangleTV(OpenGL gl, Quad q)
         {
             gl.PushMatrix();
             gl.Translate(q.position.x, q.position.y, q.position.z + 0.000001f);

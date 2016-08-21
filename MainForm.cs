@@ -68,7 +68,7 @@ namespace ClockScreenSaverGL
         enum FONDS
         {
             ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, GRILLE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, ADN
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, ADN
         };
 
         const FONDS PREMIER_FOND = FONDS.ESPACE;
@@ -184,7 +184,6 @@ namespace ClockScreenSaverGL
                         return new Automne(gl);
                 }
             }
-
             switch (Type)
             {
                 case FONDS.METABALLES: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -211,11 +210,13 @@ namespace ClockScreenSaverGL
                 case FONDS.REBOND: return new RebondParticules(gl);
                 case FONDS.ENGRENAGES: return new Engrenages(gl);
                 case FONDS.CUBES: return new Cubes(gl);
+                case FONDS.NEBULEUSE: return new Nebuleuse(gl);
                 case FONDS.ADN: return new ADN(gl);
                 case FONDS.GRILLE: return new Grille(gl);
                 default:
-                    return new Metaballes(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
+                    return new Metaballes(gl);
             }
+            
         }
 
 
@@ -223,7 +224,7 @@ namespace ClockScreenSaverGL
         /// Retourne la saison, (calcul tres approximatif)
         /// </summary>
         /// <returns></returns>
-        private SAISON getSaison()
+        private static SAISON getSaison()
         {
             int forceSaison = conf.getParametre(CAT, "Force saison", -1);
             if (forceSaison != -1)
@@ -475,7 +476,7 @@ namespace ClockScreenSaverGL
             if (IsPreviewMode)
             {
                 TailleHorloge = 10;
-                _listeObjets.Add(new HorlogeRonde(gl, true, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
+                _listeObjets.Add(new HorlogeRonde(gl, TailleHorloge, CentreX - TailleHorloge / 2, CentreY - TailleHorloge / 2));
                 return;
             }
 
@@ -507,7 +508,7 @@ namespace ClockScreenSaverGL
             ChangeFond(Type);
         }
 
-        private FONDS ProchainFond(FONDS type)
+        private static FONDS ProchainFond(FONDS type)
         {
             if (type == DERNIER_FOND)
                 return PREMIER_FOND;
@@ -521,12 +522,12 @@ namespace ClockScreenSaverGL
             {
                 switch ((Keys)e.KeyValue)
                 {
-                    //case Keys.Up: _couleur.ChangeHue(1); break;
-                    //case Keys.Down: _couleur.ChangeHue(-1); break;
-                    case Keys.Left: _couleur.ChangeSaturation(1); break;
-                    case Keys.Right: _couleur.ChangeSaturation(-1); break;
-                    case Keys.Up: _couleur.ChangeValue(1); break;
-                    case Keys.Down: _couleur.ChangeValue(-1); break;
+                    case Keys.F1: _couleur.ChangeHue(1); break;
+                    case Keys.F2: _couleur.ChangeHue(-1); break;
+                    case Keys.F3: _couleur.ChangeSaturation(1); break;
+                    case Keys.F4: _couleur.ChangeSaturation(-1); break;
+                    case Keys.F5: _couleur.ChangeValue(1); break;
+                    case Keys.F6: _couleur.ChangeValue(-1); break;
 
                     //case Keys.H: _afficherAide = !_afficherAide; break;
                     case DisplayedObject.TOUCHE_REINIT:

@@ -22,7 +22,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private readonly int TAILLE_ANNEAU;
         private static readonly int NB_ANNEAUX = conf.getParametre(CAT, "Nombre", 200);
         private static readonly float VITESSE_ANNEAU = conf.getParametre(CAT, "Vitesse", 2f);
-        private static readonly float DECALAGE_MAX = conf.getParametre(CAT, "DecalageMax", 5f);
         private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
         private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f);
         private readonly int BANDES_PLEINES = conf.getParametre(CAT, "CouleursPleines", 16 + 1);
@@ -37,12 +36,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         static DateTime debut = DateTime.Now;
 
         Vecteur3D[,] _anneaux;
-        readonly float _zMax;
         const float VIEWPORT_X = 2f;
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 4f;
-        GLfloat[] LIGHT_POS = { -1, RAYON_ANNEAU * -1.5f, 0, 1 };
-
+        
         /*static readonly float[] SPECULAR_LIGHT = { 0.7f, 0.7f, 0.7f }; //set the 
         static readonly float[] AMBIENT_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
         static readonly float[] DIFFUSE_LIGHT = { 0.9f, 0.9f, 0.9f }; //set the 
@@ -70,7 +67,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 BANDES_PLEINES = r.Next(1, BANDES_PLEINES + 1);
             _anneaux = new Vecteur3D[NB_ANNEAUX, TAILLE_ANNEAU];
 
-            _zMax = -_tailleCubeZ;
             _CentreAnneauX = 0;
             _CentreAnneauY = 0;
             for (int x = 0; x < NB_ANNEAUX; x++)

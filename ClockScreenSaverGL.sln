@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockScreenSaverGL", "Clock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGL Material Editor", "..\OpenGL Material Editor\OpenGL Material Editor.csproj", "{6C2585E6-A4BC-48AF-B706-A1BC02E10250}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetDeezerInformation", "..\GetDeezerInformation\GetDeezerInformation.csproj", "{18963EF4-E616-494E-9825-425712560AFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColleTextures", "..\ColleTextures\ColleTextures.csproj", "{66AE08C2-7E93-47AC-B556-12C2322489DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,30 @@ Global
 		{6C2585E6-A4BC-48AF-B706-A1BC02E10250}.Release|Mixed Platforms.Build.0 = Release|x86
 		{6C2585E6-A4BC-48AF-B706-A1BC02E10250}.Release|x86.ActiveCfg = Release|x86
 		{6C2585E6-A4BC-48AF-B706-A1BC02E10250}.Release|x86.Build.0 = Release|x86
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Debug|x86.Build.0 = Debug|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|x86.ActiveCfg = Release|Any CPU
+		{18963EF4-E616-494E-9825-425712560AFC}.Release|x86.Build.0 = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Debug|x86.Build.0 = Debug|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|x86.ActiveCfg = Release|Any CPU
+		{66AE08C2-7E93-47AC-B556-12C2322489DE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

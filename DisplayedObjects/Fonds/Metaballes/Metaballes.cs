@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// <summary>
         /// Constructeur
         /// </summary>
-        public Metaballes(OpenGL gl, int cx, int cy) : base(gl)
+        public Metaballes(OpenGL gl ) : base(gl)
         {
             GetPreferences(ref Largeur, ref Hauteur, ref NbMetaballes, ref NiveauxCouleurs);
             _palette = new int[NiveauxCouleurs];

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
-    public class GravitationParticules: SystemeParticules2D.SystemeParticules2D, IDisposable
+    public class GravitationParticules: SystemeParticules2D.SystemeParticules2D
     {
         const String CAT = "GravitationParticules";
         static readonly int NB_PARTICULES = conf.getParametre(CAT, "Nb Particules", 100);

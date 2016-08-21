@@ -162,7 +162,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraTo = new Vecteur3Ddbl(Corps[to]._position);
         }
 
-        private void construitAffiche()
+        private static void construitAffiche()
         {
             /*_affiche?.Destroy(_gl);
             using (Bitmap bmp = new Bitmap(300, 300, PixelFormat.Format32bppArgb))
@@ -195,7 +195,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             _textureRight?.Destroy(_gl);
         }
 
-        double CalculeVitesseOrbitale(double Attraction, double Distance)
+        static double CalculeVitesseOrbitale(double Attraction, double Distance)
         {
             return (float)(Math.Sqrt(Attraction / Distance) * VITESSE);
         }
@@ -436,7 +436,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 }
         }
 
-        private bool IsAsteroide(int type)
+        private static bool IsAsteroide(int type)
         {
             return ((type >= Planete.ASTEROIDE_MIN) && (type <= Planete.ASTEROIDE_MAX)) || ((type >= Planete.SATELLITE_MIN) && (type <= Planete.SATELLITE_MAX));
         }

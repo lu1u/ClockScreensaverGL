@@ -40,8 +40,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private readonly Carre[] _Carres;
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
-        Texture text = new Texture();
-
+        
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -50,8 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _Carres = new Carre[NB_PAVES];
-            text.Create(gl, Resources.particleTexture);
-
+        
             // Initialiser les carres
             for (int i = 0; i < NB_PAVES; i++)
                 NouveauCarre(ref _Carres[i]);

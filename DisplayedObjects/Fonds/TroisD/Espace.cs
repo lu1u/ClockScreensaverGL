@@ -15,7 +15,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         #region Parametres
         public const string CAT = "Espace.OpenGL";
 
-        private static readonly byte ALPHA = 255;// conf.getParametre(CAT, "Alpha", (byte)200);
+        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)255);
         private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
         private static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 2000);
         private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
@@ -33,7 +33,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private class Etoile
         {
             public float x, y, z;
-            public float r, g, b;
         }
         private readonly Etoile[] _etoiles;
         private DateTime _dernierDeplacement = DateTime.Now;
@@ -48,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, Resources.particleTexture);
+            _texture.Create(gl, Config.getImagePath("particuleTexture.png"));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -66,7 +65,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _texture.Destroy(_gl);
         }
 
-        private void NouvelleEtoile(ref Etoile f)
+        private static void NouvelleEtoile(ref Etoile f)
         {
             if (f == null)
                 f = new Etoile();
@@ -74,9 +73,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.x = FloatRandom(-VIEWPORT_X * 6, VIEWPORT_X * 6);
             f.z = -VIEWPORT_Z;
             f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
-            f.r = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
-            f.g = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
-            f.b = FloatRandom(1.0f - DELTA_COULEUR, 1.0f + DELTA_COULEUR);
         }
 
         /// <summary>
@@ -106,9 +102,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.1f);
             gl.Fog(OpenGL.GL_FOG_START, VIEWPORT_Z * 1);
             gl.Fog(OpenGL.GL_FOG_END, _zCamera);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-
+            
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
@@ -121,7 +115,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Etoile o in _etoiles)
             {
-                gl.Color(col[0] * o.r, col[1] * o.g, col[2] * o.b, col[3]);
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);

@@ -20,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
 		static private int UnSur = 0 ;
 		
-		public Bacteries(OpenGL gl, int cx, int cy) : base(gl, cx, cy)
+		public Bacteries(OpenGL gl, int cx, int cy) : base(gl)
         {
 		}
 		

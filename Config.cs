@@ -112,7 +112,11 @@ namespace ClockScreenSaverGL
 
         public static string getImagePath(string imgName)
         {
-            return Path.Combine(getImagesDirectory(), imgName);
+            string res = Path.Combine(getImagesDirectory(), imgName);
+            if (File.Exists(res))
+              return res;
+
+            return Path.Combine(getImagesDirectory(), "particule.png");
         }
 
         /// <summary>
@@ -398,12 +402,14 @@ namespace ClockScreenSaverGL
             if ((p != null) && (p is Parameter))
             {
                 if (p._type != type)
-                    throw new InvalidCastException("parametre " + name + ": type invalide");
+                    //throw new InvalidCastException("parametre " + name + ": type invalide");
+                    return defaut;
 
                 return p._value;
             }
 
             categorie._valeurs.Add(name, new Parameter(defaut, type, defaut));
+            categorie._propre = false;
             return defaut;
         }
 

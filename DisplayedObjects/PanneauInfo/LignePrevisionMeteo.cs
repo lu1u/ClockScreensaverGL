@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             _bmp?.Dispose();
         }
-        private float KelvinToCelsius(float v)
+        private static float KelvinToCelsius(float v)
         {
             return v - 273.15f;
         }
