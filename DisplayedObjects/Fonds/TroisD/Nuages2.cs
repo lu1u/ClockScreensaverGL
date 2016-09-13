@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private static readonly float ALPHA = conf.getParametre(CAT, "Alpha", (byte)1.0f);
         private static readonly int NB_NUAGES = conf.getParametre(CAT, "NbNuages", 200);
         private static readonly float TAILLE_NUAGE = conf.getParametre(CAT, "Taille", 9);
-        private static readonly float ROULIS_MAX = conf.getParametre(CAT, "Roulis max", 5);
+        private static readonly float ROULIS_MAX = conf.getParametre(CAT, "Roulis max", 3);
         private static readonly float VITESSE_ROULIS = conf.getParametre(CAT, "Vitesse roulis", 0.1f);
         private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2.0f);
         private static readonly float VITESSE_LATERALE = conf.getParametre(CAT, "Vitesse laterale", 10.0f);

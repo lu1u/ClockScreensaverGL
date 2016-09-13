@@ -12,21 +12,26 @@ using System.Drawing;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
-	/// <summary>
-	/// Description of Class1.
-	/// </summary>
-	public abstract class Fond : DisplayedObject
-	{
-        public Fond(OpenGL gl): base(gl)
-            {
+    /// <summary>
+    /// Description of Class1.
+    /// </summary>
+    public abstract class Fond : DisplayedObject
+    {
+
+        public Fond(OpenGL gl) : base(gl)
+        {
 
         }
         public override void ClearBackGround(OpenGL gl, Color c)
         {
-            gl.ClearColor(0, 0, 0,0);
+            gl.ClearColor(0, 0, 0, 0);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
         }
-	}
-	
 
+        protected void fillConsole(OpenGL gl)
+        {
+
+        }
+
+    }
 }

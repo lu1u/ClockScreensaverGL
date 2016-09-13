@@ -126,8 +126,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         protected void fillConsole(OpenGL gl)
         {
+            base.fillConsole(gl);
             Console c = Console.getInstance(gl);
-            c.AddLigne(Color.Green, "TerreOpenGL");
+            c.AddLigne(Color.Green, this.GetType().Name);
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.LAMBIENT)  + "L Ambient  " + Tableau( LIG_AMBIENT ) );
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.LDIFFUSE)  + "L Diffuse    " + Tableau(LIG_DIFFUSE));
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.LSPECULAR) + "L Specular " + Tableau(LIG_SPECULAR));

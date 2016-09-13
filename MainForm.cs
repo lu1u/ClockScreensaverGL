@@ -7,6 +7,7 @@ using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
 using ClockScreenSaverGL.DisplayedObjects.Meteo;
@@ -67,8 +68,8 @@ namespace ClockScreenSaverGL
         #region Fonds
         enum FONDS
         {
-            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, MULTICHAINES, NUAGES, GRILLE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, ADN
+            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, /* GRILLE, */ PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, ADN,
         };
 
         const FONDS PREMIER_FOND = FONDS.ESPACE;
@@ -212,7 +213,9 @@ namespace ClockScreenSaverGL
                 case FONDS.CUBES: return new Cubes(gl);
                 case FONDS.NEBULEUSE: return new Nebuleuse(gl);
                 case FONDS.ADN: return new ADN(gl);
-                case FONDS.GRILLE: return new Grille(gl);
+                case FONDS.BOIDS_OISEAUX: return new BoidsOiseaux(gl);
+                case FONDS.BOIDS_POISSONS: return new BoidsPoissons(gl);
+                //case FONDS.GRILLE: return new Grille(gl);
                 default:
                     return new Metaballes(gl);
             }

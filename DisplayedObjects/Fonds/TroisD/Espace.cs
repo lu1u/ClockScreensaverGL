@@ -47,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, Config.getImagePath("particuleTexture.png"));
+            _texture.Create(gl, Config.getImagePath("etoile.png"));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)

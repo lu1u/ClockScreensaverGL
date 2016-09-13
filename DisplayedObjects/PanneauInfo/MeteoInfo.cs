@@ -89,7 +89,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             if (_lignes != null)
                 foreach (LignePrevisionMeteo l in _lignes)
                     l.Dispose();
-            _wb.Dispose();
+            _wb?.Dispose();
         }
 
         /// <summary>

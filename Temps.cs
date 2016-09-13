@@ -38,5 +38,10 @@ namespace ClockScreenSaverGL
             _derniere = derniere ;
 			_intervalle = (float)(t.Subtract(derniere).TotalMilliseconds / 1000.0);
 		}
+
+        public static double Maintenant()
+        {
+            return DateTime.Now.Subtract(BASEDATE).TotalMilliseconds;
+        }
 	}
 }

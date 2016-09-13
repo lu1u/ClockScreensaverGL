@@ -5,6 +5,8 @@ using System.Drawing;
 
 using GLfloat = System.Single;
 using GLuint = System.UInt32;
+using System.Windows.Forms;
+
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
@@ -13,20 +15,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     public sealed class Nebuleuse : TroisD, IDisposable
     {
         #region Parametres
-        public const string CAT = "Nebuleuse.OpenGL";
+        public const string CAT = "Nebuleuse";
 
-        private static readonly byte ALPHA_ETOILE = 255;// conf.getParametre(CAT, "Alpha", (byte)255);
-        private static readonly byte ALPHA_NUAGE = 32;// conf.getParametre(CAT, "Alpha", (byte)255);
-        private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
-        private static readonly float TAILLE_NUAGE =10.0f;
-        private static readonly int NB_ETOILES = 500;// conf.getParametre(CAT, "NbEtoiles", 2000);
-        private static readonly int NB_NUAGES =30;// conf.getParametre(CAT, "NbEtoiles", 2000);
+        private static readonly byte ALPHA_ETOILE = conf.getParametre(CAT, "Alpha Etoile", (byte)255);
+        private static readonly byte ALPHA_NUAGE = conf.getParametre(CAT, "Alpha Nuage", (byte)64);
+        private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille Etoiles", 0.25f);
+        private static readonly float TAILLE_NUAGE =conf.getParametre(CAT, "Taille Nuages", 10.0f);
+        private static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles",100);
+        private static readonly int NB_NUAGES = conf.getParametre(CAT, "NbNuages", 50);
+        private static readonly float RATIO_VITESSE_NUAGES = conf.getParametre(CAT, "Ratio Vitesse Nuages", 1.5f);
         private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
         private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = 10f;// conf.getParametre(CAT, "VitesseRotation", 50f);
-        private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 8f);
+        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 10f);
+        private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.1f);
+        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5.0f);
         private static readonly float DELTA_COULEUR = conf.getParametre(CAT, "Delta Couleur", 0.1f);
+        private static bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
         #endregion
         const float VIEWPORT_X = 5f;
         const float VIEWPORT_Y = 5f;
@@ -93,10 +97,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _textureEtoile?.Destroy(_gl);
         }
 
-        protected static bool Probabilite(float f)
-        {
-            return FloatRandom(0, 1.0f) < f;
-        }
+
 
         private static void NouvelleEtoile(ref Etoile f)
         {
@@ -120,11 +121,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 f = new Nuage();
             f.x = FloatRandom(-VIEWPORT_X * 6, VIEWPORT_X * 6);
             f.z = -VIEWPORT_Z;
-            f.y = FloatRandom(-VIEWPORT_Y * 3, VIEWPORT_Y * 3);
+            f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
 
-            f.rR = FloatRandom(0.4f, 1.7f)/ 256.0f;
-            f.rG = FloatRandom(0.4f, 1.7f)/ 256.0f;
-            f.rB = FloatRandom(0.4f, 1.7f)/ 256.0f;
+            f.rR = FloatRandom(0.4f, 1.8f)/ 256.0f;
+            f.rG = FloatRandom(0.4f, 1.8f)/ 256.0f;
+            f.rB = FloatRandom(0.4f, 1.8f)/ 256.0f;
 
             f.tx = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.ty = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
@@ -144,7 +145,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             RenderStart(CHRONO_TYPE.RENDER);
 #endif
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
-            float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
+            float rotationCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
 
             float[] fcolor = { couleur.R / 1024.0f, couleur.G / 1024.0f, couleur.B / 1024.0f, 1 };
 
@@ -159,17 +160,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Fog(OpenGL.GL_FOG_MODE, OpenGL.GL_LINEAR);
             gl.Fog(OpenGL.GL_FOG_COLOR, fcolor);
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.1f);
-            gl.Fog(OpenGL.GL_FOG_START, VIEWPORT_Z * 0.5f);
+            gl.Fog(OpenGL.GL_FOG_START, VIEWPORT_Z * 1.0f);
             gl.Fog(OpenGL.GL_FOG_END, _zCamera);
 
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Translate(0, 0, -_zCamera);
-            gl.Rotate(0, 0, vitesseCamera);
+            gl.Rotate(0, 0, rotationCamera);
 
             _textureNuage.Bind(gl);
-            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
+            gl.BlendFunc(OpenGL.GL_SRC_ALPHA, ADDITIVE ? OpenGL.GL_ONE : OpenGL.GL_ONE_MINUS_SRC_ALPHA);
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Nuage nuage in _nuages)
             {
@@ -186,7 +187,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Etoile o in _etoiles)
             {
-                gl.Color(couleur.R * o.rR / 256.0f, couleur.G * o.rG / 256.0f, couleur.B * o.rB / 256.0f, ALPHA_ETOILE/256.0f);
+                gl.Color(couleur.R * o.rR / 256.0f, couleur.G * o.rG / 256.0f, couleur.B * o.rB / 256.0f, ALPHA_ETOILE/255.0f);
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - o.tx, o.y - o.ty, o.z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - o.tx, o.y + o.ty, o.z);
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + o.tx, o.y + o.ty, o.z);
@@ -253,7 +254,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 }
                 else
                 {
-                    _nuages[i].z += deltaZ;
+                    _nuages[i].z += deltaZ * RATIO_VITESSE_NUAGES;
                     _nuages[i].x += deltaWind;
                 }
             }
@@ -271,6 +272,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
 
+        }
+
+        /// <summary>
+        /// Reception d'une touche
+        /// </summary>
+        /// <param name="f"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
+        public override bool KeyDown(Form f, Keys k)
+        {
+            switch (k)
+            {
+                case TOUCHE_ADDITIVE:
+                    ADDITIVE = !ADDITIVE;
+                    break;
+
+                default:
+                    return base.KeyDown(f, k);
+            }
+
+            return true;
         }
 
 #if TRACER

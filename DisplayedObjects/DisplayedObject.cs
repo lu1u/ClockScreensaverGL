@@ -83,6 +83,17 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _noFrame++;
             return (_noFrame % NbFrames == 0);
         }
+
+        /// <summary>
+        /// Retourne True avec une certaine probabilite
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
+        protected static bool Probabilite(float f)
+        {
+            return FloatRandom(0, 1.0f) < f;
+        }
+
         public static Color getCouleurOpaqueAvecAlpha(Color color, byte alpha)
         {
             float a = (float)alpha / 255.0f;
@@ -185,7 +196,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 for (int x = 0; x < source.Height; x++)
                 {
                     Color oc = source.GetPixel(i, x);
-                    int grayScale = (int)((oc.R * 0.3f * ratioR) + (oc.G * 0.59f) + (oc.B * 0.11f)) %255;
+                    int grayScale = (int)((oc.R * 0.3f * ratioR) + (oc.G * 0.59f) + (oc.B * 0.11f)) % 255;
                     //int grayScale = (int)((oc.R * 0.33) + (oc.G * 0.33) + (oc.B * 0.33));
                     destination.SetPixel(i, x, Color.FromArgb(oc.A, grayScale, grayScale, grayScale));
                 }
@@ -200,7 +211,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// <param name="g"></param>
         /// <param name="source"></param>
         /// <returns></returns>
-        static public Bitmap BitmapDesaturee(Image source, float saturation )
+        static public Bitmap BitmapDesaturee(Image source, float saturation)
         {
             Bitmap destination = new Bitmap(source.Width, source.Height);
 
@@ -219,7 +230,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             float i = (1.0f - saturation) * bWeight + saturation;
 
             // Create a Graphics
-            using (Graphics gr = Graphics.FromImage(destination) )
+            using (Graphics gr = Graphics.FromImage(destination))
             {
                 {
                     // ColorMatrix elements
@@ -246,7 +257,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                         GraphicsUnit.Pixel, imgAttribs);
                 }
             }
-                
+
             return destination;
         }
         /// <summary>
@@ -327,10 +338,31 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _gl.DeleteTextures(1, textures);
         }
 
+
+        protected void DessineCube(OpenGL gl, float MAX_X, float MAX_Y, float MAX_Z)
+        {
+            gl.Disable(OpenGL.GL_LIGHTING);
+            gl.Begin(OpenGL.GL_LINES);
+            gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z);
+            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z);
+            gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z);
+            gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z);
+
+            gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z);
+
+            gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z);
+            gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z);
+            gl.End();
+        }
+
         #region Chrono
 #if TRACER
         long moyennedureeR = 0;
-        long moyennedureeD = 0;
+            long moyennedureeD = 0;
         protected enum CHRONO_TYPE { RENDER, DEPLACE };
 
         private Stopwatch chronoRender = new Stopwatch();
