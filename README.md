@@ -8,7 +8,7 @@ Features:
 - digital clock and date
 - GDI+ and OpenGL graphics
 - french citations (can be easily changed to add your own texts)
-- 10 different backgrounds
+- 10+ different backgrounds
 
 Snow background:
 ![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-1.png)
