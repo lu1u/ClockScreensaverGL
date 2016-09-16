@@ -15,8 +15,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     /// </summary>
     public sealed class BandeMinute : BandeVerticale
     {
+
         public BandeMinute(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaMinute", (byte)60))
+            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaMinute", (byte)60))
         {
         }
         protected override void getValue(Temps maintenant, out float value, out float decalage)

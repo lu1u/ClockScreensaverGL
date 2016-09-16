@@ -9,6 +9,7 @@
 using System;
 using System.Drawing;
 using SharpGL;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
 {
@@ -18,7 +19,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
     public abstract class BandeHorizontale : Bande
     {
         public const string CAT = "BandeHorizontale";
-        public static readonly int TailleFonte = conf.getParametre(CAT, "TailleFonte", 30);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        public static readonly int TailleFonte = c.getParametre( "TailleFonte", 30);
         private OpenGLFonte _glFonte;
 
         public BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha)
@@ -26,10 +28,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
 
         {
             _glFonte = new OpenGLFonte(gl, "0123456789", TailleFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, conf.getParametre(CAT, "VY", 20f));
+            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre( "VY", 20f));
             _taillebande = new SizeF(largeur, _hauteurFonte * 2);
         }
-       
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
+
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
             float decalage, valeur;

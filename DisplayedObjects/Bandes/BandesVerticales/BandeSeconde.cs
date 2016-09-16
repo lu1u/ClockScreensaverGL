@@ -13,12 +13,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     /// <summary>
     /// Description of BandeSeconde.
     /// </summary>
-    public sealed class BandeSeconde : BandeVerticale
+    public class BandeSeconde : BandeVerticale
     {
 
 
         public BandeSeconde(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaSeconde", (byte)100))
+            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaSeconde", (byte)100))
         {
         }
 

@@ -9,6 +9,7 @@
 using System;
 using System.Drawing;
 using SharpGL;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
 {
@@ -18,17 +19,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     public abstract class BandeVerticale : Bande
     {
         public const string CAT = "BandeVerticale";
-        public static readonly int  TailleFonte = conf.getParametre(CAT, "TailleFonte", 30);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        public static readonly int  TailleFonte = c.getParametre("TailleFonte", 30);
         private OpenGLFonte _glFonte;
         
         public BandeVerticale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineY, float Px, int largeur, byte alpha)
             : base(gl, valMax, intervalle, largeurcase, TailleFonte, origineY, largeur, alpha)
         {
             _glFonte = new OpenGLFonte(gl, "0123456789", TailleFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _trajectoire = new TrajectoireDiagonale(Px, _origine, conf.getParametre(CAT, "VY", 20f), 0);
+            _trajectoire = new TrajectoireDiagonale(Px, _origine, c.getParametre("VY", 20f), 0);
             _taillebande = new SizeF(_hauteurFonte * 2, largeur);
         }
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
             float decalage, valeur;

@@ -1,4 +1,5 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
@@ -37,13 +38,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
     {
         #region Parametres
         public const string CAT = "Neige.OpenGL";
-
-        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f);
-        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 20.0f);
-        private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseChute", 5);
-        private static readonly float VITESSE_DELTA_VENT = conf.getParametre(CAT, "VitesseDeltaVent", 1f);
-        private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
-        private readonly int NB_FLOCONS = conf.getParametre(CAT, "NbFlocons", 5000);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f);
+        private static readonly float VITESSE_Y = c.getParametre("VitesseChute", 5);
+        private static readonly float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
+        private static readonly float MAX_VENT = c.getParametre("MaxVent", 3f);
+        private readonly int NB_FLOCONS = c.getParametre("NbFlocons", 5000);
         #endregion
 
         sealed private class Flocon
@@ -93,9 +94,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _flocons[i].type = r.Next(0, NB_TYPES_FLOCONS);
             }
 
-            texture.Create(gl, Config.getImagePath("flocons.png"));
+            texture.Create(gl, Configuration.getImagePath("flocons.png"));
         }
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();

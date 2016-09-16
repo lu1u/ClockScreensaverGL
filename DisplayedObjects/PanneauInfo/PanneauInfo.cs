@@ -1,4 +1,5 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Textes;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -13,20 +14,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
     {
         #region PARAMETRES
         public const string CAT = "PanneauInfos";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         private readonly int NB_MAX_LIGNES = 5;
 
-        private static readonly float ORIGINE_X = conf.getParametre(CAT, "OrigineX", 1000.0f);
-        private static readonly float ORIGINE_Y = conf.getParametre(CAT, "OrigineY", 500.0f);
-        private static readonly float VITESSE_X = conf.getParametre(CAT, "VitesseX", 30.0f);
-        private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseY", -21.0f);
-        private static readonly byte ALPHA = (byte)conf.getParametre(CAT, "Alpha", 200);
-        private static readonly float DELTA_ALPHA = conf.getParametre(CAT, "DeltaAlpha", 0.7f);
-        private static readonly string EXE_DEEZERINFO = conf.getParametre(CAT, "DeezerInfo", getDeezerInfoDirectory());
-        public static readonly bool EXE_KILL = conf.getParametre(CAT, "Tuer deezer info", false);
-        private static readonly int DIAMETRE_HORLOGE = 300;// conf.getParametre(CAT, "Diametre Horloge", 360);
+        private static readonly float ORIGINE_X = c.getParametre("OrigineX", 1000.0f);
+        private static readonly float ORIGINE_Y = c.getParametre("OrigineY", 500.0f);
+        private static readonly float VITESSE_X = c.getParametre("VitesseX", 30.0f);
+        private static readonly float VITESSE_Y = c.getParametre("VitesseY", -21.0f);
+        private static readonly byte ALPHA = (byte)c.getParametre("Alpha", 200);
+        private static readonly float DELTA_ALPHA = c.getParametre("DeltaAlpha", 0.7f);
+        private static readonly string EXE_DEEZERINFO = c.getParametre("DeezerInfo", getDeezerInfoDirectory());
+        public static readonly bool EXE_KILL = c.getParametre("Tuer deezer info", false);
+        private static readonly int DIAMETRE_HORLOGE = 300;// c.getParametre("Diametre Horloge", 360);
         private static readonly int MARGE_HORLOGE = 20;
-        private static readonly int TAILLE_TEXTE_HEURE = conf.getParametre(CAT, "Taille texte heure", 32);
-        private static readonly int TAILLE_TEXTE_DATE = conf.getParametre(CAT, "Taille texte date", 32);
+        private static readonly int TAILLE_TEXTE_HEURE = c.getParametre("Taille texte heure", 32);
+        private static readonly int TAILLE_TEXTE_DATE = c.getParametre("Taille texte date", 32);
         private static readonly int MARGE_TEXTE_HEURE = 20;
         //private static readonly int MARGE_TEXTE_DATE = 20;
 
@@ -39,17 +41,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
         }
 
-        public static readonly int NB_LIGNES_INFO_MAX = conf.getParametre(CAT, "Nb lignes info max", 4);
-        public static readonly int DELAI_DEEZER = conf.getParametre(CAT, "DeezerInfo Delai (secondes)", 5);
-        public static readonly int TAILLE_TITRE_METEO = conf.getParametre(CAT, "Taille Titre Meteo", 24);
-        public static readonly int TAILLE_ICONE_METEO = conf.getParametre(CAT, "Taille Icone Meteo", 56);
-        public static readonly int TAILLE_TEXTE_METEO = conf.getParametre(CAT, "Taille Texte Meteo", 18);
-        public static readonly int TAILLE_TEMPERATURE_METEO = conf.getParametre(CAT, "Taille Temperature Meteo", 18);
-        public static readonly float RATIO_INTERLIGNE = conf.getParametre(CAT, "RatioInterligne", 0.99f);
-        public static readonly int MARGE_H = conf.getParametre(CAT, "MargeH", 12);
-        public static readonly int MARGE_V = conf.getParametre(CAT, "MargeV", 12);
-        public static readonly int LARGEUR_JAUGE = conf.getParametre(CAT, "LargeurJauge", 8);
-        public static readonly int TAILLE_TEXTE_LEVER_COUCHER = conf.getParametre(CAT, "Taille Texte Lever", 24);
+        public static readonly int NB_LIGNES_INFO_MAX = c.getParametre("Nb lignes info max", 4);
+        public static readonly int DELAI_DEEZER = c.getParametre("DeezerInfo Delai (secondes)", 5);
+        public static readonly int TAILLE_TITRE_METEO = c.getParametre("Taille Titre Meteo", 24);
+        public static readonly int TAILLE_ICONE_METEO = c.getParametre("Taille Icone Meteo", 56);
+        public static readonly int TAILLE_TEXTE_METEO = c.getParametre("Taille Texte Meteo", 18);
+        public static readonly int TAILLE_TEMPERATURE_METEO = c.getParametre("Taille Temperature Meteo", 18);
+        public static readonly float RATIO_INTERLIGNE = c.getParametre("RatioInterligne", 0.99f);
+        public static readonly int MARGE_H = c.getParametre("MargeH", 12);
+        public static readonly int MARGE_V = c.getParametre("MargeV", 12);
+        public static readonly int LARGEUR_JAUGE = c.getParametre("LargeurJauge", 8);
+        public static readonly int TAILLE_TEXTE_LEVER_COUCHER = c.getParametre("Taille Texte Lever", 24);
 
         #endregion PARAMETRES ;
 
@@ -76,7 +78,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             _dateTexte = new DateTexte(gl, 0, 0, TAILLE_TEXTE_DATE);
             CreerBitmap(gl);
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -204,7 +209,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                         g.DrawLine(p, MARGE_H, Y, _bitmap.Width - MARGE_H, Y);
 
                     Y += TAILLE_TITRE_METEO / 2;
-                    g.DrawImage(Image.FromFile(Config.getImagePath("music-note.png")), MARGE_H, Y, TAILLE_ICONE_METEO, TAILLE_ICONE_METEO);
+                    g.DrawImage(Image.FromFile(Configuration.getImagePath("music-note.png")), MARGE_H, Y, TAILLE_ICONE_METEO, TAILLE_ICONE_METEO);
 
                     g.DrawString(_deezer.Infos, fonteTexteMeteo, Brushes.White, MARGE_H + TAILLE_ICONE_METEO, Y);
                     Y += g.MeasureString(_deezer.Infos, fonteTexte).Height * RATIO_INTERLIGNE;

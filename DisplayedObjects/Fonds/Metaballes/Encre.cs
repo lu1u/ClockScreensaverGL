@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -17,8 +18,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 	public class Encre : Metaballes
 	{
 		const String CAT = "Encre" ;
-		
-		static float TailleMax		;
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+
+        static float TailleMax		;
 		static float TailleMin ;
 		static float IntensiteMax ;
 		static float IntensiteMin ;
@@ -41,20 +43,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
 		{
 			base.GetPreferences( ref L, ref H, ref N, ref C ) ;
-			L = conf.getParametre( CAT, "Largeur", 400 ) ;
-			H = conf.getParametre( CAT, "Hauteur", 300 ) ;
-			N = conf.getParametre( CAT, "Nombre", 10 ) ;
-			C = conf.getParametre( CAT, "Niveaux", 512 ) ;
+			L = c.getParametre("Largeur", 400 ) ;
+			H = c.getParametre("Hauteur", 300 ) ;
+			N = c.getParametre("Nombre", 10 ) ;
+			C = c.getParametre("Niveaux", 512 ) ;
 		}
 		
 		protected override void ConstruitMetaballes()
 		{
-			TailleMax		= conf.getParametre( CAT, "TailleMax", 100f ) ;
-			TailleMin		= conf.getParametre( CAT, "TailleMin", 30f ) ;
-			IntensiteMax	= conf.getParametre( CAT, "IntensiteMax", 1.0f) ;
+			TailleMax		= c.getParametre("TailleMax", 100f ) ;
+			TailleMin		= c.getParametre("TailleMin", 30f ) ;
+			IntensiteMax	= c.getParametre("IntensiteMax", 1.0f) ;
 			
 			IntensiteMin	= 0 ;
-			NbMax = conf.getParametre( CAT, "Nombre", 10 ) ;
+			NbMax = c.getParametre("Nombre", 10 ) ;
 			NbMetaballes = 0 ;
 			xEmetteur = Largeur/2 ;
 			

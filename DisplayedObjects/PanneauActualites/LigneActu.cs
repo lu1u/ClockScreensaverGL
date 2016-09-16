@@ -85,7 +85,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
                     sz = g.MeasureString(_source, fSource);
                     largeurSource = sz.Width;
-                    hauteurSource = sz.Height * 1.1f;
+                    hauteurSource = sz.Height * 1.05f;
 
                     if (afficheDesc)
                     {
@@ -95,7 +95,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     }
 
                     largeur = Math.Max(largeurSource, Math.Max(largeurTitre, largeurDesc)) + 50 ;
-                    hauteur = (hauteurSource + hauteurTitre + hauteurDesc) * 1.1f;
+                    hauteur = (hauteurSource + hauteurTitre + hauteurDesc) * 1.05f;
 
                     if (_bitmap != null)
                         largeur += _bitmap.Width;

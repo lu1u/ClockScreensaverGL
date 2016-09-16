@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using ClockScreenSaverGL.Config;
 using ClockScreenSaverGL.DisplayedObjects.Textes;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
@@ -21,29 +22,30 @@ namespace ClockScreenSaverGL.DisplayedObjects
     /// <summary>
     /// Description of HorlogeRonde.
     /// </summary>
-    public sealed class HorlogeRonde : DisplayedObject, IDisposable
-    {
-
-
+    public class HorlogeRonde : DisplayedObject, IDisposable
+    {        
         #region Parametres
         public const string CAT = "HorlogeRonde";
-
-        private readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)200);
-        private static readonly int HAUTEUR_FONTE = 32;// conf.getParametre(CAT, "HauteurFonte1", (byte)38);
-        private static readonly int HAUTEUR_FONTE2 = 14;// conf.getParametre(CAT, "HauteurFonte2", (byte)16);
-        public static readonly byte ALPHA_AIGUILLES = conf.getParametre(CAT, "AlphaAiguilles", (byte)250);
-        public static readonly float EPAISSEUR_TROTTEUSE = conf.getParametre(CAT, "EpaisseurTrotteuse", 8.0f);
-        public static readonly float EPAISSEUR_MINUTES = conf.getParametre(CAT, "EpaisseurMinutes", 15.0f);
-        public static readonly float EPAISSEUR_HEURES = conf.getParametre(CAT, "EpaisseurHeure", 25.0f);
-        public static readonly float EPAISSEUR_TROTTEUSE_CONTINUE = conf.getParametre(CAT, "EpaisseurTrotteuseContinue", 2.0f);
-        public static readonly float RATIO_TROTTEUSE_CONTINUE = conf.getParametre(CAT, "RatioTrotteuseContinue", 0.15f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private readonly byte ALPHA = c.getParametre("Alpha", (byte)200);
+        private static readonly int HAUTEUR_FONTE = 32;// c.getParametre("HauteurFonte1", (byte)38);
+        private static readonly int HAUTEUR_FONTE2 = 14;// c.getParametre("HauteurFonte2", (byte)16);
+        public static readonly byte ALPHA_AIGUILLES = c.getParametre("AlphaAiguilles", (byte)250);
+        public static readonly float EPAISSEUR_TROTTEUSE = c.getParametre("EpaisseurTrotteuse", 8.0f);
+        public static readonly float EPAISSEUR_MINUTES = c.getParametre("EpaisseurMinutes", 15.0f);
+        public static readonly float EPAISSEUR_HEURES = c.getParametre("EpaisseurHeure", 25.0f);
+        public static readonly float EPAISSEUR_TROTTEUSE_CONTINUE = c.getParametre("EpaisseurTrotteuseContinue", 2.0f);
+        public static readonly float RATIO_TROTTEUSE_CONTINUE = c.getParametre("RatioTrotteuseContinue", 0.15f);
 
         private static readonly Color COULEUR_AIGUILLES = Color.FromArgb(ALPHA_AIGUILLES, 0, 0, 0);
         private static readonly Color COULEUR_GRADUATIONS = Color.FromArgb(ALPHA_AIGUILLES, 0, 0, 0);
         //private DateTexte _date;
         //private HeureTexte _heure;
         #endregion
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public float _pX, _pY;
         private int _diametre;
         private float _rayon;

@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
 using System.Drawing;
 
@@ -6,15 +7,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
     class BoidsPoissons : Boids
     {
-        const String CAT = "BoidsPoissons";
-        
-        static readonly int NB = conf.getParametre(CAT, "Nb", 1000);
-        static readonly float MAX_SPEED = conf.getParametre(CAT, "Max Speed", 20f);
-        static readonly float MAX_FORCE = conf.getParametre(CAT, "Max force", 0.1f);
-        static readonly float TAILLE = conf.getParametre(CAT, "Taille", 25f);
-        static readonly float DISTANCE_VOISINS = conf.getParametre(CAT, "Distance voisins", 25.0f);
-        static readonly float SEPARATION = conf.getParametre(CAT, "Separation", 7.5f);
-        static readonly float VITESSE_ANIMATION = conf.getParametre(CAT, "Vitesse animation", 1.5f);
+        const String CAT = "Boids Poissons";
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+
+        static readonly int NB = c.getParametre("Nb", 1000);
+        static float MAX_SPEED = c.getParametre("Max Speed", 20f,true);
+        static float MAX_FORCE = c.getParametre("Max force", 0.1f, true);
+        static float TAILLE = c.getParametre("Taille", 2.5f, true);
+        static float DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
+        static float SEPARATION = c.getParametre("Separation", 7.5f, true);
+        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 1.5f, true);
+        static int NB_IMAGES_ANIMATION = c.getParametre("Nb Images animation", 10, true);
         static readonly float HAUTEUR_CORPS = 0.5f * TAILLE;
         static readonly float LONGUEUR_TETE = 0.75f * TAILLE;
         static readonly float LONGUEUR_CORPS = 1.25f * TAILLE;
@@ -22,8 +25,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         static readonly float HAUTEUR_QUEUE = 0.35f * TAILLE;
 
 
-        public BoidsPoissons(OpenGL gl) : base(gl, NB, TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION)
+        public BoidsPoissons(OpenGL gl) : base(gl, c, NB, TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION, NB_IMAGES_ANIMATION)
         {
+            c.setListenerParametreChange(onConfigurationChangee);
+        }
+
+
+        protected override void onConfigurationChangee(string valeur)
+        {
+            MAX_SPEED = c.getParametre("Max Speed", 20f, true);
+            MAX_FORCE = c.getParametre("Max force", 0.1f, true);
+            TAILLE = c.getParametre("Taille", 2.5f, true);
+            DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
+            SEPARATION = c.getParametre("Separation", 7.5f, true);
+            VITESSE_ANIMATION = c.getParametre("Vitesse animation", 1.5f, true);
+            NB_IMAGES_ANIMATION = c.getParametre("Nb Images animation", 10, true);
+            base.onConfigurationChangee(valeur);
         }
 
         public override void ClearBackGround(OpenGL gl, Color couleur)
@@ -36,6 +53,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         }
 
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         protected override void InitOpenGL(OpenGL gl, Temps maintenant, Color couleur)
         {
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
@@ -113,5 +134,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             gl.End();
         }
 
+        protected override Boid newBoid()
+        {
+            return new Boid(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
+        }
     }
 }

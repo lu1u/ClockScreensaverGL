@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Collections;
@@ -21,17 +22,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     /// <summary>
     /// Description of Citations.
     /// </summary>
-    public sealed partial class Citations : Texte, IDisposable
+    public partial class Citations : Texte, IDisposable
     {
         #region Parametres
         const string CAT = "Citation";
-        public static readonly float RATIO_TAILLE_FONTE = conf.getParametre(CAT, "RatioTailleFonte", 0.4f);
-        private static readonly int DELAI_CHANGEMENT = 1000 * 60 * conf.getParametre(CAT, "DelaiChange", 1);	// x minutes entre les changements de citation
-        private static readonly int TailleMax = conf.getParametre(CAT, "TailleMax", 48);
-        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)250);
-        private static readonly float VX = conf.getParametre(CAT, "VX", -15);
-        private static readonly float VY = 0;// conf.getParametre(CAT, "VX", 0);
-        private static readonly int TAILLE_FONTE = conf.getParametre(CAT, "Taille Fonte", 30);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        public static readonly float RATIO_TAILLE_FONTE = c.getParametre("RatioTailleFonte", 0.4f);
+        private static readonly int DELAI_CHANGEMENT = 1000 * 60 * c.getParametre("DelaiChange", 1);	// x minutes entre les changements de citation
+        private static readonly int TailleMax = c.getParametre("TailleMax", 48);
+        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)250);
+        private static readonly float VX = c.getParametre("VX", -15);
+        private static readonly float VY = 0;// c.getParametre("VX", 0);
+        private static readonly int TAILLE_FONTE = c.getParametre("Taille Fonte", 30);
         #endregion
         List<string> _citations;
         
@@ -51,7 +53,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             _derniereCitation = new Random().Next(0, _citations.Count - 1);
             ChoisitCitation(f);
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();
@@ -76,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private void LireCitations()
         {
             _citations = new List<string>();
-            string nomFichier = Path.Combine(Config.getDataDirectory(), "citations.txt");
+            string nomFichier = Path.Combine(Configuration.getDataDirectory(), "citations.txt");
             try
             {
                 StreamReader file = new StreamReader(nomFichier, Encoding.UTF8);
@@ -252,7 +257,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
                 return true;
             }
 
-            return false;
+            return base.KeyDown(f, k); ;
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)

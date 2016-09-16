@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using ClockScreenSaverGL.DisplayedObjects;
+using ClockScreenSaverGL.Config;
+
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     /// <summary>
@@ -19,7 +21,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     public class Couleur : Fond
     {
         const string CAT = "Couleur";
-        static readonly byte FondCouleur = conf.getParametre(MainForm.CAT, "Valeur", (byte)100);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static readonly byte FondCouleur = c.getParametre( "Valeur", (byte)100);
 
         protected List<DisplayedObject> listeObjets = new List<DisplayedObject>();
 
@@ -39,6 +42,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         }
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         /*
         public override void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {

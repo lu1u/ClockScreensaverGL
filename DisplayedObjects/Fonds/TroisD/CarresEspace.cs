@@ -6,26 +6,27 @@ using System.Drawing;
 using GLfloat = System.Single;
 using GLuint = System.UInt32;
 using System.Windows.Forms;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class CarresEspace : TroisD
+    public class CarresEspace : TroisD
     {
         #region Parametres
         public const string CAT = "CarresEspace";
-
-        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)250);
-        private static readonly float TAILLE_CARRE = conf.getParametre(CAT, "Taille", 5.0f);
-        private static readonly int NB_PAVES = conf.getParametre(CAT, "Nb", 200);
-        private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
-        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 50f);
-        private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 8f);
-        private static bool WIRE_FRAME = conf.getParametre(CAT, "WireFrame", false);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)250);
+        private static readonly float TAILLE_CARRE = c.getParametre("Taille", 5.0f);
+        private static readonly int NB_PAVES = c.getParametre("Nb", 200);
+        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
+        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
+        private static readonly float VITESSE = c.getParametre("Vitesse", 8f);
+        private static bool WIRE_FRAME = c.getParametre("WireFrame", false);
         #endregion
         const int VIEWPORT_X = 60;
         const int VIEWPORT_Y = 30;
@@ -40,7 +41,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private readonly Carre[] _Carres;
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
-        
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         /// <summary>
         /// Constructeur
         /// </summary>
@@ -222,12 +226,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 case TOUCHE_INVERSER:
                     {
                         WIRE_FRAME = !WIRE_FRAME;
-                        conf.setParametre(CAT, "WireFrame", WIRE_FRAME);
+                        c.setParametre( "WireFrame", WIRE_FRAME);
                         return true;
                     }
 
             }
-            return false;
+            return base.KeyDown(f, k);
         }
 #if TRACER
         public override String DumpRender()

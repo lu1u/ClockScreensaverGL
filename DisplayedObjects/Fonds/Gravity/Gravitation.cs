@@ -9,28 +9,30 @@ using System.Drawing;
 using System;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
     class Gravitation : Fond, IDisposable
     {
         public const String CAT = "Gravitation";
-        public static readonly double RAYON_UNIVERS = 10;// conf.getParametre(CAT, "Rayon Univers", 8);
-        public static readonly double RATIO_RAYON = 0.0005;// conf.getParametre(CAT, "Ratio rayon planetes", 0.025);
-        public static readonly double RATIO_DISTANCES = 0.5 ;// conf.getParametre(CAT, "Ratio rayon planetes", 0.025);
-        public static double VITESSE_SUIVI_TO = 0.5;// conf.getParametre(CAT, "Vitesse ciblage", 0.4);
-        public static double VITESSE_SUIVI_FROM = 0.005;// conf.getParametre(CAT, "Vitesse camera", 0.2);
-        public static double DISTANCE_MIN_CAMERA = 15 * RATIO_RAYON ;// conf.getParametre(CAT, "Distance min camera", 0.5);
-        public static readonly double VITESSE = 0.001;// conf.getParametre(CAT, "Vitesse", 0.001);
-        public static readonly int DETAILS = conf.getParametre(CAT, "Details", 5);
-        public static readonly int DETAILS_ASTEROIDS = conf.getParametre(CAT, "Details asteroides", 30);
-        public static int NIVEAU_DETAIL = conf.getParametre(CAT, "Niveau detail", 800);
+        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
+        public static readonly double RAYON_UNIVERS = 10;// c.getParametre("Rayon Univers", 8);
+        public static readonly double RATIO_RAYON = 0.0005;// c.getParametre("Ratio rayon planetes", 0.025);
+        public static readonly double RATIO_DISTANCES = 0.5 ;// c.getParametre("Ratio rayon planetes", 0.025);
+        public static double VITESSE_SUIVI_TO = 0.5;// c.getParametre("Vitesse ciblage", 0.4);
+        public static double VITESSE_SUIVI_FROM = 0.005;// c.getParametre("Vitesse camera", 0.2);
+        public static double DISTANCE_MIN_CAMERA = 15 * RATIO_RAYON ;// c.getParametre("Distance min camera", 0.5);
+        public static readonly double VITESSE = 0.001;// c.getParametre("Vitesse", 0.001);
+        public static readonly int DETAILS = c.getParametre("Details", 5);
+        public static readonly int DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30);
+        public static int NIVEAU_DETAIL = c.getParametre("Niveau detail", 800);
         public static float ANGLE_VISION = 70;
-        public static int NB_ROCHEUSES = conf.getParametre(CAT, "Nb Rocheuses", 4);
-        public static int NB_ASTEROIDES = conf.getParametre(CAT, "Nb Asteroides", 300);
-        public static int NB_GAZEUSES = conf.getParametre(CAT, "Nb Gazeuses", 4);
+        public static int NB_ROCHEUSES = c.getParametre("Nb Rocheuses", 4);
+        public static int NB_ASTEROIDES = c.getParametre("Nb Asteroides", 300);
+        public static int NB_GAZEUSES = c.getParametre("Nb Gazeuses", 4);
         
-        public static readonly int DELAI_CHANGE_CAMERA = conf.getParametre(CAT, "Delai Change Camera", 40000);
+        public static readonly int DELAI_CHANGE_CAMERA = c.getParametre("Delai Change Camera", 40000);
         private TimerIsole _changeCamera = new TimerIsole(DELAI_CHANGE_CAMERA);
 
         private Texture _textureTop, _textureBottom, _textureLeft, _textureRight, _textureFront, _textureBack;
@@ -52,17 +54,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public Gravitation(OpenGL gl) : base(gl)
         {
             _textureTop = new Texture();
-            _textureTop.Create(gl, Config.getImagePath("universe_top.png"));
+            _textureTop.Create(gl, Configuration.getImagePath("universe_top.png"));
             _textureBottom = new Texture();
-            _textureBottom.Create(gl, Config.getImagePath("universe_bottom.png"));
+            _textureBottom.Create(gl, Configuration.getImagePath("universe_bottom.png"));
             _textureLeft = new Texture();
-            _textureLeft.Create(gl, Config.getImagePath("universe_left.png"));
+            _textureLeft.Create(gl, Configuration.getImagePath("universe_left.png"));
             _textureRight = new Texture();
-            _textureRight.Create(gl, Config.getImagePath("universe_right.png"));
+            _textureRight.Create(gl, Configuration.getImagePath("universe_right.png"));
             _textureFront = new Texture();
-            _textureFront.Create(gl, Config.getImagePath("universe_front.png"));
+            _textureFront.Create(gl, Configuration.getImagePath("universe_front.png"));
             _textureBack = new Texture();
-            _textureBack.Create(gl, Config.getImagePath("universe_back.png"));
+            _textureBack.Create(gl, Configuration.getImagePath("universe_back.png"));
             
             #region AjouteCorps
             Planete.InitPlanetes(gl);
@@ -162,6 +164,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraTo = new Vecteur3Ddbl(Corps[to]._position);
         }
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         private static void construitAffiche()
         {
             /*_affiche?.Destroy(_gl);
@@ -423,7 +429,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             if (maintenant._intervalle < (1.0f / 40.0))
             {
                 NIVEAU_DETAIL++;
-                conf.setParametre(CAT, "Niveau detail", NIVEAU_DETAIL);
+                c.setParametre("Niveau detail", NIVEAU_DETAIL);
                 construitAffiche();
             }
             else
@@ -431,7 +437,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 if (NIVEAU_DETAIL > 10)
                 {
                     NIVEAU_DETAIL--;
-                    conf.setParametre(CAT, "Niveau detail", NIVEAU_DETAIL);
+                    c.setParametre("Niveau detail", NIVEAU_DETAIL);
                     construitAffiche();
                 }
         }
@@ -552,7 +558,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                     m.shininess++;
                     return true;
                 default:
-                    return false;
+                    return base.KeyDown(f, k); ;
             }
         }
 

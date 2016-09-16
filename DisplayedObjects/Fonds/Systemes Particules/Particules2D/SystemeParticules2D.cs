@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
 {
-    public class SystemeParticules2D : Fond, IDisposable
+    public abstract class SystemeParticules2D : Fond, IDisposable
     {
         public readonly int NB_MAX_PARTICULES = 50000;
         readonly float SEUIL_ALPHA = 0.005f;

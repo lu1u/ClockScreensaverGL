@@ -6,31 +6,33 @@ using System.Drawing;
 using GLfloat = System.Single;
 using GLuint = System.UInt32;
 using System.Windows.Forms;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class Nebuleuse : TroisD, IDisposable
+    public class Nebuleuse : TroisD, IDisposable
     {
         #region Parametres
         public const string CAT = "Nebuleuse";
+        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
+        private static readonly int NB_ETOILES = c.getParametre("NbEtoiles", 100);
+        private static readonly int NB_NUAGES = c.getParametre("NbNuages", 50);
+        private static float RATIO_VITESSE_NUAGES = c.getParametre("Ratio Vitesse Nuages", 1.5f, true);
+        private static float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
+        private static float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
+        private static float VITESSE_ROTATION = c.getParametre("VitesseRotation", 10f, true);
+        private static float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.1f, true);
+        private static float VITESSE = c.getParametre("Vitesse", 5.0f, true);
+        private static float DELTA_COULEUR = c.getParametre("Delta Couleur", 0.1f, true);
+        private static bool ADDITIVE = c.getParametre("Additive", false, true);
+        private static byte ALPHA_ETOILE = c.getParametre("Alpha Etoile", (byte)255, true);
+        private static byte ALPHA_NUAGE = c.getParametre("Alpha Nuage", (byte)64);
+        private static float TAILLE_ETOILE = c.getParametre("Taille Etoiles", 0.25f, true);
+        private static float TAILLE_NUAGE = c.getParametre("Taille Nuages", 10.0f, true);
 
-        private static readonly byte ALPHA_ETOILE = conf.getParametre(CAT, "Alpha Etoile", (byte)255);
-        private static readonly byte ALPHA_NUAGE = conf.getParametre(CAT, "Alpha Nuage", (byte)64);
-        private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille Etoiles", 0.25f);
-        private static readonly float TAILLE_NUAGE =conf.getParametre(CAT, "Taille Nuages", 10.0f);
-        private static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles",100);
-        private static readonly int NB_NUAGES = conf.getParametre(CAT, "NbNuages", 50);
-        private static readonly float RATIO_VITESSE_NUAGES = conf.getParametre(CAT, "Ratio Vitesse Nuages", 1.5f);
-        private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
-        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 10f);
-        private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.1f);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5.0f);
-        private static readonly float DELTA_COULEUR = conf.getParametre(CAT, "Delta Couleur", 0.1f);
-        private static bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
         #endregion
         const float VIEWPORT_X = 5f;
         const float VIEWPORT_Y = 5f;
@@ -42,10 +44,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private class Etoile
         {
             public float x, y, z;
-            public float tx, ty;
             public float rR, rG, rB;
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         private class Nuage
         {
             public float x, y, z;
@@ -69,8 +73,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _etoiles = new Etoile[NB_ETOILES];
             _nuages = new Nuage[NB_NUAGES];
-            _textureNuage.Create(gl, Config.getImagePath("nuage_nebuleuse.png"));
-            _textureEtoile.Create(gl, Config.getImagePath("etoile.png"));
+            _textureNuage.Create(gl, Configuration.getImagePath("nuage_nebuleuse.png"));
+            _textureEtoile.Create(gl, Configuration.getImagePath("etoile.png"));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -87,8 +91,27 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 // Au debut, on varie la distance des etoiles
                 _nuages[i].z = FloatRandom(-VIEWPORT_Z, _zCamera);
             }
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
+        protected override void onConfigurationChangee(string valeur)
+        {
+            RATIO_VITESSE_NUAGES = c.getParametre("Ratio Vitesse Nuages", 1.5f, true);
+            PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
+            PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
+            VITESSE_ROTATION = c.getParametre("VitesseRotation", 10f, true);
+            VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.1f, true);
+            VITESSE = c.getParametre("Vitesse", 5.0f, true);
+            DELTA_COULEUR = c.getParametre("Delta Couleur", 0.1f, true);
+            ADDITIVE = c.getParametre("Additive", false, true);
+            ALPHA_ETOILE = c.getParametre("Alpha Etoile", (byte)255, true);
+            ALPHA_NUAGE = c.getParametre("Alpha Nuage", (byte)64, true);
+            TAILLE_ETOILE = c.getParametre("Taille Etoiles", 0.25f, true);
+            TAILLE_NUAGE = c.getParametre("Taille Nuages", 10.0f, true);
+
+            base.onConfigurationChangee(valeur);
+        }
 
         public override void Dispose()
         {
@@ -110,9 +133,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.rR = FloatRandom(0.7f, 1.3f);
             f.rG = FloatRandom(0.7f, 1.3f);
             f.rB = FloatRandom(0.7f, 1.3f);
-
-            f.tx = TAILLE_ETOILE;
-            f.ty = TAILLE_ETOILE;
         }
 
         private static void NouveauNuage(ref Nuage f)
@@ -123,9 +143,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.z = -VIEWPORT_Z;
             f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
 
-            f.rR = FloatRandom(0.4f, 1.8f)/ 256.0f;
-            f.rG = FloatRandom(0.4f, 1.8f)/ 256.0f;
-            f.rB = FloatRandom(0.4f, 1.8f)/ 256.0f;
+            f.rR = FloatRandom(0.4f, 1.8f) / 256.0f;
+            f.rG = FloatRandom(0.4f, 1.8f) / 256.0f;
+            f.rB = FloatRandom(0.4f, 1.8f) / 256.0f;
 
             f.tx = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.ty = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
@@ -187,11 +207,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Etoile o in _etoiles)
             {
-                gl.Color(couleur.R * o.rR / 256.0f, couleur.G * o.rG / 256.0f, couleur.B * o.rB / 256.0f, ALPHA_ETOILE/255.0f);
-                gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - o.tx, o.y - o.ty, o.z);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - o.tx, o.y + o.ty, o.z);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + o.tx, o.y + o.ty, o.z);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(o.x + o.tx, o.y - o.ty, o.z);
+                gl.Color(couleur.R * o.rR / 256.0f, couleur.G * o.rG / 256.0f, couleur.B * o.rB / 256.0f, ALPHA_ETOILE / 256.0f);
+                gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
+                gl.TexCoord(1.0f, 0.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
             }
             gl.End();
 
@@ -292,7 +312,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     return base.KeyDown(f, k);
             }
 
-            return true;
+            return base.KeyDown(f, k); ;
         }
 
 #if TRACER

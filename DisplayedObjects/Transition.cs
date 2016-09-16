@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
 using System.Drawing;
 
@@ -7,9 +8,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
     public class Transition : DisplayedObject
     {
         public const string CAT = "Transition";
-        public readonly float DureeTransition = conf.getParametre(CAT, "Duree transition", 2000) / 1000.0f; // En millisecondes
-        public readonly int LARGEUR_TEXTURE = conf.getParametre(CAT, "Largeur texture", 512);
-        public readonly int HAUTEUR_TEXTURE = conf.getParametre(CAT, "Hauteur texture", 512);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        public readonly float DureeTransition = c.getParametre("Duree transition", 2000) / 1000.0f; // En millisecondes
+        public readonly int LARGEUR_TEXTURE = c.getParametre("Largeur texture", 512);
+        public readonly int HAUTEUR_TEXTURE = c.getParametre("Hauteur texture", 512);
         private DisplayedObject _objetTransition;
         private float _etapeTransition = 0;
         private bool _transitionEnCours = false;
@@ -26,7 +28,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _texture = createEmptyTexture(LARGEUR_TEXTURE, HAUTEUR_TEXTURE);
         }
 
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();

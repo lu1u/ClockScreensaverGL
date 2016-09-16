@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 {
@@ -6,18 +7,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
     {
         #region Parametres
         public const string CAT = "Cubes";
-        private readonly int NB_CUBES_X = conf.getParametre(CAT, "Nb Cubes X", 30);
-        private readonly int NB_CUBES_Y = conf.getParametre(CAT, "Nb Cubes Y", 30);
-        private readonly int NB_CUBES_Z = conf.getParametre(CAT, "Nb Cubes Z", 30);
-        private float TAILLE_CUBE = conf.getParametre(CAT, "Taille cubes", 0.06f);
-        private float ECART_CUBE = conf.getParametre(CAT, "Ecart cubes", 0.4f);
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private readonly int NB_CUBES_X = c.getParametre("Nb Cubes X", 30);
+        private readonly int NB_CUBES_Y = c.getParametre("Nb Cubes Y", 30);
+        private readonly int NB_CUBES_Z = c.getParametre("Nb Cubes Z", 30);
+        private float TAILLE_CUBE = c.getParametre("Taille cubes", 0.06f);
+        private float ECART_CUBE = c.getParametre("Ecart cubes", 0.4f);
         #endregion
 
 
 
-        public Cubes(OpenGL gl) : base(gl, CAT)
+        public Cubes(OpenGL gl) : base(gl, c)
         {
-            VITESSE_ROTATION = conf.getParametre(CAT, "Vitesse Rotation", 0.5f);
+            VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 0.5f);
             TRANSLATE_Z = ECART_CUBE * NB_CUBES_Z * -0.55f;
             LIGHTPOS[0] = ECART_CUBE * NB_CUBES_X;
             LIGHTPOS[1] = ECART_CUBE * NB_CUBES_Y;
@@ -26,6 +28,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
         }
 
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         protected override void GenererListe(OpenGL gl)
         {
             float ORIGINE_X = -(NB_CUBES_X * 0.5f) * ECART_CUBE;

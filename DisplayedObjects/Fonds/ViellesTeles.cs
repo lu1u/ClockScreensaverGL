@@ -11,12 +11,14 @@ using System.Windows.Forms;
 using System.Drawing;
 using SharpGL.SceneGraph.Assets;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
     public class ViellesTeles : Fond
     {
         public const String CAT = "ToTexture";
+        static CategorieConfiguration c = Configuration.getCategorie(CAT);
         protected float[] COL_AMBIENT = { 0.21f, 0.12f, 0.05f, 1.0f };
         protected float[] COL_DIFFUSE = { 0.7f, 0.72f, 0.78f, 1.0f };
         protected float[] COL_SPECULAR = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -39,7 +41,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             public Vecteur3D position, angle, taille;
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         const int NB_QUADS = 10;
         List<Quad> quads = new List<Quad>();
 
@@ -67,7 +72,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             quads.Add(quad);
 
             tv = new Texture();
-            tv.Create(gl, Config.getImagePath(r.Next(2) == 0? "tv1.png" : "tv2.png"));
+            tv.Create(gl, Configuration.getImagePath(r.Next(2) == 0? "tv1.png" : "tv2.png"));
         }
 
         public override void Dispose()
@@ -78,7 +83,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
         protected static DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(18))
+            switch (r.Next(7))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -97,7 +102,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 14: return new Engrenages(gl);
                 case 15: return new ADN(gl);
                 case 16: return new Cubes(gl);
-                case 17: return new Grille(gl);
+                //case 17: return new Grille(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

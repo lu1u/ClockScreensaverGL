@@ -6,9 +6,11 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -22,16 +24,37 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
 
         }
+
         public override void ClearBackGround(OpenGL gl, Color c)
         {
             gl.ClearColor(0, 0, 0, 0);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
         }
 
-        protected void fillConsole(OpenGL gl)
+        public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
+        {
+            base.AfficheOpenGL(gl, maintenant, tailleEcran, couleur);
+        }
+
+        public virtual void fillConsole(OpenGL gl)
+        {
+            getConfiguration()?.fillConsole(gl);
+        }
+        /// <summary>
+        /// Appellee en notification d'un changement interactif de configuration
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected virtual void onConfigurationChangee(string valeur)
         {
 
         }
+        public override bool KeyDown(Form f, Keys k)
+        {
+            CategorieConfiguration c = getConfiguration();
+            if (c?.KeyDown(k) == true)
+                return true;
 
+            return base.KeyDown(f, k);
+        }
     }
 }

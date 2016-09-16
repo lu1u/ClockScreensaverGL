@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             _nom = nom;
             _gl = gl;
             this.texture = new Texture();
-            this.texture.Create(gl, Config.getImagePath(texture));
+            this.texture.Create(gl, Configuration.getImagePath(texture));
             _material = material;
             _taille = new Vecteur3Ddbl( rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON, rayon * Gravitation.RATIO_RAYON);
             _masse = masse;
@@ -37,7 +38,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 _rAnneauInt = (float)(rAnneauI * Gravitation.RATIO_RAYON);
                 _rAnneauExt = (float)(rAnneauE * Gravitation.RATIO_RAYON);
                 textureAnneaux = new Texture();
-                textureAnneaux.Create(gl, Config.getImagePath(textureAnneau));
+                textureAnneaux.Create(gl, Configuration.getImagePath(textureAnneau));
             }
             isBillboard = isbb;
         }

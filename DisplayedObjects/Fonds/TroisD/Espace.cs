@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
@@ -10,20 +11,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     /// <summary>
     /// Description of Neige.
     /// </summary>
-    public sealed class Espace : TroisD, IDisposable
+    public class Espace : TroisD, IDisposable
     {
         #region Parametres
-        public const string CAT = "Espace.OpenGL";
+        public const string CAT = "Espace";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)255);
-        private static readonly float TAILLE_ETOILE = conf.getParametre(CAT, "Taille", 0.15f);
-        private static readonly int NB_ETOILES = conf.getParametre(CAT, "NbEtoiles", 2000);
-        private static readonly float PERIODE_TRANSLATION = conf.getParametre(CAT, "PeriodeTranslation", 13.0f);
-        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 50f);
-        private static readonly float VITESSE_TRANSLATION = conf.getParametre(CAT, "VitesseTranslation", 0.2f);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 8f);
-        private static readonly float DELTA_COULEUR = conf.getParametre(CAT, "Delta Couleur", 0.1f);
+        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)255);
+        private static readonly float TAILLE_ETOILE = c.getParametre("Taille", 0.15f);
+        private static readonly int NB_ETOILES = c.getParametre("NbEtoiles", 2000);
+        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
+        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
+        private static readonly float VITESSE = c.getParametre("Vitesse", 8f);
+        private static readonly float DELTA_COULEUR = c.getParametre("Delta Couleur", 0.1f);
         #endregion
         const float VIEWPORT_X = 5f;
         const float VIEWPORT_Y = 5f;
@@ -47,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, Config.getImagePath("etoile.png"));
+            _texture.Create(gl, Configuration.getImagePath("etoile.png"));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -58,7 +60,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             }
         }
 
-        
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();

@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -19,7 +20,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 	public class Neige : Metaballes
 	{
 		const string CAT = "NeigeMeta" ;
-		static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
 		static int NbMax;
 		//static DateTime derniereCreation = DateTime.Now ;
         TimerIsole _timer = new TimerIsole(800);
@@ -27,30 +29,36 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		public Neige(OpenGL gl, int cx, int cy) : base(gl)
         {
 		}
-		
-		/// <summary>
-		/// Lit les preferences a chaque version de metaballes
-		/// </summary>
-		/// <param name="L"></param>
-		/// <param name="H"></param>
-		/// <param name="N"></param>
-		/// <param name="C"></param>
-		protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
+
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
+
+        /// <summary>
+        /// Lit les preferences a chaque version de metaballes
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="H"></param>
+        /// <param name="N"></param>
+        /// <param name="C"></param>
+        protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
 		{
 			base.GetPreferences( ref L, ref H, ref N, ref C ) ;
-			L = conf.getParametre(CAT, "Largeur", 400 ) ;
-			H = conf.getParametre(CAT, "Hauteur", 300 ) ;
-			C = conf.getParametre(CAT, "Niveaux", 512 ) ;
-            RatioCouleur = conf.getParametre(CAT, "RatioCouleur", 0.9f);
+			L = c.getParametre("Largeur", 400 ) ;
+			H = c.getParametre("Hauteur", 300 ) ;
+			C = c.getParametre("Niveaux", 512 ) ;
+            RatioCouleur = c.getParametre("RatioCouleur", 0.9f);
 		}
 		
 		protected override void ConstruitMetaballes()
 		{
-			TailleMax =conf.getParametre(CAT, "TailleMax", 40 ) ;
-			TailleMin = conf.getParametre(CAT, "TailleMin", 30 ) ;
-			IntensiteMax = conf.getParametre(CAT, "IntensiteMax", 1.0f ) ; ;
-			IntensiteMin = conf.getParametre(CAT, "IntensiteMin", 0.5f) ;
-			NbMax = conf.getParametre(CAT, "Nombre", 40 ) ;
+			TailleMax =c.getParametre("TailleMax", 40 ) ;
+			TailleMin = c.getParametre("TailleMin", 30 ) ;
+			IntensiteMax = c.getParametre("IntensiteMax", 1.0f ) ; ;
+			IntensiteMin = c.getParametre("IntensiteMin", 0.5f) ;
+			NbMax = c.getParametre("Nombre", 40 ) ;
 			NbMetaballes = 0 ;
 			_metaballes = new MetaBalle[NbMax] ;
 			NouvelleMetaballe(ref _metaballes[0]) ;

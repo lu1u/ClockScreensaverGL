@@ -1,10 +1,11 @@
-﻿///
+﻿// 
+
+using ClockScreenSaverGL.Config;
+///
 /// Exploite l'API Yahoo Weather
 /// https://developer.yahoo.com/weather/documentation.html  (annulee par yahoo depuis mars 2016)
 /// http://www.meteofrance.com/previsions-meteo-france/crolles/38920
 /// 
-// 
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -51,7 +52,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private static void LitCorrespondancesMeteo()
         {
             _liensIcones.Clear();
-            string fichierSources = Path.Combine(Config.getDataDirectory(), "icones meteo.txt");
+            string fichierSources = Path.Combine(Configuration.getDataDirectory(), "icones meteo.txt");
             // Lire le fichier des sources d'actualite
             StreamReader file = new StreamReader(fichierSources);
             string line;

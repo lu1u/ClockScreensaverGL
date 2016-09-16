@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     public sealed class BandeHeure : BandeVerticale
     {
         public BandeHeure(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaHeure", (byte)40))
+            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaHeure", (byte)40))
         {
         }
 

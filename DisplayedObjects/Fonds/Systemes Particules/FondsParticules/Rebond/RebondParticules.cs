@@ -1,4 +1,5 @@
-﻿///
+﻿using ClockScreenSaverGL.Config;
+///
 /// Particules qui rebondissent les unes contre les autres
 ///
 ///
@@ -12,11 +13,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
     {
         #region Parametres
         const String CAT = "RebondParticules";
-        static readonly int NB_PARTICULES = conf.getParametre(CAT, "Nb Particules", 50);
-        readonly float GRAVITE_X = conf.getParametre(CAT, "Gravite X", 0.0f);
-        readonly float GRAVITE_Y = conf.getParametre(CAT, "Gravite Y", -0.5f);
-        readonly float TAILLE_PARTICULE = conf.getParametre(CAT, "TailleParticule", 0.05f);
-        readonly float VITESSE_PARTICULE = conf.getParametre(CAT, "VitesseParticule", 0.2f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static readonly int NB_PARTICULES = c.getParametre("Nb Particules", 50);
+        readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f);
+        readonly float GRAVITE_Y = c.getParametre("Gravite Y", -0.5f);
+        readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.05f);
+        readonly float VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.2f);
         #endregion
 
         public RebondParticules(OpenGL gl) : base(gl, NB_PARTICULES)
@@ -26,7 +28,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                 AjouteParticule();
 
             couleurParticules = COULEUR_PARTICULES.BLANC;
-            AjouteTexture(Config.getImagePath("balle.png"), 1);
+            AjouteTexture(Configuration.getImagePath("balle.png"), 1);
 
             AjouteModificateur(new ModificateurGravite(GRAVITE_X, GRAVITE_Y));
             AjouteModificateur(new ModificateurRebond(MIN_X, MAX_X, MIN_Y, MAX_Y));
@@ -34,6 +36,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurVitesseLineaire());
         }
 
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         /// <summary>
         /// Ajoute une particule
         /// </summary>

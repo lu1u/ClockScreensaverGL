@@ -6,6 +6,7 @@
  * 
  * To change this template use Tools  Options  Coding  Edit Standard Headers.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -21,22 +22,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     /// </summary>
     public class HeureTexte : Texte
     {
-        static int HAUTEUR_FONTE = conf.getParametre(CAT, "TailleFonte", 80);
         const string CAT = "HeureTexte";
-        //readonly float RATIO_FONTE = 0.75f;// conf.getParametre(CAT, "RatioFonte", 0.70f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static int HAUTEUR_FONTE = c.getParametre("TailleFonte", 80);
+        //readonly float RATIO_FONTE = 0.75f;// c.getParametre("RatioFonte", 0.70f);
         //const int NB_SYMBOLES = 11;
         //Texture[] _symboles = new Texture[NB_SYMBOLES];
         //readonly int[] _largeurChiffre = new int[NB_SYMBOLES];
         //readonly float _hauteurChiffre;
         readonly OpenGLFonte _glFonte;
         public HeureTexte(OpenGL gl, int Px, int Py)
-            : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, -conf.getParametre(CAT, "VX", 15), 0, conf.getParametre(CAT, "TailleFonte", 80), conf.getParametre(CAT, "Alpha", (byte)180))
+            : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, -c.getParametre("VX", 15), 0, c.getParametre("TailleFonte", 80), c.getParametre("Alpha", (byte)180))
         {
             _glFonte = new OpenGLFonte(gl, "?0123456789:", HAUTEUR_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public HeureTexte(OpenGL gl, int Px, int Py, int tailleFonte)
-           : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, 0, 0, tailleFonte, conf.getParametre(CAT, "Alpha", (byte)180))
+           : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, 0, 0, tailleFonte, c.getParametre("Alpha", (byte)180))
         {
             HAUTEUR_FONTE = tailleFonte;
             _glFonte = new OpenGLFonte(gl, "?0123456789:", HAUTEUR_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);

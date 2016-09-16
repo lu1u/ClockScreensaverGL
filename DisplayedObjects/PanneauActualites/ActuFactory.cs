@@ -1,5 +1,6 @@
 ﻿////
 //// Gestion de la liste des actualites avec chargement des flux RSS en tache de fond
+using ClockScreenSaverGL.Config;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -46,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
         private void LireFichierSources()
         {
             _sourcesActualite = new List<string>();
-            string fichierSources = Path.Combine(Config.getDataDirectory(), "actualites.txt");
+            string fichierSources = Path.Combine(Configuration.getDataDirectory(), "actualites.txt");
 
             // Lire le fichier des sources d'actualite
             StreamReader file = new StreamReader(fichierSources);
@@ -89,7 +90,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             int sourceALire = Actualites.SourceCourante();
 
             // repete tant qu'on signale pas la fin de ce thread
-            while (_continuerThread)
+            while (_continuerThread && _sourcesActualite.Count < Actualites.MAX_LIGNES)
             {
                 sourceALire++;
                 if (sourceALire >= _sourcesActualite.Count)
@@ -99,11 +100,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 LitRSS(_sourcesActualite[sourceALire]);
 
                 // Attendre un petit peu
-                do
+                //do
                 {
                     Thread.Sleep(1000);
                 }
-                while (_continuerThread && _sourcesActualite.Count >= Actualites.MAX_LIGNES);
+                //while (_continuerThread && _sourcesActualite.Count >= Actualites.MAX_LIGNES);
             }
             Actualites.SourceCourante(sourceALire);
 
@@ -141,6 +142,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 {
                     XmlNode RSSSubNode;
                     RSSSubNode = RSSNode.SelectSingleNode("pubDate");
+                    if (!_continuerThread)
+                        return;
 
                     if (recent(RSSSubNode))
                     {

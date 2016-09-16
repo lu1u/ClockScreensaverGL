@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Quadrics;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
 
         const String CAT = "ADN";
-        static readonly float RAYON_SPHERE = conf.getParametre(CAT, "Rayon Sphere", 1.5f);
-        static readonly float LONGUEUR_RAYON = conf.getParametre(CAT, "Longueur Rayon", 10.0f);
-        static readonly int NB_ETAGES = conf.getParametre(CAT, "Nb Etages", 20);
-        static readonly float MIN_Y = conf.getParametre(CAT, "MinY", -18.0f);
-        static readonly float MAX_Y = conf.getParametre(CAT, "Max", 18.0f);
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static float RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, true);
+        static float LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, true);
+        static int NB_ETAGES = c.getParametre("Nb Etages", 20);
+        static float MIN_Y = c.getParametre("MinY", -18.0f, true);
+        static float MAX_Y = c.getParametre("Max", 18.0f, true);
 
         private class Etage
         {
@@ -26,21 +28,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         };
 
         List<Etage> _etages = new List<Etage>();
-       /* static readonly float SHININESS = conf.getParametre(CAT, "Shininess", 30f);
-        static readonly float[] COL_SPECULAR = { 0.5f, 0.5f, 0.5f, 1.0f };//{
-        static readonly float[] COL_AMBIENT = { 0.0f, 0.0f, 0.0f, 1.0f };//{ 
-        static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
-        static readonly float[] COL_DIFFUSE = { 0.4f, 0.4f, 0.4f, 1.0f };
-        static readonly float[] COL_LIGHTPOS = { -3f, 2f, 3, 1 };
-        static readonly float[] SPECULAR_LIGHT = { 0.8f, 0.8f, 0.8f }; //set the 
-        static readonly float[] AMBIENT_LIGHT = { 0.01f, 0.01f, 0.01f }; //set the 
-        static readonly float[] DIFFUSE_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
-        */
+        /* static readonly float SHININESS = c.getParametre("Shininess", 30f);
+         static readonly float[] COL_SPECULAR = { 0.5f, 0.5f, 0.5f, 1.0f };//{
+         static readonly float[] COL_AMBIENT = { 0.0f, 0.0f, 0.0f, 1.0f };//{ 
+         static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
+         static readonly float[] COL_DIFFUSE = { 0.4f, 0.4f, 0.4f, 1.0f };
+         static readonly float[] COL_LIGHTPOS = { -3f, 2f, 3, 1 };
+         static readonly float[] SPECULAR_LIGHT = { 0.8f, 0.8f, 0.8f }; //set the 
+         static readonly float[] AMBIENT_LIGHT = { 0.01f, 0.01f, 0.01f }; //set the 
+         static readonly float[] DIFFUSE_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
+         */
         Sphere _sphere = new Sphere();
         Cylinder _cylindre = new Cylinder();
         float _angle = 0;
-        public ADN(OpenGL gl) : base(gl, CAT)
+        public ADN(OpenGL gl) : base(gl)
         {
+            c.setListenerParametreChange(onConfigurationChangee);
+
             float y = MAX_Y;
             float angle = 0;
             for (int i = 0; i < NB_ETAGES; i++)
@@ -57,7 +61,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 _etages.Add(e);
 
                 y -= (MAX_Y - MIN_Y) / (float)NB_ETAGES;
-                angle +=360.0f / (float)NB_ETAGES;
+                angle += 360.0f / (float)NB_ETAGES;
             }
 
             _sphere.CreateInContext(gl);
@@ -65,7 +69,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _sphere.NormalOrientation = SharpGL.SceneGraph.Quadrics.Orientation.Outside;
             _sphere.QuadricDrawStyle = SharpGL.SceneGraph.Quadrics.DrawStyle.Fill;
             _sphere.Slices = 40;
-            _sphere.Stacks = 40 ;
+            _sphere.Stacks = 40;
             _sphere.Radius = RAYON_SPHERE;
 
             _cylindre.CreateInContext(gl);
@@ -74,9 +78,31 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _cylindre.QuadricDrawStyle = SharpGL.SceneGraph.Quadrics.DrawStyle.Fill;
             _cylindre.Slices = 20;
             _cylindre.Stacks = 20;
-            _cylindre.TopRadius =0.5f;
+            _cylindre.TopRadius = 0.5f;
             _cylindre.BaseRadius = 0.5f;
-            _cylindre.Height = LONGUEUR_RAYON ;
+            _cylindre.Height = LONGUEUR_RAYON;
+        }
+
+        /// <summary>
+        /// Appellee en notification d'un changement interactif de configuration
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected override void onConfigurationChangee(string valeur)
+        {
+            RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, true);
+            LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, true);
+            NB_ETAGES = c.getParametre("Nb Etages", 20);
+            MIN_Y = c.getParametre("MinY", -18.0f, true);
+            MAX_Y = c.getParametre("Max", 18.0f, true);
+            _sphere.Radius = RAYON_SPHERE;
+            _cylindre.Height = LONGUEUR_RAYON;
+
+            base.onConfigurationChangee(valeur);
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
         }
         public override void ClearBackGround(OpenGL gl, Color c)
         {
@@ -125,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 gl.Rotate(0, e._angle, 0);
                 {
                     gl.PushMatrix();
-                    col[0] = couleur.R * e.ratioRa / 256.0f * COL_COLOR[0] ;
+                    col[0] = couleur.R * e.ratioRa / 256.0f * COL_COLOR[0];
                     col[1] = couleur.G * e.ratioGa / 256.0f * COL_COLOR[1];
                     col[2] = couleur.B * e.ratioBa / 256.0f * COL_COLOR[2];
                     gl.Color(col);
@@ -136,7 +162,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     gl.PopMatrix();
                 }
 
-                
+
                 {
                     gl.PushMatrix();
                     col[0] = couleur.R * e.ratioRb / 256.0f * COL_COLOR[0];
@@ -152,9 +178,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
                 {
                     gl.PushMatrix();
-                    col[0] = couleur.R  / 256.0f * COL_COLOR[0];
-                    col[1] = couleur.G  / 256.0f * COL_COLOR[1];
-                    col[2] = couleur.B  / 256.0f * COL_COLOR[2];
+                    col[0] = couleur.R / 256.0f * COL_COLOR[0];
+                    col[1] = couleur.G / 256.0f * COL_COLOR[1];
+                    col[2] = couleur.B / 256.0f * COL_COLOR[2];
                     gl.Color(col);
                     gl.Translate(0, e.y, -LONGUEUR_RAYON / 2);
                     _cylindre.PushObjectSpace(gl);
@@ -164,15 +190,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 }
                 gl.PopMatrix();
             }
-
-            fillConsole(gl);
         }
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
             _angle += 2.5f * maintenant._intervalle;
 
-            foreach( Etage e in _etages)
+            foreach (Etage e in _etages)
                 e.y += maintenant._intervalle * 1.0f;
 
             Etage et = _etages.First();

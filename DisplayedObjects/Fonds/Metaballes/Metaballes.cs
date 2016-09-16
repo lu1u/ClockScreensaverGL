@@ -13,19 +13,21 @@ using System.Windows.Forms;
 using System.Text;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using ClockScreenSaverGL.Config;
+
 namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
 
     public class Metaballes : Fonds.Fond
     {
         #region Parametres
-        const string CAT = "Metaballes";
         const string COULEURS_INVERSE = "CouleursInversees";
         const string NEGATIF = "NegatifCouleurs";
-
-        protected double RatioCouleur = conf.getParametre(CAT, "RatioCouleur", 0.3f);	// Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
-        protected static bool _CouleursInverses = conf.getParametre(CAT, COULEURS_INVERSE, false);
-        protected static bool _NegatifCouleurs = conf.getParametre(CAT, NEGATIF, false);
+        const string CAT = "Metaballes";
+        private static CategorieConfiguration cat = Configuration.getCategorie(CAT);
+        protected double RatioCouleur;
+        protected static bool _CouleursInverses;
+        protected static bool _NegatifCouleurs;
         #endregion
 
         protected readonly int NiveauxCouleurs;
@@ -35,12 +37,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         protected int NbMetaballes;
         protected MetaBalle[] _metaballes;
         protected readonly int Largeur, Hauteur;
-        
+
         /// <summary>
         /// Constructeur
         /// </summary>
-        public Metaballes(OpenGL gl ) : base(gl)
+        public Metaballes(OpenGL gl) : base(gl)
         {
+            CategorieConfiguration c = getConfiguration();
+            RatioCouleur = c.getParametre("RatioCouleur", 0.3f, true);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
+            _CouleursInverses = c.getParametre(COULEURS_INVERSE, false, true);
+            _NegatifCouleurs = c.getParametre(NEGATIF, false, true);
+
+
             GetPreferences(ref Largeur, ref Hauteur, ref NbMetaballes, ref NiveauxCouleurs);
             _palette = new int[NiveauxCouleurs];
             if (_metaballes == null)
@@ -48,8 +56,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 
             _rectBitmap = new Rectangle(0, 0, Largeur, Hauteur);
             ConstruitMetaballes();
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
+        /// <summary>
+        /// Appellee en notification d'un changement interactif de configuration
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected override void onConfigurationChangee(string valeur)
+        {
+            CategorieConfiguration c = getConfiguration();
+            RatioCouleur = c.getParametre("RatioCouleur", 0.3f, true);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
+            _CouleursInverses = c.getParametre(COULEURS_INVERSE, false, true);
+            _NegatifCouleurs = c.getParametre(NEGATIF, false, true);
+
+            base.onConfigurationChangee(valeur);
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return cat;
+        }
         /// <summary>
         /// Lit les preferences a chaque version de metaballes
         /// </summary>
@@ -59,18 +87,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// <param name="C"></param>
         protected virtual void GetPreferences(ref int L, ref int H, ref int N, ref int C)
         {
-            L = conf.getParametre(CAT, "Largeur", 400);
-            H = conf.getParametre(CAT, "Hauteur", 300);
-            N = conf.getParametre(CAT, "Nombre", 8);
-            C = conf.getParametre(CAT, "NiveauxCouleur", 255);
+            CategorieConfiguration c = getConfiguration();
+            L = c.getParametre("Largeur", 400);
+            H = c.getParametre("Hauteur", 300);
+            N = c.getParametre("Nombre", 8);
+            C = c.getParametre("NiveauxCouleur", 255);
         }
 
         protected virtual void ConstruitMetaballes()
         {
-            float TailleMax = conf.getParametre(CAT, "TailleMax", 200);
-            float TailleMin = conf.getParametre(CAT, "TailleMin", 70);
-            float IntensiteMax = conf.getParametre(CAT, "IntensiteMax", 0.8f);
-            float IntensiteMin = conf.getParametre(CAT, "IntensiteMin", 0.2f);
+            CategorieConfiguration c = getConfiguration();
+
+            float TailleMax = c.getParametre("TailleMax", 200);
+            float TailleMin = c.getParametre("TailleMin", 70);
+            float IntensiteMax = c.getParametre("IntensiteMax", 0.8f);
+            float IntensiteMin = c.getParametre("IntensiteMin", 0.2f);
 
             for (int i = 0; i < NbMetaballes; i++)
                 _metaballes[i] = new MetaBalle(FloatRandom(IntensiteMin, IntensiteMax),	// Intensite
@@ -109,7 +140,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
                     _metaballes[i]._Vy = -Math.Abs(_metaballes[i]._Vy);
             }
 
-           
+
 
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
@@ -173,7 +204,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             //gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
             updatePalette(couleur);
-            
+
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
 
@@ -182,16 +213,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
                 Texture text = new Texture();
                 text.Create(gl, bmp);
                 text.Bind(gl);
-            gl.Begin(OpenGL.GL_QUADS);
-            gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, 1);
-            gl.TexCoord(0.0f, 1.0f); gl.Vertex(0, 0);
-            gl.TexCoord(1.0f, 1.0f); gl.Vertex(1, 0);
-            gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
-            gl.End();
+                gl.Begin(OpenGL.GL_QUADS);
+                gl.TexCoord(0.0f, 0.0f); gl.Vertex(0, 1);
+                gl.TexCoord(0.0f, 1.0f); gl.Vertex(0, 0);
+                gl.TexCoord(1.0f, 1.0f); gl.Vertex(1, 0);
+                gl.TexCoord(1.0f, 0.0f); gl.Vertex(1, 1);
+                gl.End();
 
-            uint[] textures = { text.TextureName };
-            gl.DeleteTextures(1, textures);
-            text.Destroy(gl);
+                uint[] textures = { text.TextureName };
+                gl.DeleteTextures(1, textures);
+                text.Destroy(gl);
             }
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();
@@ -212,23 +243,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// <returns></returns>
         public override bool KeyDown(Form f, Keys k)
         {
+            CategorieConfiguration c = getConfiguration();
+            
             switch (k)
             {
                 case TOUCHE_INVERSER:
                     {
                         _CouleursInverses = !_CouleursInverses;
-                        conf.setParametre(CAT, COULEURS_INVERSE, _CouleursInverses);
+                        c.setParametre(COULEURS_INVERSE, _CouleursInverses);
                         return true;
                     }
 
                 case TOUCHE_NEGATIF:
                     {
                         _NegatifCouleurs = !_NegatifCouleurs;
-                        conf.setParametre(CAT, NEGATIF, _NegatifCouleurs);
+                        c.setParametre(NEGATIF, _NegatifCouleurs);
                         return true;
                     }
             }
-            return false;
+            return base.KeyDown(f, k); ;
         }
 
 

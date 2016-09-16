@@ -1,4 +1,5 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.Particules;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles;
 using ClockScreenSaverGL.DisplayedObjects.Metaballes;
@@ -13,25 +14,29 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
     {
         const String CAT = "MultiChaines";
-        static readonly float ANGLE_ECRANS = conf.getParametre(CAT, "Angle ecrans", 180.0f);
-        static readonly int NB_ECRANS_LARGEUR   = conf.getParametre(CAT, "Nb ecrans largeur", 6);
-        static readonly int NB_ECRANS_HAUTEUR = conf.getParametre(CAT, "Nb ecrans Hauteur", 3);
-        static readonly float MARGE_ECRAN       = conf.getParametre(CAT, "Marge ecrans", 0.3f);
-        static readonly float HAUTEUR_ECRAN = conf.getParametre(CAT, "Hauteur ecrans", 0.75f);
-        static readonly float LARGEUR_ECRAN = conf.getParametre(CAT, "Largeur ecrans", 0.9f);
-        static readonly float RAYON_RONDE = conf.getParametre(CAT, "Rayon courbe", 4.0f);
-        static readonly int NB_CHAINES = conf.getParametre(CAT, "Nb chaines", 4);
-        static readonly int LARGEUR_TEXTURE = conf.getParametre(CAT, "Largeur texture", 256);
-        static readonly int HAUTEUR_TEXTURE = conf.getParametre(CAT, "Hauteur texture", 256);
-        static readonly float FOV = conf.getParametre(CAT, "FOV", 75.0f);
-        static readonly float VITESSE_PANORAMIQUE = conf.getParametre(CAT, "Vitesse panoramique", 0.5f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static readonly float ANGLE_ECRANS = c.getParametre("Angle ecrans", 180.0f);
+        static readonly int NB_ECRANS_LARGEUR   = c.getParametre("Nb ecrans largeur", 6);
+        static readonly int NB_ECRANS_HAUTEUR = c.getParametre("Nb ecrans Hauteur", 3);
+        static readonly float MARGE_ECRAN       = c.getParametre("Marge ecrans", 0.3f);
+        static readonly float HAUTEUR_ECRAN = c.getParametre("Hauteur ecrans", 0.75f);
+        static readonly float LARGEUR_ECRAN = c.getParametre("Largeur ecrans", 0.9f);
+        static readonly float RAYON_RONDE = c.getParametre("Rayon courbe", 4.0f);
+        static readonly int NB_CHAINES = c.getParametre("Nb chaines", 4);
+        static readonly int LARGEUR_TEXTURE = c.getParametre("Largeur texture", 256);
+        static readonly int HAUTEUR_TEXTURE = c.getParametre("Hauteur texture", 256);
+        static readonly float FOV = c.getParametre("FOV", 75.0f);
+        static readonly float VITESSE_PANORAMIQUE = c.getParametre("Vitesse panoramique", 0.5f);
         int[,] Chaines;
         DisplayedObject[] _objets;
         float angle = 0;
         TimerIsole timerNouvelleChaine = new TimerIsole(10000);
         TimerIsole timerEcranChangeChaine = new TimerIsole(1000);
         uint[] textures;
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         ///////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Constructeur
@@ -73,7 +78,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <returns></returns>
         protected static DisplayedObject InitObjet(OpenGL gl)
         {
-            switch (r.Next(18))
+            switch (r.Next(17))
             {
                 case 0: return new Neige(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
                 case 1: return new Encre(gl, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height);
@@ -92,7 +97,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case 14: return new Engrenages(gl);
                 case 15: return new ADN(gl);
                 case 16: return new Cubes(gl);
-                case 17: return new Grille(gl);
+                //case 17: return new Grille(gl);
                 default:
                     return new Metaballes.Metaballes(gl);
             }

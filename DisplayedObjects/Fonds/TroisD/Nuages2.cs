@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Drawing;
@@ -12,14 +13,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         #region Parametres
         public const string CAT = "Nuages2";
-
-        private static readonly float ALPHA = conf.getParametre(CAT, "Alpha", (byte)1.0f);
-        private static readonly int NB_NUAGES = conf.getParametre(CAT, "NbNuages", 200);
-        private static readonly float TAILLE_NUAGE = conf.getParametre(CAT, "Taille", 9);
-        private static readonly float ROULIS_MAX = conf.getParametre(CAT, "Roulis max", 3);
-        private static readonly float VITESSE_ROULIS = conf.getParametre(CAT, "Vitesse roulis", 0.1f);
-        private static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 2.0f);
-        private static readonly float VITESSE_LATERALE = conf.getParametre(CAT, "Vitesse laterale", 10.0f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private static readonly float ALPHA = c.getParametre("Alpha", (byte)1.0f);
+        private static readonly int NB_NUAGES = c.getParametre("NbNuages", 200);
+        private static readonly float TAILLE_NUAGE = c.getParametre("Taille", 9);
+        private static readonly float ROULIS_MAX = c.getParametre("Roulis max", 3);
+        private static readonly float VITESSE_ROULIS = c.getParametre("Vitesse roulis", 0.1f);
+        private static readonly float VITESSE = c.getParametre("Vitesse", 2.0f);
+        private static readonly float VITESSE_LATERALE = c.getParametre("Vitesse laterale", 10.0f);
         private static readonly float COLOR_RATIO = 150;
         #endregion
         const float VIEWPORT_X = 12f;
@@ -48,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _nuages = new Nuage[NB_NUAGES];
 
-            _texture.Create(gl, Config.getImagePath("nuages.png"));
+            _texture.Create(gl, Configuration.getImagePath("nuages.png"));
             // Initialiser les etoiles
             for (int i = 0; i < NB_NUAGES; i++)
             {
@@ -65,7 +66,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 });
         }
 
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();

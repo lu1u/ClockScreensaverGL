@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -17,34 +18,41 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 	public class Bacteries : Metaballes
 	{
 		const String CAT = "Bacteries" ;
+        static CategorieConfiguration c = Configuration.getCategorie(CAT);
 		static float TailleMax, TailleMin, IntensiteMax,IntensiteMin ;
 		static private int UnSur = 0 ;
 		
 		public Bacteries(OpenGL gl, int cx, int cy) : base(gl)
         {
 		}
-		
-		/// <summary>
-		/// Lit les preferences a chaque version de metaballes
-		/// </summary>
-		/// <param name="L"></param>
-		/// <param name="H"></param>
-		/// <param name="N"></param>
-		/// <param name="C"></param>
-		protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
+
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
+        /// <summary>
+        /// Lit les preferences a chaque version de metaballes
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="H"></param>
+        /// <param name="N"></param>
+        /// <param name="C"></param>
+        protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
 		{
+
 			base.GetPreferences( ref L, ref H, ref N, ref C ) ;
-			L = conf.getParametre(CAT, "Largeur", 400 ) ;
-			H = conf.getParametre(CAT, "Hauteur", 300 ) ;
-			N = conf.getParametre(CAT, "Nombre", 30 ) ;
-			C = conf.getParametre(CAT, "Niveaux", 512 ) ;
+			L = c.getParametre("Largeur", 400 ) ;
+			H = c.getParametre("Hauteur", 300 ) ;
+			N = c.getParametre("Nombre", 30 ) ;
+			C = c.getParametre("Niveaux", 512 ) ;
 		}
 		
 		protected override void ConstruitMetaballes()
 		{
-			TailleMax = conf.getParametre(CAT, "TailleMax", 30f) ;
-			TailleMin =conf.getParametre(CAT, "TailleMin", 20f ) ;
-			IntensiteMax = conf.getParametre(CAT, "IntensiteMax", 1.0f) ;
+			TailleMax = c.getParametre("TailleMax", 30f) ;
+			TailleMin =c.getParametre("TailleMin", 20f ) ;
+			IntensiteMax = c.getParametre("IntensiteMax", 1.0f) ;
 			IntensiteMin = IntensiteMax / 2.0f ;
 			
 			for ( int i = 0; i < NbMetaballes; i++)

@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils  Options  Codage  Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using System;
 using System.Drawing;
 namespace ClockScreenSaverGL
@@ -19,11 +20,11 @@ namespace ClockScreenSaverGL
         const string HUE = "hue";
         const string VALUE = "value";
         const string SATURATION = "saturation";
-        static protected readonly Config conf = Config.getInstance();
+        static protected CategorieConfiguration conf = Config.Configuration.getCategorie(CAT);
 
-        public double _Hue = conf.getParametre(CAT, "Teinte", 0.5f);
-        public double _Saturation = conf.getParametre(CAT, "Saturation", 0.9f);
-        public double _Luminance = conf.getParametre(CAT, "Valeur", 0.75f);
+        public double _Hue = conf.getParametre( "Teinte", 0.5f, true);
+        public double _Saturation = conf.getParametre("Saturation", 0.9f, true);
+        public double _Luminance = conf.getParametre( "Valeur", 0.75f, true);
         private DateTime dernier = DateTime.Now;
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace ClockScreenSaverGL
                 if (V > 0.01) V -= 0.01f;
             }
 
-            conf.setParametre(CAT, parameterName, (float)V);
+            conf.setParametre( parameterName, (float)V);
         }
 
 

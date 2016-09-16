@@ -1,11 +1,9 @@
-﻿using System;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using ClockScreenSaverGL.DisplayedObjects.Fonds;
-using SharpGL;
-using SharpGL.SceneGraph.Quadrics;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
@@ -13,20 +11,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         const float DEUX_PI = (float)(Math.PI * 2.0);
         const String CAT = "Engrenages";
-        static readonly int NB_ENGRENAGES = conf.getParametre(CAT, "NbEngrenages", 500);
-        static readonly float LONGUEUR_AXE = conf.getParametre(CAT, "Longueur Axe", 1.5f);
-        static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 20.0f);
-        static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "Vitesse Rotation", 10.0f);
-        static readonly float RAYON_MIN = conf.getParametre(CAT, "Rayon Min", 0.2f);
-        static readonly float RAYON_MAX = conf.getParametre(CAT, "Rayon Max", 0.8f);
-        static readonly float RATIO_COULEUR_MIN = conf.getParametre(CAT, "Ration Couleur Min", 0.8f);
-        static readonly float RATIO_COULEUR_MAX = conf.getParametre(CAT, "Ration Couleur Max", 1.2f);
-        static readonly float VITESSE_GROSSISSEMENT = conf.getParametre(CAT, "Vitesse grossissement", 2.0f);
-        static readonly int NB_DENTS = conf.getParametre(CAT, "Nb Dents", 20);
-        static readonly int NB_FACES_PAR_DENT = 3;// conf.getParametre(CAT, "Nb faces par dent", 6);
-        static readonly float EPAISSEUR = conf.getParametre(CAT, "Epaisseur", 0.5f);
-        static readonly float TAILLE_DENT = conf.getParametre(CAT, "Taille dent", 0.05f);
-        
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static readonly int NB_ENGRENAGES = c.getParametre("NbEngrenages", 500);
+        static readonly float LONGUEUR_AXE = c.getParametre("Longueur Axe", 1.5f);
+        static readonly float VITESSE = c.getParametre("Vitesse", 20.0f);
+        static readonly float RAYON_MIN = c.getParametre("Rayon Min", 0.2f);
+        static readonly float RAYON_MAX = c.getParametre("Rayon Max", 0.8f);
+        static readonly float RATIO_COULEUR_MIN = c.getParametre("Ration Couleur Min", 0.8f);
+        static readonly float RATIO_COULEUR_MAX = c.getParametre("Ration Couleur Max", 1.2f);
+        static readonly float VITESSE_GROSSISSEMENT = c.getParametre("Vitesse grossissement", 2.0f);
+        static readonly int NB_DENTS = c.getParametre("Nb Dents", 20);
+        static readonly int NB_FACES_PAR_DENT = 3;// c.getParametre("Nb faces par dent", 6);
+        static readonly float EPAISSEUR = c.getParametre("Epaisseur", 0.5f);
+        static readonly float TAILLE_DENT = c.getParametre("Taille dent", 0.05f);
+        static  float VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, true);
+
         TimerIsole timer = new TimerIsole(500);
         private class Engrenage
         {
@@ -43,7 +42,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         float xCible, yCible, zCible;
         private uint _genLists;
-        public Engrenages(OpenGL gl) : base(gl, CAT)
+        public Engrenages(OpenGL gl) : base(gl)
         {
             _angleVue = 3.14f;// FloatRandom(0, DEUX_PI);
             _genLists = gl.GenLists(NB_ENGRENAGES);
@@ -63,8 +62,24 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             xCible = x;
             yCible = y;
             zCible = z;
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
+        /// <summary>
+        /// Appellee en notification d'un changement interactif de configuration
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected override void onConfigurationChangee(string valeur)
+        {
+            VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 10.0f, true);
+
+            base.onConfigurationChangee(valeur);
+        }
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         void CreeEngrenage(OpenGL gl, uint i, float x, float y, float z, float rayon, float vitesse, float angle, int nbDents, float epaisseur)
         {
             Engrenage e = new Engrenage();
@@ -136,8 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 gl.CallList(e.listId);
                 gl.PopMatrix();
             }
-
-            fillConsole(gl);
+            
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);

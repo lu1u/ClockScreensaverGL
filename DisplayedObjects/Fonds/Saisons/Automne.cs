@@ -1,4 +1,5 @@
-﻿using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using ClockScreenSaverGL.Config;
+using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 /*
@@ -22,16 +23,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
     {
         #region Parametres
         public const string CAT = "Automne.OpenGL";
+        static private CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static readonly float VITESSE_ROTATION = conf.getParametre(CAT, "VitesseRotation", 0.2f);
-        private static readonly float PERIODE_ROTATION = conf.getParametre(CAT, "PeriodeRotation", 20.0f);
-        private static readonly float VITESSE_Y = conf.getParametre(CAT, "VitesseChute", 8.0f);
-        private static readonly float VITESSE_DELTA_VENT = conf.getParametre(CAT, "VitesseDeltaVent", 1f);
-        private static readonly float MAX_VENT = conf.getParametre(CAT, "MaxVent", 3f);
-        private readonly int NB_FEUILLES = conf.getParametre(CAT, "NbFeuilles", 10);
-        private readonly float TAILLE_FEUILLE = conf.getParametre(CAT, "TailleFeuilles", 3.0f);
-        private readonly float DIEDRE_FEUILLE = conf.getParametre(CAT, "DiedreFeuilles", 0.25f);
-        private readonly float NB_FACES_FEUILLES = conf.getParametre(CAT, "Nb Faces", 3);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f);
+        private static readonly float VITESSE_Y = c.getParametre("VitesseChute", 8.0f);
+        private static readonly float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
+        private static readonly float MAX_VENT = c.getParametre("MaxVent", 3f);
+        private readonly int NB_FEUILLES = c.getParametre("NbFeuilles", 10);
+        private readonly float TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 3.0f);
+        private readonly float DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f);
+        private readonly float NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3);
         #endregion
 
         sealed private class Feuille
@@ -83,17 +85,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             }
 
             texture[0] = new Texture();
-            texture[0].Create(gl, Config.getImagePath("feuille1.png"));
+            texture[0].Create(gl, Configuration.getImagePath("feuille1.png"));
             texture[1] = new Texture();
-            texture[1].Create(gl, Config.getImagePath("feuille2.png"));
+            texture[1].Create(gl, Configuration.getImagePath("feuille2.png"));
             texture[2] = new Texture();
-            texture[2].Create(gl, Config.getImagePath("feuille3.png"));
+            texture[2].Create(gl, Configuration.getImagePath("feuille3.png"));
             texture[3] = new Texture();
-            texture[3].Create(gl, Config.getImagePath("feuille4.png"));
+            texture[3].Create(gl, Configuration.getImagePath("feuille4.png"));
             texture[4] = new Texture();
-            texture[4].Create(gl, Config.getImagePath("feuille5.png"));
+            texture[4].Create(gl, Configuration.getImagePath("feuille5.png"));
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         private void NouvelleFeuille(ref Feuille f)
         {
             if (f == null)

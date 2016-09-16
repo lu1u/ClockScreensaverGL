@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
@@ -12,21 +13,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
     {
         #region PARAMETRES
         const string CAT = "Ete";
-        static private readonly string REPERTOIRE_ETE = conf.getParametre(CAT, "Repertoire", "ete");
-        static private readonly int NB_HERBES = conf.getParametre(CAT, "Nb Herbes", 80);
-        static private readonly int NB_FLARES = conf.getParametre(CAT, "Nb Flares", 6);
-        static private readonly float VX_SOLEIL = conf.getParametre(CAT, "VX Soleil", 5f);
-        static private readonly float VY_SOLEIL = conf.getParametre(CAT, "VY Soleil", -5f);
-        static private readonly int TAILLE_SOLEIL = conf.getParametre(CAT, "Taille Soleil", 300);
-        static private readonly float RATIO_FLARE_MIN = conf.getParametre(CAT, "Ratio Flare Min", 0.7f);
-        static private readonly float RATIO_FLARE_MAX = conf.getParametre(CAT, "Ratio Flare Max", 1.3f);
-        static private readonly byte ALPHA = (byte)conf.getParametre(CAT, "Alpha", 64);
-        static private readonly byte ALPHA_FLARE_MIN = (byte)conf.getParametre(CAT, "Alpha Flare Min", 3);
-        static private readonly byte ALPHA_FLARE_MAX = (byte)conf.getParametre(CAT, "Alpha Flare Max", 16);
-        static private readonly int HAUTEUR_TOUFFE = conf.getParametre(CAT, "Hauteur touffe", 200);
-        static private bool AFFICHE_FOND = conf.getParametre(CAT, "Affiche Fond", true);
-        static private readonly float DISTANCE_FLARE_MIN = conf.getParametre(CAT, "Distance Flare Min", 0.1f);
-        static private readonly float DISTANCE_FLARE_MAX = conf.getParametre(CAT, "Distance Flare Max", 1.7f);
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+
+        static private readonly string REPERTOIRE_ETE = c.getParametre("Repertoire", "ete");
+        static private readonly int NB_HERBES = c.getParametre("Nb Herbes", 80);
+        static private readonly int NB_FLARES = c.getParametre("Nb Flares", 6);
+        static private readonly float VX_SOLEIL = c.getParametre("VX Soleil", 5f);
+        static private readonly float VY_SOLEIL = c.getParametre("VY Soleil", -5f);
+        static private readonly int TAILLE_SOLEIL = c.getParametre("Taille Soleil", 300);
+        static private readonly float RATIO_FLARE_MIN = c.getParametre("Ratio Flare Min", 0.7f);
+        static private readonly float RATIO_FLARE_MAX = c.getParametre("Ratio Flare Max", 1.3f);
+        static private readonly byte ALPHA = (byte)c.getParametre("Alpha", 64);
+        static private readonly byte ALPHA_FLARE_MIN = (byte)c.getParametre("Alpha Flare Min", 3);
+        static private readonly byte ALPHA_FLARE_MAX = (byte)c.getParametre("Alpha Flare Max", 16);
+        static private readonly int HAUTEUR_TOUFFE = c.getParametre("Hauteur touffe", 200);
+        static private bool AFFICHE_FOND = c.getParametre("Affiche Fond", true);
+        static private readonly float DISTANCE_FLARE_MIN = c.getParametre("Distance Flare Min", 0.1f);
+        static private readonly float DISTANCE_FLARE_MAX = c.getParametre("Distance Flare Max", 1.7f);
 
         const int NB_IMAGES_FLARES = 4;
         const float DECALAGE_TEXTURE = 1.0f / NB_IMAGES_FLARES;
@@ -68,12 +71,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
             _textureSoleil = new Texture();
-            _textureSoleil.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\soleil.png"));
+            _textureSoleil.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\soleil.png"));
             _textureFond = new Texture();
-            _textureFond.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\fondEte.png"));
+            _textureFond.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png"));
             _textureFlares = new Texture();
-            _textureFlares.Create(gl, Config.getImagePath(REPERTOIRE_ETE + @"\flares.png"));
+            _textureFlares.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png"));
             Init(gl);
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
         }
         /**
          * Initialisation du soleil, des lens flares et de l'herbe
@@ -212,10 +220,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
                     */
                 case TOUCHE_INVERSER:
                     AFFICHE_FOND = !AFFICHE_FOND;
-                    conf.setParametre(CAT, "Affiche Fond", AFFICHE_FOND);
+                    c.setParametre( "Affiche Fond", AFFICHE_FOND);
                     return true;
             }
-            return false;
+            return base.KeyDown(f, k); ;
         }
         public override void AppendHelpText(StringBuilder s)
         {

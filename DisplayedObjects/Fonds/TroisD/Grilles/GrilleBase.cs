@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
 using System.Drawing;
 
@@ -19,7 +20,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
         protected float TRANSLATE_Z;
         #endregion
 
-        public GrilleBase(OpenGL gl, string CAT) : base(gl, CAT)
+        public GrilleBase(OpenGL gl, CategorieConfiguration CAT) : base(gl)
         {
             _genLists = gl.GenLists(1);
             gl.NewList(_genLists, OpenGL.GL_COMPILE);
@@ -113,8 +114,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
             gl.Translate(0, 0, TRANSLATE_Z);
             gl.Rotate(_angleVue / 2.0f, _angleVue, _angleVue / 3.0f);
             gl.CallList(_genLists);
-
-            fillConsole(gl);
+            
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif

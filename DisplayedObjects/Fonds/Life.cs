@@ -6,6 +6,7 @@
  * 
  * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
@@ -21,17 +22,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     {
         #region Parametres
         public const string CAT = "JeuDeLaVie";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        protected readonly byte ALPHA = conf.getParametre(CAT, "Alpha", (byte)40);
-        protected readonly float COULEUR_NAISSANCE = conf.getParametre(CAT, "CouleurNaissance", 0.3f);
-        protected readonly float COULEUR_NORMAL = conf.getParametre(CAT, "CouleurNormale", 0.4f);
-        protected readonly int LARGEUR = conf.getParametre(CAT, "Largeur", 60);
-        protected readonly int HAUTEUR = conf.getParametre(CAT, "Hauteur", 50);
-        protected readonly int SKIP = conf.getParametre(CAT, "Skip", 2);
-        protected readonly float VITESSE_ANGLE = conf.getParametre(CAT, "Vitesse Angle", 2.0f);
-        protected readonly float LOOK_AT_X = conf.getParametre(CAT, "LookAtX", 0.1f);
-        protected readonly float LOOK_AT_Y = 0.02f;// conf.getParametre(CAT, "LookAtY", 0.05f);
-        protected readonly float LOOK_AT_Z = conf.getParametre(CAT, "LookAtZ", -0.3f);
+        protected readonly byte ALPHA = c.getParametre("Alpha", (byte)40);
+        protected readonly float COULEUR_NAISSANCE = c.getParametre("CouleurNaissance", 0.3f);
+        protected readonly float COULEUR_NORMAL = c.getParametre("CouleurNormale", 0.4f);
+        protected readonly int LARGEUR = c.getParametre("Largeur", 60);
+        protected readonly int HAUTEUR = c.getParametre("Hauteur", 50);
+        protected readonly int SKIP = c.getParametre("Skip", 2);
+        protected readonly float VITESSE_ANGLE = c.getParametre("Vitesse Angle", 2.0f);
+        protected readonly float LOOK_AT_X = c.getParametre("LookAtX", 0.1f);
+        protected readonly float LOOK_AT_Y = 0.02f;// c.getParametre("LookAtY", 0.05f);
+        protected readonly float LOOK_AT_Z = c.getParametre("LookAtZ", -0.3f);
         #endregion
         protected byte[,] cellules;
         protected byte[,] cellulestemp;
@@ -50,10 +52,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-            textureCellule.Create(gl, Config.getImagePath("particule.png"));
+            textureCellule.Create(gl, Configuration.getImagePath("particule.png"));
         }
 
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         /// <summary>
         /// Etat initial des cellules
         /// </summary>

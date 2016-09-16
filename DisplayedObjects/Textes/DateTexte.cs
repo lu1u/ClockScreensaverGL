@@ -7,6 +7,7 @@
  * Affiche un objet texte contenant la date du jour
  * Derive de Texte, se contente de fournir la date sous forme de texte
  */
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Drawing;
@@ -18,18 +19,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     public class DateTexte : Texte
     {
         const string CAT = "DateTexte";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         private string _date; // Sera initialise dans OnDateChange
 
         public DateTexte(OpenGL gl, int Px, int Py)
-            : base(gl, Px, 0, conf.getParametre(CAT, "VX", -17), 0, conf.getParametre(CAT, "TailleFonte", 60), conf.getParametre(CAT, "Alpha", (byte)160))
+            : base(gl, Px, 0, c.getParametre("VX", -17), 0, c.getParametre("TailleFonte", 60), c.getParametre("Alpha", (byte)160))
         {
         }
 
         public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte)
-            : base(gl, Px, 0, 0, 0, tailleFonte, conf.getParametre(CAT, "Alpha", (byte)160))
+            : base(gl, Px, 0, 0, 0, tailleFonte, c.getParametre("Alpha", (byte)160))
         {
         }
-        
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
             _date = maintenant._temps.ToLongDateString();

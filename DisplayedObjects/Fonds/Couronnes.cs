@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using SharpGL;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 {
@@ -11,13 +12,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
     public class Couronnes : Fond
     {
         public const String CAT = "Couronnes";
-        private readonly int NB_COURONNES = conf.getParametre(CAT, "NbCouronnes", 5);
-        private readonly int NB_SECTEURS = 120;// conf.getParametre(CAT, "Details Secteurs", 40);
-        private bool ADDITIVE = conf.getParametre(CAT, "Additive", false);
-        private readonly float RAYON_MAX = conf.getParametre(CAT, "Rayon Max", 1.5f);
-        private bool WIRE_FRAME = conf.getParametre(CAT, "WireFrame", false);
-        private readonly int NB_SEGMENTS_MAX = 40;// conf.getParametre(CAT, "Nb Segments Max", 20);
-        private readonly int NB_SEGMENTS_MIN = conf.getParametre(CAT, "Nb Segments Min", 2);
+        private const string PARAM_WIREFRAME = "WireFrame";
+        private const string PARAM_ADDITIVE = "Additive";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        private readonly int NB_COURONNES = c.getParametre("NbCouronnes", 5);
+        private readonly int NB_SECTEURS = c.getParametre("Details Secteurs", 120);
+        private readonly float RAYON_MAX = c.getParametre("Rayon Max", 1.5f);
+        private bool ADDITIVE = c.getParametre(PARAM_ADDITIVE, false, true);
+        private bool WIRE_FRAME = c.getParametre(PARAM_WIREFRAME, false, true);
+        private readonly int NB_SEGMENTS_MAX = c.getParametre("Nb Segments Max", 40);
+        private readonly int NB_SEGMENTS_MIN = c.getParametre("Nb Segments Min", 2);
 
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
@@ -39,7 +43,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         Couronne[] _couronnes;
         private float _zCamera = 1.5f;
 
-        public Couronnes(OpenGL gl): base(gl)
+        public Couronnes(OpenGL gl) : base(gl)
         {
             _couronnes = new Couronne[NB_COURONNES];
 
@@ -57,8 +61,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 _couronnes[i].periodeRayon = FloatRandom(0.001f, 20);
                 _couronnes[i].vitesseRayon = FloatRandom(0.010f, 0.1f) * SigneRandom();
             }
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
+        protected override void onConfigurationChangee(string valeur)
+        {
+            ADDITIVE = c.getParametre(PARAM_ADDITIVE, false, true);
+            WIRE_FRAME = c.getParametre(PARAM_WIREFRAME, false, true);
+
+            base.onConfigurationChangee(valeur);
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
 #if TRACER
@@ -103,11 +121,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                     for (int i = 0; i <= nbSecteurs; i++)
                     {
                         float angle = ((float)i / (float)nbSecteurs) * tailleSegment;
-                        
+
                         float sin = (float)Math.Sin(angle);
                         float cos = (float)Math.Cos(angle);
                         gl.Vertex(rMin * cos, rMin * sin, 0);
-                        gl.Vertex(rMax * cos, rMax * sin, 0);                        
+                        gl.Vertex(rMax * cos, rMax * sin, 0);
                     }
                     gl.End();
                     gl.Rotate(0, 0, 360.0f / c.nbSegments);
@@ -151,7 +169,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case TOUCHE_INVERSER:
                     {
                         WIRE_FRAME = !WIRE_FRAME;
-                        conf.setParametre(CAT, "WireFrame", WIRE_FRAME);
+                        c.setParametre(PARAM_WIREFRAME, WIRE_FRAME);
                         return true;
                     }
 
@@ -159,12 +177,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 case TOUCHE_ADDITIVE:
                     {
                         ADDITIVE = !ADDITIVE;
-                        conf.setParametre(CAT, "Additive", ADDITIVE);
+                        c.setParametre(PARAM_ADDITIVE, ADDITIVE);
                         return true;
                     }
 
             }
-            return false;
+            return base.KeyDown(f, k); ;
         }
     }
 }

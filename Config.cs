@@ -21,7 +21,7 @@ namespace ClockScreenSaverGL
     /// </summary>
     public class Config
     {
-        enum TYPE_PARAMETRE { T_INT, T_FLOAT, T_DOUBLE, T_BOOL, T_STRING, T_BYTE };
+        public enum TYPE_PARAMETRE { T_INT, T_FLOAT, T_DOUBLE, T_BOOL, T_STRING, T_BYTE };
         private const string TYPE_INT = "int";
         private const string TYPE_FLOAT = "float";
         private const string TYPE_DOUBLE = "double";
@@ -32,28 +32,176 @@ namespace ClockScreenSaverGL
         private const char VALUE_SEPARATOR = '=';
         private const char KEY_SEPARATOR = '.';
 
-        private class Parameter
-        {
-            public Parameter(Object value, TYPE_PARAMETRE type, Object defaut)
-            {
-                _value = value;
-                _type = type;
-                _default = defaut;
-            }
-            public TYPE_PARAMETRE _type;
-            public Object _value;
-            public Object _default;
-        };
+        
 
-        private class Categorie
+        public class Categorie
         {
+            public delegate void ParametreChange(String nom);
+
+            private class Parameter
+            {
+                public Parameter(Object value, TYPE_PARAMETRE type, Object defaut)
+                {
+                    _value = value;
+                    _type = type;
+                    _default = defaut;
+                }
+                public TYPE_PARAMETRE _type;
+                public Object _value;
+                public Object _default;
+            };
+
+            private ParametreChange _parametreChange;
             public bool _propre = true;
-            public Dictionary<string, Parameter> _valeurs = new Dictionary<string, Parameter>();
+            private Dictionary<string, Parameter> _valeurs = new Dictionary<string, Parameter>();
+            private string _name;
+
+            public Categorie(String name)
+            {
+                _name = name;
+
+            }
+
+            public void setListenerParametreChange( ParametreChange p)
+            {
+                _parametreChange = p;
+            }
+
+            public Object getParametre(String name, TYPE_PARAMETRE type,Object defaut)
+            {
+                Parameter p;
+                _valeurs.TryGetValue(name, out p);
+                if ((p != null) && (p is Parameter))
+                {
+                    if (p._type != type)
+                        //throw new InvalidCastException("parametre " + name + ": type invalide");
+                        return defaut;
+
+                    return p._value;
+                }
+
+                _valeurs.Add(name, new Parameter(defaut, type, defaut));
+                _propre = false;
+                if ( _parametreChange !=null)
+                    _parametreChange(name);
+                return defaut;
+            }
+
+            public void setParametreFromFile(string key, Config.TYPE_PARAMETRE type, Object valeur, Object defaut)
+            {
+                if (_valeurs.ContainsKey(key))
+                    _valeurs.Remove(key);
+
+                Parameter par = new Parameter(valeur, type, defaut);
+                _valeurs.Add(key, par);
+            }
+
+
+            public void setParametre(String valueName, TYPE_PARAMETRE type, Object defaut)
+            {
+                if (_valeurs.ContainsKey(valueName))
+                    _valeurs.Remove(valueName);
+
+                Parameter par = new Parameter(defaut, type, defaut);
+                _valeurs.Add(valueName, par);
+
+                _propre = false;
+            }
+
+            /// <summary>
+            /// S'assurer que les modifications sur la categorie sont bien ecrites dans le fichier
+            /// </summary>
+            public void flush()
+            {
+                if (!_propre)
+                {
+                    string nomFichier = getNomFichier(_name);
+                    using (TextWriter tw = new StreamWriter(nomFichier))
+                    {
+                        foreach (String key in _valeurs.Keys)
+                        {
+                            Parameter p = _valeurs[key];
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneType(p));
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
+                            tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
+                        }
+                    }
+                    _propre = true;
+                }
+
+            }
+
+            static string toLigneType(Parameter p)
+            {
+                switch (p._type)
+                {
+                    case TYPE_PARAMETRE.T_INT:
+                        return "type" + VALUE_SEPARATOR + TYPE_INT;
+                    case TYPE_PARAMETRE.T_FLOAT:
+                        return "type" + VALUE_SEPARATOR + TYPE_FLOAT;
+                    case TYPE_PARAMETRE.T_DOUBLE:
+                        return "type" + VALUE_SEPARATOR + TYPE_DOUBLE;
+                    case TYPE_PARAMETRE.T_BOOL:
+                        return "type" + VALUE_SEPARATOR + TYPE_BOOL;
+                    case TYPE_PARAMETRE.T_STRING:
+                        return "type" + VALUE_SEPARATOR + TYPE_STRING;
+                    case TYPE_PARAMETRE.T_BYTE:
+                        return "type" + VALUE_SEPARATOR + TYPE_BYTE;
+
+                    default:
+                        return null;
+                }
+            }
+
+            static string toLigneValue(Parameter p)
+            {
+                switch (p._type)
+                {
+                    case TYPE_PARAMETRE.T_INT:
+                        return "value" + VALUE_SEPARATOR + ((int)p._value);
+                    case TYPE_PARAMETRE.T_FLOAT:
+                        return "value" + VALUE_SEPARATOR + ((float)p._value);
+                    case TYPE_PARAMETRE.T_DOUBLE:
+                        return "value" + VALUE_SEPARATOR + ((double)p._value);
+                    case TYPE_PARAMETRE.T_BOOL:
+                        return "value" + VALUE_SEPARATOR + (stringFromBool((bool)p._value));
+                    case TYPE_PARAMETRE.T_STRING:
+                        return "value" + VALUE_SEPARATOR + ((string)p._value);
+                    case TYPE_PARAMETRE.T_BYTE:
+                        return "value" + VALUE_SEPARATOR + ((byte)p._value);
+
+                    default:
+                        return null;
+                }
+            }
+
+            static string toLigneDefaut(Parameter p)
+            {
+                switch (p._type)
+                {
+                    case TYPE_PARAMETRE.T_INT:
+                        return "default" + VALUE_SEPARATOR + ((int)p._default);
+                    case TYPE_PARAMETRE.T_FLOAT:
+                        return "default" + VALUE_SEPARATOR + ((float)p._default);
+                    case TYPE_PARAMETRE.T_DOUBLE:
+                        return "default" + VALUE_SEPARATOR + ((double)p._default);
+                    case TYPE_PARAMETRE.T_BOOL:
+                        return "default" + VALUE_SEPARATOR + (stringFromBool((bool)p._default));
+                    case TYPE_PARAMETRE.T_STRING:
+                        return "default" + VALUE_SEPARATOR + ((string)p._default);
+                    case TYPE_PARAMETRE.T_BYTE:
+                        return "default" + VALUE_SEPARATOR + ((byte)p._default);
+
+                    default:
+                        return null;
+                }
+            }
+
         }
 
 
         static Config _instance;
-        Dictionary<string, Categorie> _categories;
+        private Dictionary<string, Categorie> _categories;
 
         public static Config getInstance()
         {
@@ -71,7 +219,7 @@ namespace ClockScreenSaverGL
 
         ~Config()
         {
-            EcritFichier();
+            EcrireCategories();
         }
 
        
@@ -79,25 +227,7 @@ namespace ClockScreenSaverGL
         {
             Categorie categorie;
             _categories.TryGetValue(name, out categorie);
-            if (categorie != null)
-            {
-                if (!categorie._propre)
-                        {
-                            string nomFichier = getNomFichier(name);
-                            using (TextWriter tw = new StreamWriter(nomFichier))
-                            {
-                                foreach (String key in categorie._valeurs.Keys)
-                                {
-                                    Parameter p = categorie._valeurs[key];
-                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneType(p));
-                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneValue(p));
-                                    tw.WriteLine(key + KEY_SEPARATOR + toLigneDefaut(p));
-                                }
-                            }
-                            categorie._propre = true;
-                        }                  
-                
-            }
+            categorie?.flush();            
         }
 
         public static string getDataDirectory()
@@ -122,79 +252,14 @@ namespace ClockScreenSaverGL
         /// <summary>
         /// Ecrit le fichier de configuration
         /// </summary>
-        void EcritFichier()
+        void EcrireCategories()
         {
             foreach (String name in _categories.Keys)
                     flush(name);            
         }
 
 
-        static string toLigneType(Parameter p)
-        {
-            switch (p._type)
-            {
-                case TYPE_PARAMETRE.T_INT:
-                    return "type" + VALUE_SEPARATOR + TYPE_INT;
-                case TYPE_PARAMETRE.T_FLOAT:
-                    return "type" + VALUE_SEPARATOR + TYPE_FLOAT;
-                case TYPE_PARAMETRE.T_DOUBLE:
-                    return "type" + VALUE_SEPARATOR + TYPE_DOUBLE;
-                case TYPE_PARAMETRE.T_BOOL:
-                    return "type" + VALUE_SEPARATOR + TYPE_BOOL;
-                case TYPE_PARAMETRE.T_STRING:
-                    return "type" + VALUE_SEPARATOR + TYPE_STRING;
-                case TYPE_PARAMETRE.T_BYTE:
-                    return "type" + VALUE_SEPARATOR + TYPE_BYTE;
-
-                default:
-                    return null;
-            }
-        }
-
-        static string toLigneValue(Parameter p)
-        {
-            switch (p._type)
-            {
-                case TYPE_PARAMETRE.T_INT:
-                    return "value" + VALUE_SEPARATOR + ((int)p._value);
-                case TYPE_PARAMETRE.T_FLOAT:
-                    return "value" + VALUE_SEPARATOR + ((float)p._value);
-                case TYPE_PARAMETRE.T_DOUBLE:
-                    return "value" + VALUE_SEPARATOR + ((double)p._value);
-                case TYPE_PARAMETRE.T_BOOL:
-                    return "value" + VALUE_SEPARATOR + (stringFromBool((bool)p._value));
-                case TYPE_PARAMETRE.T_STRING:
-                    return "value" + VALUE_SEPARATOR + ((string)p._value);
-                case TYPE_PARAMETRE.T_BYTE:
-                    return "value" + VALUE_SEPARATOR + ((byte)p._value);
-
-                default:
-                    return null;
-            }
-        }
-
-        static string toLigneDefaut(Parameter p)
-        {
-            switch (p._type)
-            {
-                case TYPE_PARAMETRE.T_INT:
-                    return "default" + VALUE_SEPARATOR + ((int)p._default);
-                case TYPE_PARAMETRE.T_FLOAT:
-                    return "default" + VALUE_SEPARATOR + ((float)p._default);
-                case TYPE_PARAMETRE.T_DOUBLE:
-                    return "default" + VALUE_SEPARATOR + ((double)p._default);
-                case TYPE_PARAMETRE.T_BOOL:
-                    return "default" + VALUE_SEPARATOR + (stringFromBool((bool)p._default));
-                case TYPE_PARAMETRE.T_STRING:
-                    return "default" + VALUE_SEPARATOR + ((string)p._default);
-                case TYPE_PARAMETRE.T_BYTE:
-                    return "default" + VALUE_SEPARATOR + ((byte)p._default);
-
-                default:
-                    return null;
-            }
-        }
-
+        
         /// <summary>
         /// Lit le fichier de configuration et donne leur valeur aux parametres
         /// </summary>
@@ -210,7 +275,7 @@ namespace ClockScreenSaverGL
 
                     // Creer la categorie
                     string categorieName = Path.GetFileNameWithoutExtension(filename);
-                    Categorie categorie = new Categorie();
+                    Categorie categorie = new Categorie(categorieName);
 
                     // La remplir a partir du contenu du fichier
                     using (StreamReader file = new System.IO.StreamReader(filename))
@@ -250,17 +315,17 @@ namespace ClockScreenSaverGL
                             }
 
                             if (type.Equals(TYPE_BOOL))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString(defaut));
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_BOOL, boolFromString(valeur), boolFromString(defaut));
                             else if (type.Equals(TYPE_DOUBLE))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_DOUBLE, doubleFromString(valeur), doubleFromString(defaut));
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_DOUBLE, doubleFromString(valeur), doubleFromString(defaut));
                             else if (type.Equals(TYPE_FLOAT))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_FLOAT, floatFromString(valeur), floatFromString(defaut));
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_FLOAT, floatFromString(valeur), floatFromString(defaut));
                             else if (type.Equals(TYPE_INT))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_INT, intFromSting(valeur), intFromSting(defaut));
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_INT, intFromSting(valeur), intFromSting(defaut));
                             else if (type.Equals(TYPE_STRING))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_STRING, valeur, defaut);
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_STRING, valeur, defaut);
                             else if (type.Equals(TYPE_BYTE))
-                                setParametreFromFile(categorie._valeurs, name, TYPE_PARAMETRE.T_BYTE, byteFromString(valeur), byteFromString(defaut));
+                                categorie.setParametreFromFile( name, TYPE_PARAMETRE.T_BYTE, byteFromString(valeur), byteFromString(defaut));
                         }
                     }
                     _categories.Add(categorieName, categorie);
@@ -346,14 +411,7 @@ namespace ClockScreenSaverGL
             return b ? "true" : "false";
         }
 
-        void setParametreFromFile(Dictionary<string, Parameter> categorie, string key, Config.TYPE_PARAMETRE type, Object valeur, Object defaut)
-        {
-            if (categorie.ContainsKey(key))
-                categorie.Remove(key);
 
-            Parameter par = new Parameter(valeur, type, defaut);
-            categorie.Add(key, par);
-        }
 
         /// <summary>
         /// Calcule un repertoire pour stocker les fichiers de conf
@@ -392,25 +450,13 @@ namespace ClockScreenSaverGL
             _categories.TryGetValue(cat, out categorie);
             if (categorie == null)
             {
-                categorie = new Categorie();
+                categorie = new Categorie(cat);
                 categorie._propre = false;
                 _categories.Add(cat, categorie);
             }
 
-            Parameter p;
-            categorie._valeurs.TryGetValue(name, out p);
-            if ((p != null) && (p is Parameter))
-            {
-                if (p._type != type)
-                    //throw new InvalidCastException("parametre " + name + ": type invalide");
-                    return defaut;
-
-                return p._value;
-            }
-
-            categorie._valeurs.Add(name, new Parameter(defaut, type, defaut));
-            categorie._propre = false;
-            return defaut;
+            return categorie.getParametre(name, type, defaut);
+            
         }
 
         public int getParametre(string categorie, string name, int defaut)
@@ -461,17 +507,11 @@ namespace ClockScreenSaverGL
 
             if (categorie == null)
             {
-                categorie = new Categorie();
+                categorie = new Categorie(categorieName);
                 _categories.Add(categorieName, categorie);
             }
 
-            if (categorie._valeurs.ContainsKey(valueName))
-                categorie._valeurs.Remove(valueName);
-
-            Parameter par = new Parameter(defaut, type, defaut);
-            categorie._valeurs.Add(valueName, par);
-
-            categorie._propre = false;
+            categorie.setParametre(valueName, type, defaut);
         }
 
         public void setParametre(string Cat, string nom, bool valeur)

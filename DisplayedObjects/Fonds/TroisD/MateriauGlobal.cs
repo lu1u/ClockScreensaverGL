@@ -1,14 +1,12 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
-    public class MateriauGlobal : TroisD
+    public abstract class  MateriauGlobal : TroisD
     {
         const String CONF_LIGHT_AMBIENT = "Material Light Ambient";
         const String CONF_LIGHT_DIFFUSE = "Material Light Diffuse";
@@ -33,53 +31,60 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         protected float[] LIG_AMBIENT = { 0.5f, 0.5f, 0.5f };
         protected float[] LIG_DIFFUSE = { 1.0f, 1.0f, 1.0f };
         protected float RATIO_COULEUR = 1.0f / 256.0f;
-        protected readonly String _CAT;
-
+        
         protected VALEUR_MODIFIEE valModifie = VALEUR_MODIFIEE.AMBIENT;
-        public MateriauGlobal(OpenGL gl, String cat) : base(gl, 0, 0, 0, 0)
+        public MateriauGlobal(OpenGL gl) : base(gl, 0, 0, 0, 0)
         {
-            _CAT = cat;
 
-            float val = conf.getParametre(_CAT, CONF_LIGHT_AMBIENT, 0.5f);
+            getConfiguration()?.setListenerParametreChange(onConfigurationChangee);
+            onConfigurationChangee(null);            
+        }
+
+        /// <summary>
+        /// Notification: valeurs de configuration changees
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected override void onConfigurationChangee(string valeur)
+        {
+            CategorieConfiguration c = getConfiguration();
+
+            float val = c.getParametre(CONF_LIGHT_AMBIENT, 0.5f, true);
             LIG_AMBIENT[0] = val;
             LIG_AMBIENT[1] = val;
             LIG_AMBIENT[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_LIGHT_DIFFUSE, 1.0f);
+            val = c.getParametre(CONF_LIGHT_DIFFUSE, 1.0f, true);
             LIG_DIFFUSE[0] = val;
             LIG_DIFFUSE[1] = val;
             LIG_DIFFUSE[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_LIGHT_SPECULAR, 1.0f);
+            val = c.getParametre(CONF_LIGHT_SPECULAR, 1.0f, true);
             LIG_SPECULAR[0] = val;
             LIG_SPECULAR[1] = val;
             LIG_SPECULAR[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_COL_AMBIENT, 0.2f);
+            val = c.getParametre(CONF_COL_AMBIENT, 0.2f, true);
             COL_AMBIENT[0] = val;
             COL_AMBIENT[1] = val;
             COL_AMBIENT[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_COL_DIFFUSE, 0.2f);
+            val = c.getParametre(CONF_COL_DIFFUSE, 0.2f, true);
             COL_DIFFUSE[0] = val;
             COL_DIFFUSE[1] = val;
             COL_DIFFUSE[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_COL_SPECULAR, 0.7f);
+            val = c.getParametre(CONF_COL_SPECULAR, 0.7f, true);
             COL_SPECULAR[0] = val;
             COL_SPECULAR[1] = val;
             COL_SPECULAR[2] = val;
 
-            val = conf.getParametre(_CAT, CONF_COL_COLOR, 0.7f);
+            val = c.getParametre(CONF_COL_COLOR, 0.7f, true);
             COL_COLOR[0] = val;
             COL_COLOR[1] = val;
             COL_COLOR[2] = val;
 
-            SHININESS = conf.getParametre(_CAT, CONF_SHININESS, 45f);
+            SHININESS = c.getParametre(CONF_SHININESS, 45f, true);
         }
-
-
-
 
         protected void setGlobalMaterial(OpenGL gl, Color couleur)
         {
@@ -123,8 +128,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             gl.Color(COL_COLOR[0] * R, COL_COLOR[1] * G, COL_COLOR[2] * B);
         }
-
-        protected void fillConsole(OpenGL gl)
+        /*
+        protected override void fillConsole(OpenGL gl)
         {
             base.fillConsole(gl);
             Console c = Console.getInstance(gl);
@@ -139,7 +144,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.COLOR)     + "Color            " + Tableau(COL_COLOR));
             c.AddLigne(Color.Green, MarqueurIf(VALEUR_MODIFIEE.SHININESS) + "Shininess    " + SHININESS);
         }
-
+        */
         private static string Tableau(float[] tab)
         {
             return tab[0].ToString("0.000") + " : " + tab[1].ToString("0.000") + " : " + tab[2].ToString("0.000") ;
@@ -157,8 +162,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="k"></param>
         /// <returns></returns>
         ///
+
         public override bool KeyDown(Form f, Keys k)
         {
+            CategorieConfiguration c = getConfiguration();
+
             switch (k)
             {
                 case Keys.Insert:
@@ -189,51 +197,51 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                                 LIG_AMBIENT[0] *= 1.1f;
                                 LIG_AMBIENT[1] *= 1.1f;
                                 LIG_AMBIENT[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_AMBIENT, LIG_AMBIENT[0]);
+                                c.setParametre( CONF_LIGHT_AMBIENT, LIG_AMBIENT[0]);
                                 break;
                             case VALEUR_MODIFIEE.LDIFFUSE:
                                 LIG_DIFFUSE[0] *= 1.1f;
                                 LIG_DIFFUSE[1] *= 1.1f;
                                 LIG_DIFFUSE[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_DIFFUSE, LIG_DIFFUSE[0]);
+                                c.setParametre( CONF_LIGHT_DIFFUSE, LIG_DIFFUSE[0]);
                                 break;
                             case VALEUR_MODIFIEE.LSPECULAR:
                                 LIG_SPECULAR[0] *= 1.1f;
                                 LIG_SPECULAR[1] *= 1.1f;
                                 LIG_SPECULAR[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_SPECULAR, LIG_SPECULAR[0]);
+                                c.setParametre( CONF_LIGHT_SPECULAR, LIG_SPECULAR[0]);
                                 break;
                             case VALEUR_MODIFIEE.AMBIENT:
                                 COL_AMBIENT[0] *= 1.1f;
                                 COL_AMBIENT[1] *= 1.1f;
                                 COL_AMBIENT[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_AMBIENT, COL_AMBIENT[0]);
+                                c.setParametre( CONF_COL_AMBIENT, COL_AMBIENT[0]);
                                 break;
                             case VALEUR_MODIFIEE.DIFFUSE:
                                 COL_DIFFUSE[0] *= 1.1f;
                                 COL_DIFFUSE[1] *= 1.1f;
                                 COL_DIFFUSE[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_DIFFUSE, COL_DIFFUSE[0]);
+                                c.setParametre( CONF_COL_DIFFUSE, COL_DIFFUSE[0]);
                                 break;
                             case VALEUR_MODIFIEE.SPECULAR:
                                 COL_SPECULAR[0] *= 1.1f;
                                 COL_SPECULAR[1] *= 1.1f;
                                 COL_SPECULAR[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_SPECULAR, COL_SPECULAR[0]);
+                                c.setParametre( CONF_COL_SPECULAR, COL_SPECULAR[0]);
                                 break;
                             case VALEUR_MODIFIEE.COLOR:
                                 COL_COLOR[0] *= 1.1f;
                                 COL_COLOR[1] *= 1.1f;
                                 COL_COLOR[2] *= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_COLOR, COL_COLOR[0]);
+                                c.setParametre( CONF_COL_COLOR, COL_COLOR[0]);
                                 break;
                             case VALEUR_MODIFIEE.SHININESS:
                                 SHININESS++;
-                                conf.setParametre(_CAT, CONF_SHININESS, SHININESS);
+                                c.setParametre( CONF_SHININESS, SHININESS);
                                 break;
                         }
 
-                        conf.flush(_CAT);
+                        c.flush();
                         return true;
                     }
 
@@ -245,50 +253,50 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                                 LIG_AMBIENT[0] /= 1.1f;
                                 LIG_AMBIENT[1] /= 1.1f;
                                 LIG_AMBIENT[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_AMBIENT, LIG_AMBIENT[0]);
+                                c.setParametre( CONF_LIGHT_AMBIENT, LIG_AMBIENT[0]);
                                 break;
                             case VALEUR_MODIFIEE.LDIFFUSE:
                                 LIG_DIFFUSE[0] /= 1.1f;
                                 LIG_DIFFUSE[1] /= 1.1f;
                                 LIG_DIFFUSE[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_DIFFUSE, LIG_DIFFUSE[0]);
+                                c.setParametre( CONF_LIGHT_DIFFUSE, LIG_DIFFUSE[0]);
                                 break;
                             case VALEUR_MODIFIEE.LSPECULAR:
                                 LIG_SPECULAR[0] /= 1.1f;
                                 LIG_SPECULAR[1] /= 1.1f;
                                 LIG_SPECULAR[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_LIGHT_SPECULAR, LIG_SPECULAR[0]);
+                                c.setParametre( CONF_LIGHT_SPECULAR, LIG_SPECULAR[0]);
                                 break;
                             case VALEUR_MODIFIEE.AMBIENT:
                                 COL_AMBIENT[0] /= 1.1f;
                                 COL_AMBIENT[1] /= 1.1f;
                                 COL_AMBIENT[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_AMBIENT, COL_AMBIENT[0]);
+                                c.setParametre( CONF_COL_AMBIENT, COL_AMBIENT[0]);
                                 break;
                             case VALEUR_MODIFIEE.DIFFUSE:
                                 COL_DIFFUSE[0] /= 1.1f;
                                 COL_DIFFUSE[1] /= 1.1f;
                                 COL_DIFFUSE[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_DIFFUSE, COL_DIFFUSE[0]);
+                                c.setParametre( CONF_COL_DIFFUSE, COL_DIFFUSE[0]);
                                 break;
                             case VALEUR_MODIFIEE.SPECULAR:
                                 COL_SPECULAR[0] /= 1.1f;
                                 COL_SPECULAR[1] /= 1.1f;
                                 COL_SPECULAR[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_SPECULAR, COL_SPECULAR[0]);
+                                c.setParametre( CONF_COL_SPECULAR, COL_SPECULAR[0]);
                                 break;
                             case VALEUR_MODIFIEE.COLOR:
                                 COL_COLOR[0] /= 1.1f;
                                 COL_COLOR[1] /= 1.1f;
                                 COL_COLOR[2] /= 1.1f;
-                                conf.setParametre(_CAT, CONF_COL_COLOR, COL_COLOR[0]);
+                                c.setParametre( CONF_COL_COLOR, COL_COLOR[0]);
                                 break;
                             case VALEUR_MODIFIEE.SHININESS:
                                 SHININESS--;
-                                conf.setParametre(_CAT, CONF_SHININESS, SHININESS);
+                                c.setParametre( CONF_SHININESS, SHININESS);
                                 break;
                         }
-                        conf.flush(_CAT);
+                        c.flush();
                         return true;
                     }
                 /*
@@ -297,7 +305,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_AMBIENT[0] *= 1.1f;
                     COL_AMBIENT[1] *= 1.1f;
                     COL_AMBIENT[2] *= 1.1f;
-                    conf.setParametre(CAT, "Material.Ambient", COL_AMBIENT[0]);
+                    c.setParametre(CAT, "Material.Ambient", COL_AMBIENT[0]);
                     return true;
                 }
             case Keys.Delete:
@@ -305,7 +313,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_AMBIENT[0] *= 0.9f;
                     COL_AMBIENT[1] *= 0.9f;
                     COL_AMBIENT[2] *= 0.9f;
-                    conf.setParametre(CAT, "Material.Ambient", COL_AMBIENT[0]);
+                    c.setParametre(CAT, "Material.Ambient", COL_AMBIENT[0]);
                     return true;
                 }
 
@@ -314,7 +322,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_DIFFUSE[0] *= 1.1f;
                     COL_DIFFUSE[1] *= 1.1f;
                     COL_DIFFUSE[2] *= 1.1f;
-                    conf.setParametre(CAT, "Material.Diffuse", COL_DIFFUSE[0]);
+                    c.setParametre(CAT, "Material.Diffuse", COL_DIFFUSE[0]);
                     return true;
                 }
             case Keys.End:
@@ -322,7 +330,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_DIFFUSE[0] *= 0.9f;
                     COL_DIFFUSE[1] *= 0.9f;
                     COL_DIFFUSE[2] *= 0.9f;
-                    conf.setParametre(CAT, "Material.Diffuse", COL_DIFFUSE[0]);
+                    c.setParametre(CAT, "Material.Diffuse", COL_DIFFUSE[0]);
                     return true;
                 }
             case Keys.PageUp:
@@ -330,7 +338,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_SPECULAR[0] *= 1.1f;
                     COL_SPECULAR[1] *= 1.1f;
                     COL_SPECULAR[2] *= 1.1f;
-                    conf.setParametre(CAT, "Material.Specular", COL_SPECULAR[0]);
+                    c.setParametre(CAT, "Material.Specular", COL_SPECULAR[0]);
                     return true;
                 }
             case Keys.PageDown:
@@ -338,7 +346,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_SPECULAR[0] *= 0.9f;
                     COL_SPECULAR[1] *= 0.9f;
                     COL_SPECULAR[2] *= 0.9f;
-                    conf.setParametre(CAT, "Material.Specular", COL_SPECULAR[0]);
+                    c.setParametre(CAT, "Material.Specular", COL_SPECULAR[0]);
                     return true;
                 }
 
@@ -347,7 +355,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_COLOR[0] *= 1.1f;
                     COL_COLOR[1] *= 1.1f;
                     COL_COLOR[2] *= 1.1f;
-                    conf.setParametre(CAT, "Material.Color", COL_COLOR[0]);
+                    c.setParametre(CAT, "Material.Color", COL_COLOR[0]);
                     return true;
                 }
             case Keys.Enter:
@@ -355,7 +363,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     COL_COLOR[0] *= 0.9f;
                     COL_COLOR[1] *= 0.9f;
                     COL_COLOR[2] *= 0.9f;
-                    conf.setParametre(CAT, "Material.Color", COL_COLOR[0]);
+                    c.setParametre(CAT, "Material.Color", COL_COLOR[0]);
                     return true;
                 }
 
@@ -363,15 +371,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             case Keys.Subtract:
                 SHININESS--;
-                conf.setParametre(CAT, "Material.Shininess", SHININESS);
+                c.setParametre(CAT, "Material.Shininess", SHININESS);
                 return true;
 
             case Keys.Add:
                 SHININESS++;
-                conf.setParametre(CAT, "Material.Shininess", SHININESS);
+                c.setParametre(CAT, "Material.Shininess", SHININESS);
                 return true;*/
                 default:
-                    return false;
+                    return base.KeyDown(f, k) ;
             }
         }
     }

@@ -13,6 +13,7 @@ using System.Drawing.Imaging;
 using System.Text;
 using SharpGL;
 using System.Diagnostics;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects
 {
@@ -35,12 +36,12 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         const float PRECISION_RANDOM = 100000.0f;
         static readonly public Random r = new Random();
-        static protected readonly Config conf = Config.getInstance();
         protected readonly OpenGL _gl;
 
         protected SizeF _taille = new SizeF(-1, -1);
 
-        //public virtual void AfficheGDI(Graphics g, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
+        public abstract CategorieConfiguration getConfiguration();
+
 
         public DisplayedObject(OpenGL gl)
         {
@@ -53,6 +54,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         public virtual void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur) { }
         public virtual void AppendHelpText(StringBuilder s) { }
+
+
 
         public virtual void Deplace(Temps maintenant, Rectangle tailleEcran) { }
 

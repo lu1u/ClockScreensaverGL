@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClockScreenSaverGL.Config;
+using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
@@ -22,11 +23,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
             try
             {
-                _bmp = Image.FromFile(Config.getImagePath(@"Meteo\" + icone + ".png"));
+                _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\" + icone + ".png"));
             }
             catch (Exception)
             {
-                _bmp = Image.FromFile(Config.getImagePath(@"Meteo\inconnu.png"));
+                _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
                 _texte = "{" + icone + "}" + _texte;
             }
             _date = date;

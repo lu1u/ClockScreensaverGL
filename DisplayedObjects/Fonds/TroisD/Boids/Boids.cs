@@ -4,19 +4,20 @@ using GLfloat = System.Single;
 using SharpGL;
 using System.Drawing;
 using SharpGL.SceneGraph.Assets;
+using System.Collections.Generic;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
     abstract class Boids : MateriauGlobal, IDisposable
     {
         #region Parametres
-        const String CAT = "Boids";
-
-        private static readonly int NB_IMAGES_QUEUE = conf.getParametre(CAT, "Nb images queue", 20);
-        public static readonly int MAX_X = 200;// conf.getParametre(CAT, "Max X", 100);
-        public static readonly int MAX_Y = 150;// conf.getParametre(CAT, "Max Y", 100);
-        public static readonly int MAX_Z = 100; //conf.getParametre(CAT, "Max Z", 100);
-        static float  TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION;
+        
+        public static readonly int MAX_X = 200;// c.getParametre("Max X", 100);
+        public static readonly int MAX_Y = 150;// c.getParametre("Max Y", 100);
+        public static readonly int MAX_Z = 100; //c.getParametre("Max Z", 100);
+        static float TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION;
+        static int NB_IMAGES_ANIMATION;
         protected readonly int NB_BOIDS;
         #endregion
 
@@ -34,10 +35,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         static readonly float COULEUR_BOIDS = 1024.0f;
         static readonly float VITESSE_IMAGES = 4.0f;
 #endif
-        protected Boid[] _boids;
+        protected List<Boid> _boids;
         protected float _angleCamera = 0;
         uint _genLists =0;
-        public Boids(OpenGL gl, int Nb, float Taille, float MaxSpeed, float MaxForce, float DistanceVoisins, float Separation, float VitesseAnimation ) : base(gl, CAT)
+        public Boids(OpenGL gl, CategorieConfiguration cat, int Nb, float Taille, float MaxSpeed, float MaxForce, float DistanceVoisins, float Separation, float VitesseAnimation, int NbImagesAnimation ) :
+            base(gl)
         {
             NB_BOIDS = Nb;
             TAILLE = Taille;
@@ -46,32 +48,36 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             DISTANCE_VOISINS = DistanceVoisins;
             SEPARATION = Separation;
             VITESSE_ANIMATION = VitesseAnimation;
-            _boids = new Boid[NB_BOIDS];
+            NB_IMAGES_ANIMATION = NbImagesAnimation;
+            _boids = new List<Boid>();// new Boid[NB_BOIDS];
             InitBoids(_boids);
             InitRender(gl);
             
         }
 
+
+
         protected virtual void InitRender(OpenGL gl)
         {
-            _genLists = gl.GenLists(NB_IMAGES_QUEUE);
+            _genLists = gl.GenLists(NB_IMAGES_ANIMATION);
 
-            for (int i = 0; i < NB_IMAGES_QUEUE; i++)
+            for (int i = 0; i < NB_IMAGES_ANIMATION; i++)
             {
                 gl.NewList(_genLists + (uint)i, OpenGL.GL_COMPILE);
-                DessineBoid(gl, (float)i / NB_IMAGES_QUEUE);
+                DessineBoid(gl, (float)i / NB_IMAGES_ANIMATION);
                 gl.EndList();
             }
         }
 
+        protected abstract Boid newBoid();
         /// <summary>
         /// Initialisation du tableau de boids
         /// </summary>
         /// <param name="_boids"></param>
-        protected virtual void InitBoids(Boid[] _boids)
+        protected virtual void InitBoids(List<Boid> _boids)
         {
-            for (int i = 0; i < NB_BOIDS; i++)
-                _boids[i] = new Boid(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
+           // for (int i = 0; i < NB_BOIDS; i++)
+           //     _boids[i] = new Boid(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
         }
 
         protected abstract void DessineBoid(OpenGL gl, float noImage);
@@ -80,7 +86,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         {
             base.Dispose();
             if  (_genLists != 0)
-                _gl.DeleteLists(_genLists, NB_IMAGES_QUEUE);
+                _gl.DeleteLists(_genLists, NB_IMAGES_ANIMATION);
         }
 
 
@@ -88,7 +94,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.RENDER);
-#endif           
+#endif         
+            if (_boids.Count < NB_BOIDS)
+            {
+                Boid b = newBoid();
+                b._couleur = couleur;
+                _boids.Add(b);
+            }
+
             InitOpenGL(gl, maintenant, couleur);
 
 
@@ -100,6 +113,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 {
                     float theta = b._Vitesse.Heading2D();
                     theta = (float)(theta / Math.PI * 180.0);// - 90.0f;
+                    gl.Color(b._couleur.R / 256.0f, b._couleur.G / 256.0f, b._couleur.B / 256.0f);
                     gl.PushMatrix();
                     gl.Translate(b._Position.x, b._Position.y, b._Position.z);
                     gl.Rotate(0, 0, theta);
@@ -108,8 +122,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                     gl.End();
                     gl.PopMatrix();
                 }
-
-            fillConsole(gl);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -124,17 +136,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 #endif
             _angleCamera += maintenant._intervalle * 0.1f;
 
+            
             foreach (Boid b in _boids)
                 b.flock(_boids);
 
-            float dImage = NB_IMAGES_QUEUE * maintenant._intervalle * VITESSE_ANIMATION ;
+            float dImage = NB_IMAGES_ANIMATION * maintenant._intervalle * VITESSE_ANIMATION ;
             foreach (Boid b in _boids)
             {
                 b.update(maintenant);
 
 
                 b.image += dImage * b._vitesseAnimation;
-                if (b.image >= NB_IMAGES_QUEUE)
+                if (b.image >= NB_IMAGES_ANIMATION)
                     b.image = 0;
             }
 #if TRACER
@@ -155,11 +168,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             public Vecteur3D _Acceleration;
             public float image;
             public float _vitesseAnimation;
-
+            public Color _couleur;
             public Boid(float x, float y, float z)
             {
                 _Acceleration = new Vecteur3D(0, 0);
-                image = DisplayedObject.FloatRandom(0, Boids.NB_IMAGES_QUEUE);
+                image = DisplayedObject.FloatRandom(0, Boids.NB_IMAGES_ANIMATION);
                 _vitesseAnimation = DisplayedObject.FloatRandom(0.8f, 1.2f);
                 float angle = DisplayedObject.FloatRandom(0, TWO_PI);
                 _Vitesse = new Vecteur3D((float)Math.Cos(angle), (float)Math.Sin(angle));
@@ -187,7 +200,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 #endif
 
             // We accumulate a new acceleration each time based on three rules
-            public void flock(Boid[] boids)
+            public void flock(List<Boid> boids)
             {
                 //Vecteur3D sep = Separation(boids);   // Separation
                 //Vecteur3D ali = Alignement(boids);      // Alignment
@@ -206,7 +219,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _Acceleration.additionner(coh);
             }
 
-            private void flocking(Boid[] boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
+            private void flocking(List<Boid> boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
             {
                 sep = new Vecteur3D(0, 0, 0);
                 ali = new Vecteur3D(0, 0, 0);

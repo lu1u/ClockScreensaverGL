@@ -16,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
     public sealed class BandeSeconde : BandeHorizontale
     {
         public BandeSeconde(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, conf.getParametre(CAT, "AlphaSeconde", (byte)100))
+            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaSeconde", (byte)100))
         {
         }
 

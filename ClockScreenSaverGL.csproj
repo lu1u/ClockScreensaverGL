@@ -87,6 +87,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
     <DefineConstants>TRACE;DEBUG;TRACER</DefineConstants>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -130,7 +131,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
+    <Compile Include="Configuration\CategorieConfiguration.cs" />
+    <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\Parametre.cs" />
     <Compile Include="CouleurGlobale.cs" />
     <Compile Include="DisplayedObjects\Bandes\Bande.cs" />
     <Compile Include="DisplayedObjects\Bandes\BandesHorizontales\BandeHeure.cs" />
@@ -156,10 +159,8 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\Boids.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\BoidsOiseaux.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\BoidsPoissons.cs" />
-    <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\BoidsTrace.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Nebuleuse.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\FrustumCulling.cs" />
-    <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Grille.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Cubes.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\GrilleBase.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Nuages2.cs" />

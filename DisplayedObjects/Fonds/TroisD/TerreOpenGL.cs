@@ -9,6 +9,7 @@ using SharpGL.SceneGraph.Assets;
 using SharpGL.SceneGraph.Quadrics;
 using SharpGL.SceneGraph.Evaluators;
 using System.Windows.Forms;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
@@ -16,12 +17,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         #region Parametres
         const String CAT = "TerreOpenGl";
-        static readonly int NB_TRANCHES = 256;// conf.getParametre(CAT, "NbTranches", 64);
-        static readonly int NB_MERIDIENS = 256;// conf.getParametre(CAT, "NbMeridiens", 64);
-        static readonly float VITESSE = conf.getParametre(CAT, "Vitesse", 5f);
-        static readonly float LONGITUDE_DRAPEAU = 270 + conf.getParametre(CAT, "Longitude", 5.97f); // Longitude du drapeau + correction en fonction de la texture
-        static readonly float LATITUDE_DRAPEAU = 0 + conf.getParametre(CAT, "Latitude", 45.28f); // Latitude du drapeau
-        static readonly int DETAILS_DRAPEAU = conf.getParametre(CAT, "Details drapeau", 10);
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static readonly int NB_TRANCHES = c.getParametre("NbTranches", 64);
+        static readonly int NB_MERIDIENS = c.getParametre("NbMeridiens", 64);
+        static float VITESSE = c.getParametre("Vitesse", 5f, true );
+        static float LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, true); // Longitude du drapeau + correction en fonction de la texture
+        static float LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, true); // Latitude du drapeau
+        static int DETAILS_DRAPEAU = c.getParametre("Details drapeau", 10);
         #endregion
 
         Texture _textureTerre = new Texture();
@@ -34,10 +36,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// Constructeur: preparer les objets OpenGL
         /// </summary>
         /// <param name="gl"></param>
-        public TerreOpenGL(OpenGL gl) : base(gl, CAT)
+        public TerreOpenGL(OpenGL gl) : base(gl)
         //: base(1.0f, 1.0f, 1.0f, 0)
         {
-            _textureTerre.Create(gl, Config.getImagePath("terre.png"));
+            _textureTerre.Create(gl, Configuration.getImagePath("terre.png"));
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;
@@ -50,8 +52,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 _zDrapeau[i] = 0.002f * (float)Math.Sin(i * 4.0 * Math.PI / DETAILS_DRAPEAU);
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
+        /// <summary>
+        /// Appellee en notification d'un changement interactif de configuration
+        /// </summary>
+        /// <param name="valeur"></param>
+        protected override void onConfigurationChangee(string valeur)
+        {
+           LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, true); // Longitude du drapeau + correction en fonction de la texture
+           LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, true); // Latitude du drapeau
+           
+           base.onConfigurationChangee(valeur);
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void Dispose()
         {
             base.Dispose();
@@ -126,8 +146,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 }
                 gl.End();
             }
-
-            fillConsole(gl);
+            
 
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);

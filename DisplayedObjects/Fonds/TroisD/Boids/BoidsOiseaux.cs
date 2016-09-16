@@ -5,27 +5,45 @@ using System.Linq;
 using System.Text;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 {
     class BoidsOiseaux : Boids
     {
         const String CAT = "Boids Oiseaux";
-        static readonly int NB = conf.getParametre(CAT, "Nb", 1000);
-        static readonly float MAX_SPEED = conf.getParametre(CAT, "Max Speed", 40f);
-        static readonly float MAX_FORCE = conf.getParametre(CAT, "Max force", 0.4f);
-        static readonly float TAILLE = conf.getParametre(CAT, "Taille", 2.0f);
-        static readonly float DISTANCE_VOISINS = conf.getParametre(CAT, "Distance voisins", 25.0f);
-        static readonly float SEPARATION = conf.getParametre(CAT, "Separation", 10.0f);
-        static readonly float VITESSE_ANIMATION = conf.getParametre(CAT, "Vitesse animation", 2.0f);
-        static readonly float DIMINUE_VITESSE_V = conf.getParametre(CAT, "Diminition vitesse verticale", 0.99f);
-        static readonly float DIMINUE_ACCELERATION_V = conf.getParametre(CAT, "Diminution acceleration verticale", 0.99f);
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+
+        static readonly int NB = c.getParametre("Nb", 1000);
+        static float MAX_SPEED         = c.getParametre("Max Speed", 40.0f, true);
+        static float MAX_FORCE         = c.getParametre("Max force", 0.4f, true);
+        static float TAILLE            = c.getParametre("Taille", 2.0f, true);
+        static float DISTANCE_VOISINS  = c.getParametre("Distance voisins", 25.0f, true);
+        static float SEPARATION        = c.getParametre("Separation", 10.0f, true);
+        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 2.0f, true);
+        static float DIMINUE_VITESSE_V = c.getParametre("Diminition vitesse verticale", 0.99f, true);
+        static int NB_IMAGES_ANIMATION = c.getParametre("Nb Images animation", 10, true);
+        static float DIMINUE_ACCELERATION_V = c.getParametre("Diminution acceleration verticale", 0.99f, true);
+
         Texture _texture = new Texture();
         
 
-        public BoidsOiseaux(OpenGL gl) : base(gl, NB, TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION)
+        public BoidsOiseaux(OpenGL gl) : base(gl, c, NB, TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION, NB_IMAGES_ANIMATION)
         {
-            _texture.Create(gl, Config.getImagePath("oiseau.png"));
+            _texture.Create(gl, Configuration.getImagePath("oiseau.png"));
+            c.setListenerParametreChange(onConfigurationChangee);
+        }
+
+        protected override void onConfigurationChangee(string valeur)
+        {
+            MAX_SPEED = c.getParametre("Max Speed", 20f, true);
+            MAX_FORCE = c.getParametre("Max force", 0.1f, true);
+            TAILLE = c.getParametre("Taille", 2.5f, true);
+            DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
+            SEPARATION = c.getParametre("Separation", 7.5f, true);
+            VITESSE_ANIMATION = c.getParametre("Vitesse animation", 1.5f, true);
+            NB_IMAGES_ANIMATION = c.getParametre("Nb Images animation", 10, true);
+            base.onConfigurationChangee(valeur);
         }
 
         public override void Dispose()
@@ -34,6 +52,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             _texture?.Destroy(_gl);
         }
 
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         protected override void DessineBoid(OpenGL gl, float noImage)
         {
             double angle = noImage * 2.0 * Math.PI;
@@ -85,22 +108,34 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             gl.Color(0.0f,0.0f,0.0f,1.0f);
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             _texture.Bind(gl);
+
+            _boids.Sort(delegate (Boid O1, Boid O2)
+            {
+                if (O1._Position.z > O2._Position.z) return 1;
+                if (O1._Position.z < O2._Position.z) return -1;
+                return 0;
+            });
         }
 
         /// <summary>
         /// Initialisation du tableau de boids
         /// </summary>
         /// <param name="_boids"></param>
-        protected override void InitBoids(Boid[] _boids)
+        protected override void InitBoids(List<Boid> _boids)
         {
             for (int i = 0; i < NB_BOIDS; i++)
-                _boids[i] = new BoidOiseau(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
+                _boids.Add(new BoidOiseau(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z)));
         }
         public override void ClearBackGround(OpenGL gl, Color c)
         {
             c = getCouleurOpaqueAvecAlpha(c, 128);
             gl.ClearColor(c.R / 256.0f, c.G / 256.0f, c.B / 256.0f, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
+
+        protected override Boid newBoid()
+        {
+            return new BoidOiseau(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
         }
 
         protected class BoidOiseau : Boid
@@ -115,6 +150,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
                 _Acceleration.y *= DIMINUE_ACCELERATION_V;
                 _Vitesse.y *= DIMINUE_VITESSE_V;
+                _couleur = Color.Black;
                 base.update(maintenant);
             }
         }

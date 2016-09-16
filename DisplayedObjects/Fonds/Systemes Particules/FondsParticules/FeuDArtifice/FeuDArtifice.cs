@@ -7,20 +7,22 @@ using SharpGL;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D;
 using ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modificateurs;
 using SharpGL.SceneGraph.Assets;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 {
     class FeuDArtifice : SystemeParticules2D.SystemeParticules2D, IDisposable
     {
         const String CAT = "FeuDArtifice";
-        static readonly int NB_EMETTEURS = 1;// conf.getParametre(CAT, "Nb Emetteurs", 5);
-        static readonly int NB_PARTICULES = 5000;// conf.getParametre(CAT, "Nb Particules", 600);
-        readonly float GRAVITE_X = 0;// conf.getParametre(CAT, "Gravite X", 0.05f);
-        readonly float GRAVITE_Y = -0.5f;// conf.getParametre(CAT, "Gravite Y", 0.2f);
-        readonly float ALPHA_MODIFIEUR = 0.4f;// conf.getParametre(CAT, "Modifieur Alpha", 0.05f);
-        readonly float TAILLE_MODIFIEUR = 0.001f;// conf.getParametre(CAT, "Modifieur Taille", 1.1f);
-        readonly float TAILLE_PARTICULE = 0.002f;// conf.getParametre(CAT, "TailleParticule", 0.02f);
-        readonly float VITESSE_PARTICULE = 0.5f;// conf.getParametre(CAT, "VitesseParticule", 0.2f);
+        static CategorieConfiguration c = Configuration.getCategorie(CAT);
+        static readonly int NB_EMETTEURS =c.getParametre("Nb Emetteurs", 1);
+        static readonly int NB_PARTICULES =c.getParametre("Nb Particules", 5000);
+        readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f, true);
+        readonly float GRAVITE_Y = -c.getParametre("Gravite Y", -0.5f, true);
+        readonly float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.4f, true);
+        readonly float TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.001f);
+        readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.002f);
+        readonly float VITESSE_PARTICULE =  c.getParametre("VitesseParticule", 0.5f);
 
         public FeuDArtifice(OpenGL gl) : base(gl, NB_PARTICULES)
         {
@@ -38,6 +40,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AjouteModificateur(new ModificateurGravite(GRAVITE_X, GRAVITE_Y));
             AjouteModificateur(new ModificateurAlpha(ALPHA_MODIFIEUR));
             AjouteModificateur(new ModificateurTaille(TAILLE_MODIFIEUR));
+        }
+
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
         }
     }
 }

@@ -3,6 +3,7 @@
  * Inspire de http://www.jgallant.com/blog/
  */
 
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using System;
 using System.Collections.Generic;
@@ -15,17 +16,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     class Printemps : Fond
     {
         #region PARAMETRES
-        const String CAT = "Tree.GDI";
-        public static readonly byte ALPHA = (byte)conf.getParametre(CAT, "ALPHA", 128);
-        public static readonly int DELAI_RECOMMENCE = conf.getParametre(CAT, "Delai nouvel arbre", 10) * 1000;
-        public static readonly float LARGEUR_TRONC = conf.getParametre(CAT, "Largeur Tronc", 10);
-        public static readonly int HAUTEUR_TRONC = conf.getParametre(CAT, "Hauteur Tronc", 200);
-        public static readonly int LARGEUR_ARBRE = conf.getParametre(CAT, "Largeur Arbre", 1200);
-        public static readonly int HAUTEUR_ARBRE = conf.getParametre(CAT, "Hauteur Arbre", 400);
-        public static readonly int LONGUEUR_BRANCHE = conf.getParametre(CAT, "Longueur Branche", 7);
-        public static readonly int DISTANCE_MIN = conf.getParametre(CAT, "Distance Min", 5);
-        public static readonly int DISTANCE_MAX = conf.getParametre(CAT, "Distance Max", 100);
-        public static readonly int NB_CIBLES = conf.getParametre(CAT, "Nb Cibles", 200);
+        const String CAT = "Tree";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        public static readonly byte ALPHA = (byte)c.getParametre("ALPHA", 128);
+        public static readonly int DELAI_RECOMMENCE = c.getParametre("Delai nouvel arbre", 10) * 1000;
+        public static readonly float LARGEUR_TRONC = c.getParametre("Largeur Tronc", 10);
+        public static readonly int HAUTEUR_TRONC = c.getParametre("Hauteur Tronc", 200);
+        public static readonly int LARGEUR_ARBRE = c.getParametre("Largeur Arbre", 1200);
+        public static readonly int HAUTEUR_ARBRE = c.getParametre("Hauteur Arbre", 400);
+        public static readonly int LONGUEUR_BRANCHE = c.getParametre("Longueur Branche", 7);
+        public static readonly int DISTANCE_MIN = c.getParametre("Distance Min", 5);
+        public static readonly int DISTANCE_MAX = c.getParametre("Distance Max", 100);
+        public static readonly int NB_CIBLES = c.getParametre("Nb Cibles", 200);
         float _oscillation = 0;
         
         #endregion
@@ -66,7 +68,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
         }
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
         public override void ClearBackGround(OpenGL gl, Color c)
         {
             c = getCouleurOpaqueAvecAlpha(c, ALPHA);
