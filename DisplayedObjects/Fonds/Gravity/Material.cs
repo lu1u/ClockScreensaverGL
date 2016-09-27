@@ -73,9 +73,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             color[2] = v;
         }
 
-        public void set(float amb, float diff, float spec, float color, int sh)
+        public void set(float amb, float diff, float spec, float couleur, int sh)
         {
-            setColor(color);
+            setColor(couleur);
             setAmbient(amb);
             setDiffuse(diff);
             setSpecular(spec);

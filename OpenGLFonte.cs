@@ -11,7 +11,8 @@ namespace ClockScreenSaverGL
 {
     class OpenGLFonte : IDisposable
     {
-        readonly float RATIO_FONTE = 1.0f;// c.getParametre("RatioFonte", 0.70f);
+        public const String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyzàéèôïöë0123456789,;:!?./*=&é\"'{([-|è`_\\ç^à@)]=}><";
+
         readonly OpenGL _gl;
         readonly string _caracteres;
         readonly float _hauteurSymbole;
@@ -48,10 +49,10 @@ namespace ClockScreenSaverGL
                     for (int i = 0; i < nbSymboles; i++)
                     {
                         SizeF size = g.MeasureString(_caracteres[i].ToString(), f);
-                        largeur = (float)Math.Round(size.Width * RATIO_FONTE);
+                        largeur = (float)Math.Round(size.Width);
                         _hauteurSymbole = Math.Max(_hauteurSymbole, size.Height);
 
-                        _xCaractere[i] = xCaractere;
+                        _xCaractere[i] = xCaractere;        // Bord gauche du caractere
                         xCaractere += largeur;
                     }
                 }

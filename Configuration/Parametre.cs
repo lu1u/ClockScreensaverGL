@@ -24,6 +24,7 @@ namespace ClockScreenSaverGL.Config
         public TYPE_PARAMETRE _type;
         public bool _modifiable;
         public Object _value;
+        public Object _defaut;
 
         public Parametre(string ligneFichier)
         {
@@ -52,6 +53,7 @@ namespace ClockScreenSaverGL.Config
 
             // Valeur
             _value = toObject(_type, ligneFichier);
+            _defaut = toObject(_type, ligneFichier);
         }
 
         /// <summary>
@@ -182,6 +184,7 @@ namespace ClockScreenSaverGL.Config
             this.nom = nom;
             _type = type;
             _value = valeur;
+            _defaut = valeur;
             _modifiable = modifiable;
         }
 
@@ -366,6 +369,11 @@ namespace ClockScreenSaverGL.Config
                     _value = (byte)0;
                     break;
             }
+        }
+
+        internal void Defaut()
+        {
+            _value = _defaut;
         }
     }
 }

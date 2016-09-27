@@ -17,16 +17,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public const string CAT = "Espace";
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)255);
-        private static readonly float TAILLE_ETOILE = c.getParametre("Taille", 0.15f);
+        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)255,true);
+        private static readonly float TAILLE_ETOILE = c.getParametre("Taille", 0.15f, true);
         private static readonly int NB_ETOILES = c.getParametre("NbEtoiles", 2000);
-        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
-        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
-        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
-        private static readonly float VITESSE = c.getParametre("Vitesse", 8f);
-        private static readonly float DELTA_COULEUR = c.getParametre("Delta Couleur", 0.1f);
+        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f, true);
+        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f, true);
+        private static readonly float VITESSE = c.getParametre("Vitesse", 8f, true);
         #endregion
+
         const float VIEWPORT_X = 5f;
         const float VIEWPORT_Y = 5f;
         const float VIEWPORT_Z = 5f;
@@ -49,14 +49,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, Configuration.getImagePath("etoile.png"));
+            _texture.Create(gl, c.getParametre("Etoile", Configuration.getImagePath("etoile.png")));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
             {
                 NouvelleEtoile(ref _etoiles[i]);
-                // Au debut, on varie la distance des etoiles
-                _etoiles[i].z = FloatRandom(-VIEWPORT_Z, _zCamera);
+               
             }
         }
 
@@ -70,16 +69,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _texture.Destroy(_gl);
         }
 
-        private static void NouvelleEtoile(ref Etoile f)
+        private void NouvelleEtoile(ref Etoile f)
         {
             if (f == null)
+            {
                 f = new Etoile();
+                // Au debut, on varie la distance des etoiles
+                f.z = FloatRandom(-VIEWPORT_Z, _zCamera);
+            }
+            else
+                f.z = -VIEWPORT_Z;
 
             f.x = FloatRandom(-VIEWPORT_X * 6, VIEWPORT_X * 6);
-            f.z = -VIEWPORT_Z;
             f.y = FloatRandom(-VIEWPORT_Y * 6, VIEWPORT_Y * 6);
         }
 
+        public override void ClearBackGround(OpenGL gl, Color c)
+        {
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+        }
         /// <summary>
         /// Affichage des flocons
         /// </summary>
@@ -95,8 +104,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
 
-            gl.ClearColor(0, 0, 0, 1);
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_DEPTH);

@@ -46,6 +46,7 @@ namespace ClockScreenSaverGL
 			}
 			return j;
 		}
+
 		private static double MoonAge(int d, int m, int y)
 		{
 			int j = JulianDate(d, m, y);

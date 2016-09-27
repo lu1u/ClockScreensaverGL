@@ -1,4 +1,5 @@
-﻿using SharpGL;
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         static Random r = new Random();
         const int NB_TYPES_FEUILLES =2;
         static int TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-        static Bitmap _b = TYPE_FEUILLES == 0 ? Resources.feuille1 :  Resources.feuille2 ;
+        static Bitmap _b ;
         public Vector3 Position { get; set; }
         public float _taille;
         private static Texture _texture;
@@ -32,7 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         public static void InitTexture()
         {
             TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-            _b = TYPE_FEUILLES == 0 ? Resources.feuille1 : Resources.feuille2;
+            _b = (Bitmap)Bitmap.FromFile(Configuration.getImagePath(TYPE_FEUILLES == 0 ? "feuille1.png" : "feuille2.png"));
 
             _texture = null;
         }
@@ -44,13 +45,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         }
 
         /// <summary>
-        /// Retourne l'image donne, pivoter de angle degres
+        /// Retourne l'image donne, pivotee de angle degres
         /// http://stackoverflow.com/questions/4320531/rotating-an-image-modifies-the-resolution-and-clarity/4320581#4320581
         /// </summary>
         /// <param name="image"></param>
         /// <param name="angle"></param>
         /// <returns></returns>
-        public static Bitmap RotateImage(Image image, float angle)
+        private static Bitmap RotateImage(Image image, float angle)
         {
             const double pi2 = Math.PI / 2.0;
             double oldWidth = (double)image.Width;

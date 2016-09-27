@@ -51,6 +51,7 @@ namespace ClockScreenSaverGL
         static readonly int ETE = c.getParametre("Ete", 172);
         static readonly int AUTOMNE = c.getParametre("Automne", 265);
         static readonly int HIVER = c.getParametre("Hiver", 356);
+        static bool MULTISAMPLE = c.getParametre("Multisample", true);
         #endregion
 
         CouleurGlobale _couleur = new CouleurGlobale();        // La couleur de base pour tous les affichages
@@ -69,7 +70,7 @@ namespace ClockScreenSaverGL
         #region Fonds
         enum FONDS
         {
-            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, /* GRILLE, */ PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
+            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
             BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, ADN,
         };
 
@@ -162,11 +163,10 @@ namespace ClockScreenSaverGL
         /// <returns></returns>
         private Fond createBackgroundObject(FONDS Type, bool initial)
         {
-
             OpenGL gl = openGLControl.OpenGL;
-            if (!initial)
-                gl.PopAttrib();
 
+             if (!initial)
+                gl.PopAttrib();
 
             gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
 
@@ -216,10 +216,10 @@ namespace ClockScreenSaverGL
                 case FONDS.ADN: return new ADN(gl);
                 case FONDS.BOIDS_OISEAUX: return new BoidsOiseaux(gl);
                 case FONDS.BOIDS_POISSONS: return new BoidsPoissons(gl);
-                //case FONDS.GRILLE: return new Grille(gl);
+                case FONDS.MOLECULE: return new Molecule(gl);
                 default:
                     return new Metaballes(gl);
-            }
+            }           
             
         }
 
@@ -418,23 +418,31 @@ namespace ClockScreenSaverGL
             gl.Perspective(60, Bounds.Width / (float)Bounds.Height, .1f, 1000f);
             gl.MatrixMode(OpenGL.GL_MODELVIEW);                         // Select The Modelview Matrix
             gl.LoadIdentity();
-            gl.Enable(OpenGL.GL_MULTISAMPLE);
+            if (MULTISAMPLE)
+            {
+                gl.Enable(OpenGL.GL_MULTISAMPLE);
+                gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
+            }
+            else
+            {
+                gl.Disable(OpenGL.GL_MULTISAMPLE);
+                gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_FASTEST);
+            }
 
-            // Deplacer et Afficher tous les objets
-            foreach (DisplayedObject b in _listeObjets)
+                // Deplacer et Afficher tous les objets
+                foreach (DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
-            gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_NICEST);
-
+            
             if (wireframe)
             {
-                gl.LineWidth(1);
+                gl.LineWidth(2);
                 gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
             }
             // Deplacer et Afficher tous les objets
             foreach (DisplayedObject b in _listeObjets)
             {
                 gl.PushMatrix();
-                gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
+                gl.PushAttrib(OpenGL.GL_ENABLE_BIT| OpenGL.GL_COLOR_BUFFER_BIT| OpenGL.GL_DEPTH_BUFFER_BIT);
                 b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
                 gl.PopAttrib();
                 gl.PopMatrix();
@@ -628,6 +636,12 @@ namespace ClockScreenSaverGL
                     Application.Exit();
                 }
             }
+        }
+
+        private void onFormClosed(object sender, FormClosedEventArgs e)
+        {
+            Configuration.getInstance().flush();
+            Log.getInstance().flush();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public TerreOpenGL(OpenGL gl) : base(gl)
         //: base(1.0f, 1.0f, 1.0f, 0)
         {
-            _textureTerre.Create(gl, Configuration.getImagePath("terre.png"));
+            _textureTerre.Create(gl, c.getParametre("Terre", Configuration.getImagePath("terre.png")));
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;

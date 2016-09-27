@@ -22,7 +22,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         public GravitationParticules(OpenGL gl) : base(gl, NB_PARTICULES)
         {
 
-            AjouteTexture(Configuration.getImagePath("particuleTexture.png"), 1);
+            AjouteTexture(c.getParametre("Particule", Configuration.getImagePath("particuleTexture.png")), 1);
 
             AjouteEmetteur(new EmetteurGravitation(G, MULT_DIST, TIMER_CREATE));
 

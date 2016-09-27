@@ -14,21 +14,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         #region Parametres
         const String CAT = "RebondParticules";
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
-        static readonly int NB_PARTICULES = c.getParametre("Nb Particules", 50);
+        readonly int NB_PARTICULES = c.getParametre("Nb Particules", 50);
         readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f);
         readonly float GRAVITE_Y = c.getParametre("Gravite Y", -0.5f);
         readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.05f);
         readonly float VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.2f);
         #endregion
 
-        public RebondParticules(OpenGL gl) : base(gl, NB_PARTICULES)
+        public RebondParticules(OpenGL gl) : base(gl, c.getParametre("Nb Particules", 50))
         {
             // Ajouter les particules (pas d'emetteur: le nb de particules reste fixe)
             for (int i = 0; i < NB_PARTICULES; i++)
                 AjouteParticule();
 
             couleurParticules = COULEUR_PARTICULES.BLANC;
-            AjouteTexture(Configuration.getImagePath("balle.png"), 1);
+            AjouteTexture(c.getParametre("Balle", Configuration.getImagePath("balle.png")), 1);
 
             AjouteModificateur(new ModificateurGravite(GRAVITE_X, GRAVITE_Y));
             AjouteModificateur(new ModificateurRebond(MIN_X, MAX_X, MIN_Y, MAX_Y));

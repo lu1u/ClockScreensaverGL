@@ -1,14 +1,12 @@
 ﻿/*
  * Un tunnel infini et mouvant
  * 
- * Pour changer ce modèle utiliser Outils | Options | Codage | Editer les en-têtes standards.
  */
+using ClockScreenSaverGL.Config;
+using SharpGL;
 using System;
 using System.Drawing;
-using SharpGL;
 using GLfloat = System.Single;
-using System.Windows.Forms;
-using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 {
@@ -18,7 +16,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     public class Tunnel : MateriauGlobal
     {
         private const string CAT = "Tunnel.OpenGL";
-        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static CategorieConfiguration c = Configuration.getCategorie(CAT);
         private static readonly int TAILLE_ANNEAU_MIN = c.getParametre("NbFacettesMin", 4);
         private static readonly int TAILLE_ANNEAU_MAX = c.getParametre("NbFacettesMax", 16);
         private readonly int TAILLE_ANNEAU;
@@ -42,15 +40,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         const float VIEWPORT_Y = 2f;
         const float VIEWPORT_Z = 4f;
         
-        /*static readonly float[] SPECULAR_LIGHT = { 0.7f, 0.7f, 0.7f }; //set the 
-        static readonly float[] AMBIENT_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
-        static readonly float[] DIFFUSE_LIGHT = { 0.9f, 0.9f, 0.9f }; //set the 
-        static readonly float[] COL_SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };//{
-        static readonly float[] COL_AMBIENT = { 0.1f, 0.1f, 0.1f, 1.0f };//{ 
-        static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
-        static readonly float[] COL_DIFFUSE = { 0.04f, 0.04f, 0.04f, 1.0f };
-        static readonly float SHININESS = 120f;// c.getParametre("Shininess", 70);
-        */
         /// <summary>
         /// Constructeur: initialiser les anneaux
         /// </summary>
@@ -67,6 +56,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 BANDES_PLEINES = TAILLE_ANNEAU + 1;
             else
                 BANDES_PLEINES = r.Next(1, BANDES_PLEINES + 1);
+
             _anneaux = new Vecteur3D[NB_ANNEAUX, TAILLE_ANNEAU];
 
             _CentreAnneauX = 0;
@@ -142,7 +132,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Disable(OpenGL.GL_CULL_FACE);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-            gl.DepthMask((byte)OpenGL.GL_TRUE);
+            //gl.DepthMask((byte)OpenGL.GL_TRUE);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             /*
             // Lumiere

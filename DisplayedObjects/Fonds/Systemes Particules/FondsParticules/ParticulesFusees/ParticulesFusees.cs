@@ -29,7 +29,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             AttributBlend = PARTICULES_BLEND_ADDITIVE;
             typeFond = TYPE_FOND.FOND_COULEUR;
             couleurParticules = COULEUR_PARTICULES.BLANC;
-            AjouteTexture(Configuration.getImagePath("nuages_petits.png"), 3);
+            AjouteTexture(c.getParametre("Nuages petits", Configuration.getImagePath("nuages_petits.png")), 3);
 
             AjouteModificateur(new ModificateurExclusion(MIN_X, MIN_Y, MAX_X, MAX_Y,
                 ModificateurExclusion.Exclusions.EXCLURE_AU_DESSUS | ModificateurExclusion.Exclusions.EXCLURE_A_DROITE| ModificateurExclusion.Exclusions.EXCLURE_A_GAUCHE));

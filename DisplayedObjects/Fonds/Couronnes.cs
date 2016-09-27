@@ -162,6 +162,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         /// <param name="f"></param>
         /// <param name="k"></param>
         /// <returns></returns>
+        /*
         public override bool KeyDown(Form f, Keys k)
         {
             switch (k)
@@ -183,6 +184,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
 
             }
             return base.KeyDown(f, k); ;
-        }
+        }*/
     }
 }

@@ -52,7 +52,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-            textureCellule.Create(gl, Configuration.getImagePath("particule.png"));
+            textureCellule.Create(gl, c.getParametre("texture particule", Configuration.getImagePath("particule.png")));
         }
 
         public override CategorieConfiguration getConfiguration()

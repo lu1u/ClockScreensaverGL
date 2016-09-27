@@ -71,11 +71,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
             _textureSoleil = new Texture();
-            _textureSoleil.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\soleil.png"));
+            _textureSoleil.Create(gl, c.getParametre("Soleil", Configuration.getImagePath(REPERTOIRE_ETE + @"\soleil.png")));
             _textureFond = new Texture();
-            _textureFond.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png"));
+            _textureFond.Create(gl, c.getParametre("Fond", Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png")));
             _textureFlares = new Texture();
-            _textureFlares.Create(gl, Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png"));
+            _textureFlares.Create(gl, c.getParametre("Flares", Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png")));
             Init(gl);
         }
 
@@ -208,16 +208,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         /// <param name="f"></param>
         /// <param name="k"></param>
         /// <returns></returns>
-        public override bool KeyDown(Form f, Keys k)
+        /*public override bool KeyDown(Form f, Keys k)
         {
             switch (k)
             {
-                /*case Keys.R:
-                    {
-                        Init();
-                        return true;
-                    }
-                    */
                 case TOUCHE_INVERSER:
                     AFFICHE_FOND = !AFFICHE_FOND;
                     c.setParametre( "Affiche Fond", AFFICHE_FOND);
@@ -225,6 +219,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             }
             return base.KeyDown(f, k); ;
         }
+*/
         public override void AppendHelpText(StringBuilder s)
         {
             s.Append(Resources.AideEte);

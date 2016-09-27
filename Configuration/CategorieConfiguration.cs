@@ -21,8 +21,12 @@ namespace ClockScreenSaverGL.Config
         private bool _propre = true;
         public delegate void ParametreChange(string nom);
         private ParametreChange _parametreChange;
-        private string keyCourante;         // La valeur courante, modifiee par le clavier
+        private string keyCourante;         // La valeur courante, modifiee interactivement
 
+        /// <summary>
+        /// Constructeur
+        /// </summary>
+        /// <param name="nom">Nom de la categorie</param>
         public CategorieConfiguration(string nom)
         {
             _nom = nom;
@@ -52,10 +56,7 @@ namespace ClockScreenSaverGL.Config
         /// <returns></returns>
         public static string getFileName(string nom)
         {
-            string path = Configuration.getRepertoire();
-            Directory.CreateDirectory(path);
-
-            return Path.Combine(path, nom + EXTENSION_CONF);
+            return Path.Combine(Configuration.getRepertoire(), nom + EXTENSION_CONF);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace ClockScreenSaverGL.Config
                 {
                     string line;
                     while ((line = file.ReadLine()) != null)
-                        if (line.Length > 0 && !line.StartsWith(DEBUT_COMMENTAIRE)) // Commentaire
+                        if ((line.Length > 0) && (!line.StartsWith(DEBUT_COMMENTAIRE))) // Commentaire
                         {
                             Parametre parametre = new Parametre(line);
                             _valeurs.Add(parametre.nom, parametre);
@@ -145,9 +146,9 @@ namespace ClockScreenSaverGL.Config
             if ((p != null) && (p is Parametre))
             {
                 if (p._type != type)
-                    //throw new InvalidCastException("parametre " + name + ": type invalide");
                     return defaut;
                 p._modifiable = modifiable;
+                p._defaut = defaut;
                 return p._value;
             }
 
@@ -228,13 +229,14 @@ namespace ClockScreenSaverGL.Config
             c.AddLigne(Color.LightGreen, "");
             c.AddLigne(Color.LightGreen, "8/2 : changer le parametre courant");
             c.AddLigne(Color.LightGreen, "4/6 : modifier la valeur du parametre courant");
+            c.AddLigne(Color.LightGreen, "Les valeurs en gris nécessitent de redémarrer le fond (touche R)");
             c.AddLigne(Color.LightGreen, "");
 
             foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom))
                 if (p._modifiable)
                     c.AddLigne(p.nom.Equals(keyCourante) ? Color.Yellow : Color.Green, p.nom + " = " + p.valueToString());
                 else
-                    c.AddLigne(Color.Gray, p.nom + " = " + p.valueToString());
+                    c.AddLigne(p.nom.Equals(keyCourante) ? Color.White : Color.Gray, p.nom + " = " + p.valueToString());
         }
 
         /// <summary>
@@ -247,14 +249,11 @@ namespace ClockScreenSaverGL.Config
         {
             // Tableau des clefs
             List<string> clefs = new List<string>();
-            foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom).Where(p => p._modifiable))
+            foreach (Parametre p in _valeurs.Values.OrderBy(p => p.nom)/*.Where(p => p._modifiable)*/)
                 clefs.Add(p.nom);
 
-
             if (clefs.Count == 0)
-            {
-                return k == Keys.NumPad2 || k == Keys.NumPad8 || k == Keys.NumPad4 || k == Keys.NumPad6 ;
-            }
+                return k == Keys.NumPad2 || k == Keys.NumPad8 || k == Keys.NumPad4 || k == Keys.NumPad6;
 
             if (keyCourante == null)
                 keyCourante = clefs[0];
@@ -264,93 +263,89 @@ namespace ClockScreenSaverGL.Config
                 case Keys.NumPad2:
                     {
                         int indice = clefs.IndexOf(keyCourante);
-                        if (indice == -1)
-                            keyCourante = clefs[0];
-                        else
-                        {
-                            indice++;
-                            if (indice >= clefs.Count)
-                                indice = 0;
+                        indice++;
+                        if (indice >= clefs.Count)
+                            indice = 0;
 
-                            keyCourante = clefs[indice];
-                        }
-                        return true;
+                        keyCourante = clefs[indice];
+                        break;
                     }
 
                 case Keys.NumPad8:
                     {
                         int indice = clefs.IndexOf(keyCourante);
-                        if (indice == -1)
-                            keyCourante = clefs[0];
-                        else
-                        {
-                            indice--;
-                            if (indice < 0)
-                                indice = clefs.Count - 1;
+                        indice--;
+                        if (indice < 0)
+                            indice = clefs.Count - 1;
 
-                            keyCourante = clefs[indice];
-                        }
-                        return true;
+                        keyCourante = clefs[indice];
+                        break;
                     }
 
                 case Keys.NumPad4:
                     {
-                        if (keyCourante != null)
+                        Parametre p;
+                        if (_valeurs.TryGetValue(keyCourante, out p))
                         {
-                            Parametre p;
-                            if (_valeurs.TryGetValue(keyCourante, out p))
-                            {
-                                p.Diminue();
-                                _parametreChange?.Invoke(keyCourante);
-                            }
+                            p.Diminue();
+                            _propre = false;
+                            _parametreChange?.Invoke(keyCourante);
                         }
-                        return true;
+                        break;
                     }
 
                 case Keys.NumPad6:
                     {
-                        if (keyCourante != null)
+                        Parametre p;
+                        if (_valeurs.TryGetValue(keyCourante, out p))
                         {
-                            Parametre p;
-                            if (_valeurs.TryGetValue(keyCourante, out p))
-                            {
-                                p.Augmente();
-                                _parametreChange?.Invoke(keyCourante);
-                            }
+                            p.Augmente();
+                            _propre = false;
+                            _parametreChange?.Invoke(keyCourante);
                         }
-                        return true;
+                        break;
                     }
 
+                case Keys.NumPad5:
+                    {
+                        Parametre p;
+                        if (_valeurs.TryGetValue(keyCourante, out p))
+                        {
+                            p.Defaut();
+                            _propre = false;
+                            _parametreChange?.Invoke(keyCourante);
+                        }
+                        break;
+                    }
                 case Keys.NumPad0:
                     {
-                        if (keyCourante != null)
+                        Parametre p;
+                        if (_valeurs.TryGetValue(keyCourante, out p))
                         {
-                            Parametre p;
-                            if (_valeurs.TryGetValue(keyCourante, out p))
-                            {
-                                p.Nulle();
-                                _parametreChange?.Invoke(keyCourante);
-                            }
+                            p.Nulle();
+                            _propre = false;
+                            _parametreChange?.Invoke(keyCourante);
                         }
-                        return true;
+                        break;
                     }
 
                 case Keys.Subtract:
                     {
-                        if (keyCourante != null)
+                        Parametre p;
+                        if (_valeurs.TryGetValue(keyCourante, out p))
                         {
-                            Parametre p;
-                            if (_valeurs.TryGetValue(keyCourante, out p))
-                            {
-                                p.Negatif();
-                                _parametreChange?.Invoke(keyCourante);
-                            }
+                            p.Negatif();
+                            _propre = false;
+                            _parametreChange?.Invoke(keyCourante);
                         }
-                        return true;
+
+                        break;
                     }
                 default:
                     return false;
             }
+
+            return true;
         }
 
         public void Dispose()

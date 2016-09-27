@@ -18,7 +18,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         static readonly int NB_EMETTEURS =c.getParametre("Nb Emetteurs", 1);
         static readonly int NB_PARTICULES =c.getParametre("Nb Particules", 5000);
         readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f, true);
-        readonly float GRAVITE_Y = -c.getParametre("Gravite Y", -0.5f, true);
+        readonly float GRAVITE_Y = -c.getParametre("Gravite Y", 0.5f, true);
         readonly float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.4f, true);
         readonly float TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.001f);
         readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.002f);

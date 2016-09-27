@@ -17,28 +17,21 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
     {
         #region Parametres
         public const string CAT = "CarresEspace";
-        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
-        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)250);
-        private static readonly float TAILLE_CARRE = c.getParametre("Taille", 5.0f);
+        static private CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         private static readonly int NB_PAVES = c.getParametre("Nb", 200);
-        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
-        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
-        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
-        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
-        private static readonly float VITESSE = c.getParametre("Vitesse", 8f);
-        private static bool WIRE_FRAME = c.getParametre("WireFrame", false);
+        private static byte ALPHA = c.getParametre("Alpha", (byte)250, true);
+        private static float TAILLE_CARRE = c.getParametre("Taille", 5.0f, true);
+        private static float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
+        private static float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
+        private static float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f, true);
+        private static float VITESSE = c.getParametre("Vitesse", 8f, true);
         #endregion
         const int VIEWPORT_X = 60;
         const int VIEWPORT_Y = 30;
         const float VIEWPORT_Z = 20.0f;
         private static readonly GLfloat[] fogcolor = { 0, 0, 0, 1 };
 
-        private class Carre
-        {
-            public float x, y, z;
-            //public bool aSupprimer;
-        }
-        private readonly Carre[] _Carres;
+        private readonly Vecteur3D[] _Carres;                       // Coordonnees du centre des carres
         private DateTime _dernierDeplacement = DateTime.Now;
         private DateTime _debutAnimation = DateTime.Now;
         public override CategorieConfiguration getConfiguration()
@@ -52,20 +45,39 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public CarresEspace(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
-            _Carres = new Carre[NB_PAVES];
-        
+            _Carres = new Vecteur3D[NB_PAVES];
+
             // Initialiser les carres
             for (int i = 0; i < NB_PAVES; i++)
                 NouveauCarre(ref _Carres[i]);
 
             TrierTableau();
+            c.setListenerParametreChange(onConfigurationChangee);
         }
 
-        private void NouveauCarre(ref Carre f)
+        /// <summary>
+        /// Relire les parametres modifiable interactivement
+        /// </summary>
+        /// <param name="name"></param>
+        protected override void onConfigurationChangee(string name)
+        {
+            ALPHA = c.getParametre("Alpha", (byte)250, true);
+            TAILLE_CARRE = c.getParametre("Taille", 5.0f, true);
+            PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
+            PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
+            VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f, true);
+            VITESSE = c.getParametre("Vitesse", 8f, true);
+            base.onConfigurationChangee(name);
+        }
+        /// <summary>
+        /// Creation d'un carre tout au fond
+        /// </summary>
+        /// <param name="f"></param>
+        private void NouveauCarre(ref Vecteur3D f)
         {
             if (f == null)
             {
-                f = new Carre();
+                f = new Vecteur3D();
                 f.z = -VIEWPORT_Z + TAILLE_CARRE * r.Next(0, (int)(_zCamera + VIEWPORT_Z) / (int)TAILLE_CARRE);
             }
             else
@@ -135,14 +147,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Fog(OpenGL.GL_FOG_END, _zCamera);
             gl.Translate(0, 0, -_zCamera);
             gl.Rotate(0, 0, vitesseCamera + 90);
-            if (WIRE_FRAME)
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_LINE);
-
             couleur = getCouleurOpaqueAvecAlpha(couleur, ALPHA);
             float[] col = { couleur.R / 256.0f, couleur.G / 256.0f, couleur.B / 256.0f, 1 };
             gl.Color(col);
             gl.Begin(OpenGL.GL_QUADS);
-            foreach (Carre o in _Carres)
+            foreach (Vecteur3D o in _Carres)
             {
                 gl.Vertex(o.x, o.y, o.z);
                 gl.Vertex(o.x, o.y, o.z + TAILLE_CARRE);
@@ -150,8 +159,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 gl.Vertex(o.x + TAILLE_CARRE, o.y, o.z);
             }
             gl.End();
-            if (WIRE_FRAME)
-                gl.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -160,7 +167,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
 
         /// <summary>
-        /// Deplacement de tous les objets: flocons, camera...
+        /// Deplacement de tous les objets: carres, camera...
         /// </summary>
         /// <param name="maintenant"></param>
         /// <param name="tailleEcran"></param>
@@ -171,14 +178,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #endif
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
             float deltaZ = VITESSE * maintenant._intervalle;
-            // Deplace les flocons
+
+            // Deplace les carres
             bool trier = false;
             for (int i = 0; i < NB_PAVES; i++)
             {
                 if (_Carres[i].z > (_zCamera + TAILLE_CARRE))
                 {
+                    // Nouveau carre tout au fond
                     NouveauCarre(ref _Carres[i]);
-                    trier = true;
+                    trier = true;               // Il faudra trier le tableau
                 }
                 else
                 {
@@ -189,9 +198,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             if (trier)
                 TrierTableau();
 
-
             _dernierDeplacement = maintenant._temps;
-
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif
@@ -200,7 +207,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         private void TrierTableau()
         {
-            Array.Sort(_Carres, delegate (Carre O1, Carre O2)
+            Array.Sort(_Carres, delegate (Vecteur3D O1, Vecteur3D O2)
             {
                 if (DistanceCarre(O1) > DistanceCarre(O2)) return -1;
                 if (DistanceCarre(O1) < DistanceCarre(O2)) return 1;
@@ -214,25 +221,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// </summary>
         /// <param name="C"></param>
         /// <returns></returns>
-        private double DistanceCarre(Carre C)
+        private double DistanceCarre(Vecteur3D C)
         {
             return (C.x * C.x) + (C.y * C.y) + ((C.z - _zCamera) * (C.z - _zCamera));
         }
 
-        public override bool KeyDown(Form f, Keys k)
-        {
-            switch (k)
-            {
-                case TOUCHE_INVERSER:
-                    {
-                        WIRE_FRAME = !WIRE_FRAME;
-                        c.setParametre( "WireFrame", WIRE_FRAME);
-                        return true;
-                    }
 
-            }
-            return base.KeyDown(f, k);
-        }
 #if TRACER
         public override String DumpRender()
         {

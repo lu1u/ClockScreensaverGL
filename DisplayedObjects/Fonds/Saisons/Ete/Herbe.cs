@@ -23,7 +23,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="longueurSegment"></param>
-
         public Herbe(float x, float y, float longueurSegment, float raideur)
         {
             if (_pens == null)
@@ -58,27 +57,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             }
         }
 
-
-        public void Affiche(Graphics g, double vent)
-        {
-            float X = _x;
-            float Y = _y;
-            vent *= _raideur;
-            float XX, YY;
-            for (int i = 1; i < NbSegments; i++)
-            {
-                XX = X + _longueurSegments[i] * (float)Math.Sin(_anglesSegments[i] + vent * i);
-                YY = Y + _longueurSegments[i] * (float)Math.Cos(_anglesSegments[i] + vent * i);
-
-                g.DrawLine(_pens[i], X, Y, XX, YY);
-
-                X = XX;
-                Y = YY;
-
-            }
-        }
-
-
         public void Affiche(OpenGL gl, double vent)
         {
             float X = _x;
@@ -89,6 +67,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             gl.PushMatrix();
             gl.Translate(_x, _y, 0);
 
+            // trace les elements du brin d'herbe
             for (int i = 1; i < NbSegments; i++)
             {
                 gl.Begin(OpenGL.GL_QUADS);

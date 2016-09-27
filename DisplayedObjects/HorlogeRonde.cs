@@ -459,9 +459,9 @@ namespace ClockScreenSaverGL.DisplayedObjects
         /// Dessine le fond de l'horloge (partie fixe)
         /// </summary>
         /// <param name="g"></param>
-        /// <param name="CentreX"></param>
-        /// <param name="CentreY"></param>
-        private void DessineFondHorloge(Graphics g, float CentreX, float CentreY, bool dessingFond = false)
+        /// <param name="centreX"></param>
+        /// <param name="centreY"></param>
+        private void DessineFondHorloge(Graphics g, float centreX, float centreY, bool dessinFond = false)
         {
             float _rayon = _diametre / 2.0f;
             float Longueur1 = _diametre * 0.49f;
@@ -477,13 +477,13 @@ namespace ClockScreenSaverGL.DisplayedObjects
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.AntiAlias;
             g.CompositingQuality = CompositingQuality.HighQuality;
-            if (dessingFond)
+            if (dessinFond)
                 g.FillEllipse(Brushes.White, 0, 0, _diametre, _diametre);
 
             DateTime maintenant = DateTime.Now;
 
-            DessineJourDuMois(g, CentreX, CentreY, _rayon, maintenant.Day, Brushes.Black, new Pen(Color.Black, EPAISSEUR_TROTTEUSE_CONTINUE));
-            DessinePhaseLunaire(g, CentreX, CentreY, _rayon, maintenant);
+            DessineJourDuMois(g, centreX, centreY, _rayon, maintenant.Day, Brushes.Black, new Pen(Color.Black, EPAISSEUR_TROTTEUSE_CONTINUE));
+            DessinePhaseLunaire(g, centreX, centreY, _rayon, maintenant);
 
             using (Brush bTexte = new SolidBrush(COULEUR_GRADUATIONS))
             using (Pen pinceauNoir = new Pen(COULEUR_GRADUATIONS, 8), pinceauNoir2 = new Pen(COULEUR_GRADUATIONS, 6),
@@ -503,23 +503,23 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
                     // Traits de graduation
                     if (i % 5 == 0)
-                        g.DrawLine(pinceauNoir, CentreX + (Longueur1 * c), CentreY + (Longueur1 * s), CentreX + (Longueur3 * c), CentreY + (Longueur3 * s));
+                        g.DrawLine(pinceauNoir, centreX + (Longueur1 * c), centreY + (Longueur1 * s), centreX + (Longueur3 * c), centreY + (Longueur3 * s));
                     else
-                        g.DrawLine(pinceauNoir2, CentreX + (Longueur1 * c), CentreY + (Longueur1 * s), CentreX + (Longueur2 * c), CentreY + (Longueur2 * s));
+                        g.DrawLine(pinceauNoir2, centreX + (Longueur1 * c), centreY + (Longueur1 * s), centreX + (Longueur2 * c), centreY + (Longueur2 * s));
 
                     // Chiffres
                     if (i % 5 == 0)
                     {
-                        g.DrawString((i / 5).ToString(), fonte, bTexte, CentreX + (Longueur4 * c), CentreY + (Longueur4 * s), stringFormat);
-                        g.DrawString((i).ToString(), fonte2, bTexte, CentreX + (Longueur5 * c), CentreY + (Longueur5 * s), stringFormat);
+                        g.DrawString((i / 5).ToString(), fonte, bTexte, centreX + (Longueur4 * c), centreY + (Longueur4 * s), stringFormat);
+                        g.DrawString((i).ToString(), fonte2, bTexte, centreX + (Longueur5 * c), centreY + (Longueur5 * s), stringFormat);
                     }
                 }
 
                 // Inscription publicitaire
                 using (Font f = new Font(FontFamily.GenericSansSerif, (int)(HAUTEUR_FONTE * 0.3), FontStyle.Bold, GraphicsUnit.Pixel))
                 {
-                    int y = (int)(CentreY - (_rayon * 0.3f));
-                    g.DrawString("Lucien Pilloni\nKinésithérapeute\n04 56 00 29 78\nlpilloni.kine@gmail.com", f, bTexte, CentreX, y, stringFormat);
+                    int y = (int)(centreY - (_rayon * 0.3f));
+                    g.DrawString("Lucien Pilloni\nKinésithérapeute\n04 56 00 29 78\nlpilloni.kine@gmail.com", f, bTexte, centreX, y, stringFormat);
                 }
 
                 // Cadran de la troteuse seconde
@@ -527,7 +527,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                 Longueur1 = rayon * 0.48f;
                 Longueur2 = rayon * 0.46f;
                 Longueur3 = rayon * 0.39f;
-                CentreY = CentreY + (rayon * 0.9f);
+                centreY = centreY + (rayon * 0.9f);
 
                 for (int i = 1; i <= 100; i++)
                 {
@@ -537,12 +537,12 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
                     // Traits de graduation
                     if (i % 10 == 0)
-                        g.DrawLine(p, CentreX + (Longueur1 * c), CentreY + (Longueur1 * s), CentreX + (Longueur3 * c), CentreY + (Longueur3 * s));
+                        g.DrawLine(p, centreX + (Longueur1 * c), centreY + (Longueur1 * s), centreX + (Longueur3 * c), centreY + (Longueur3 * s));
                     else
-                        g.DrawLine(p, CentreX + (Longueur1 * c), CentreY + (Longueur1 * s), CentreX + (Longueur2 * c), CentreY + (Longueur2 * s));
+                        g.DrawLine(p, centreX + (Longueur1 * c), centreY + (Longueur1 * s), centreX + (Longueur2 * c), centreY + (Longueur2 * s));
                 }
 
-                g.FillEllipse(bTexte, CentreX - rayon * 0.05f, CentreY - rayon * 0.05f, rayon * 0.1f, rayon * 0.1f);
+                g.FillEllipse(bTexte, centreX - rayon * 0.05f, centreY - rayon * 0.05f, rayon * 0.1f, rayon * 0.1f);
             }
         }
 

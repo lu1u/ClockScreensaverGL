@@ -50,12 +50,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             return c;
         }
+
+        const int NB_TYPES_NUAGES = 3;
         private class Nuage
         {
             public float x, y, z;
             public float tx, ty;
             public float rR, rG, rB;
             public float Alpha;
+            public int Type;
         }
         private readonly Etoile[] _etoiles;
         private readonly Nuage[] _nuages;
@@ -73,8 +76,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _etoiles = new Etoile[NB_ETOILES];
             _nuages = new Nuage[NB_NUAGES];
-            _textureNuage.Create(gl, Configuration.getImagePath("nuage_nebuleuse.png"));
-            _textureEtoile.Create(gl, Configuration.getImagePath("etoile.png"));
+            _textureNuage.Create(gl, c.getParametre("Nuage nebuleuse", Configuration.getImagePath("nuages_nebuleuse.png")));
+            _textureEtoile.Create(gl, c.getParametre("Etoile", Configuration.getImagePath("etoile2.png")));
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -150,6 +153,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             f.tx = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.ty = TAILLE_NUAGE * FloatRandom(0.75f, 1.5f);
             f.Alpha = ((float)ALPHA_NUAGE / 256.0f) * FloatRandom(0.5f, 1.2f);
+            f.Type = r.Next(0, NB_TYPES_NUAGES);
         }
 
         /// <summary>
@@ -194,20 +198,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Nuage nuage in _nuages)
             {
+                float decalTextureG = (1.0f / NB_TYPES_NUAGES) * nuage.Type;
+                float decalTextureD = (1.0f / NB_TYPES_NUAGES) * (nuage.Type+1);
+
+
                 gl.Color(couleur.R * nuage.rR, couleur.G * nuage.rG, couleur.B * nuage.rB, nuage.Alpha);
-                gl.TexCoord(0.0f, 0.0f); gl.Vertex(nuage.x - nuage.tx, nuage.y - nuage.ty, nuage.z);
-                gl.TexCoord(0.0f, 1.0f); gl.Vertex(nuage.x - nuage.tx, nuage.y + nuage.ty, nuage.z);
-                gl.TexCoord(1.0f, 1.0f); gl.Vertex(nuage.x + nuage.tx, nuage.y + nuage.ty, nuage.z);
-                gl.TexCoord(1.0f, 0.0f); gl.Vertex(nuage.x + nuage.tx, nuage.y - nuage.ty, nuage.z);
+                gl.TexCoord(decalTextureG, 0.0f); gl.Vertex(nuage.x - nuage.tx, nuage.y - nuage.ty, nuage.z);
+                gl.TexCoord(decalTextureG, 1.0f); gl.Vertex(nuage.x - nuage.tx, nuage.y + nuage.ty, nuage.z);
+                gl.TexCoord(decalTextureD, 1.0f); gl.Vertex(nuage.x + nuage.tx, nuage.y + nuage.ty, nuage.z);
+                gl.TexCoord(decalTextureD, 0.0f); gl.Vertex(nuage.x + nuage.tx, nuage.y - nuage.ty, nuage.z);
             }
             gl.End();
 
             _textureEtoile.Bind(gl);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE);
+            gl.Disable(OpenGL.GL_DEPTH);
             gl.Begin(OpenGL.GL_QUADS);
             foreach (Etoile o in _etoiles)
             {
                 gl.Color(couleur.R * o.rR / 256.0f, couleur.G * o.rG / 256.0f, couleur.B * o.rB / 256.0f, ALPHA_ETOILE / 256.0f);
+
                 gl.TexCoord(0.0f, 0.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y - TAILLE_ETOILE, o.z);
                 gl.TexCoord(0.0f, 1.0f); gl.Vertex(o.x - TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
                 gl.TexCoord(1.0f, 1.0f); gl.Vertex(o.x + TAILLE_ETOILE, o.y + TAILLE_ETOILE, o.z);
@@ -300,6 +310,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         /// <param name="f"></param>
         /// <param name="k"></param>
         /// <returns></returns>
+        /*
         public override bool KeyDown(Form f, Keys k)
         {
             switch (k)
@@ -314,7 +325,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             return base.KeyDown(f, k); ;
         }
-
+        */
 #if TRACER
         public override String DumpRender()
         {

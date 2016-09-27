@@ -13,6 +13,7 @@ using SharpGL.SceneGraph.Assets;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.Net;
+using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
@@ -150,6 +151,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             s = s.Replace("&nbsp;", " ");
             s = WebUtility.HtmlDecode(s);
             s = s.Trim(TRIM_CARACTERES);
+
+            if (s.IndexOf("nbsp") != -1)
+                Log.getInstance().warning("Reste un nbsp: " + s);
             return s;
         }
     }

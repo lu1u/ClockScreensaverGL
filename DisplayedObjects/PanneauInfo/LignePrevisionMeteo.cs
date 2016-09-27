@@ -1,4 +1,9 @@
-﻿using ClockScreenSaverGL.Config;
+﻿/***
+ * Representation d'une ligne de prevision meteo
+ * A changer en fonction du site qu'on utilise
+ * */
+
+using ClockScreenSaverGL.Config;
 using System;
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -23,7 +28,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
             try
             {
-                _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\" + icone + ".png"));
+                string chemin = Configuration.getImagePath(@"Meteo\" + icone + ".png", true);
+
+                if ( chemin == null)
+                {
+                    Log.getInstance().warning("icone météo inconnue " + icone);
+                    _bmp = Image.FromFile(Configuration.getImagePath(@"Meteo\inconnu.png"));
+                    _texte = "{" + icone + "}" + _texte;
+                }
+                else
+                    _bmp = Image.FromFile(chemin);
             }
             catch (Exception)
             {
@@ -40,21 +54,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             _bmp?.Dispose();
         }
-        private static float KelvinToCelsius(float v)
+
+        /// <summary>
+        /// Conversion degres Kelvin => Celsius
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        /*private static float KelvinToCelsius(float v)
         {
             return v - 273.15f;
         }
-
+*/
 
         public float affiche(Graphics g, Font fTitre, Font fSousTitre, float Y)
         {
             if (_bmp != null)
-            {
                 g.DrawImage(_bmp, 0, Y, PanneauInfos.TAILLE_ICONE_METEO, PanneauInfos.TAILLE_ICONE_METEO);
-                //_bmp.Dispose();
-                //_bmp = null;
-            }
-
+            
             float H = 0;
             // Date
             SizeF size = g.MeasureString(_date, fTitre);
@@ -78,7 +94,5 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
             return H;
         }
-
-
     }
 }

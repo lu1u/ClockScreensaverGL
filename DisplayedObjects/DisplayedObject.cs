@@ -346,19 +346,45 @@ namespace ClockScreenSaverGL.DisplayedObjects
         {
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Begin(OpenGL.GL_LINES);
-            gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z);
-            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z);
-            gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z);
-            gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z);
 
-            gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z);
+            // Quatre lignes verticales
             gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z);
+            gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z);
+            gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z);
+
+            // Quatre lignes gauche a droite
+            gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z);
+            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z);
+            gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z);
             gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z);
 
-            gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z);
-            gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z);
-            gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z);
-            gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z);
+            // Quatre lignes avant arriere
+            gl.Vertex(+MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, +MAX_Y, -MAX_Z);
+            gl.Vertex(-MAX_X, +MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, +MAX_Y, -MAX_Z);
+            gl.Vertex(-MAX_X, -MAX_Y, +MAX_Z); gl.Vertex(-MAX_X, -MAX_Y, -MAX_Z);
+            gl.Vertex(+MAX_X, -MAX_Y, +MAX_Z); gl.Vertex(+MAX_X, -MAX_Y, -MAX_Z);
+            gl.End();
+
+            // Origine
+            float X = MAX_X * 0.1f;
+            float Y = MAX_Y * 0.1f;
+            float Z = MAX_Z * 0.1f;
+
+
+            gl.Begin(OpenGL.GL_TRIANGLES);
+            gl.Vertex(+0.0f*X-MAX_X, +1.0f*Y-MAX_Y, +0.0f*Z-MAX_Z);  // Haut du triangle de face
+            gl.Vertex(-1.0f*X-MAX_X, -1.0f*Y-MAX_Y, +1.0f*Z-MAX_Z);  // Bas gauche du triangle de face
+            gl.Vertex(+1.0f*X-MAX_X, -1.0f*Y-MAX_Y, +1.0f*Z-MAX_Z);  // Bas droit du triangle de face
+            gl.Vertex(+0.0f*X-MAX_X, +1.0f*Y-MAX_Y, +0.0f*Z-MAX_Z);       // Haut du triangle (Droit)
+            gl.Vertex(+1.0f*X-MAX_X, -1.0f*Y-MAX_Y, +1.0f*Z-MAX_Z);       // Gauche du triangle (Droit)
+            gl.Vertex(+1.0f*X-MAX_X, -1.0f*Y-MAX_Y, -1.0f*Z-MAX_Z);      // Droite du triangle (Droit)
+            gl.Vertex(+0.0f*X-MAX_X, +1.0f*Y-MAX_Y, +0.0f*Z-MAX_Z);  // Haut du triangle (Arrière)
+            gl.Vertex(+1.0f*X-MAX_X, -1.0f*Y-MAX_Y, -1.0f*Z-MAX_Z); // Gauche du triangle (Arrière)
+            gl.Vertex(-1.0f*X-MAX_X, -1.0f*Y-MAX_Y, -1.0f*Z-MAX_Z); // Droite du triangle (Arrière)
+            gl.Vertex(+0.0f*X-MAX_X, +1.0f*Y-MAX_Y, +0.0f*Z-MAX_Z);   // Haut du triangle (Gauche)
+            gl.Vertex(-1.0f*X-MAX_X, -1.0f*Y-MAX_Y, -1.0f*Z-MAX_Z);   // Gauche du triangle (Gauche)
+            gl.Vertex(-1.0f*X-MAX_X, -1.0f*Y-MAX_Y, +1.0f*Z-MAX_Z);   // Droite du triangle (Gauche)
             gl.End();
         }
 

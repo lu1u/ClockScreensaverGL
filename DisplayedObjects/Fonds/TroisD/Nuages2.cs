@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _nuages = new Nuage[NB_NUAGES];
 
-            _texture.Create(gl, Configuration.getImagePath("nuages.png"));
+            _texture.Create(gl, c.getParametre("Nuages", Configuration.getImagePath("nuages.png")));
             // Initialiser les etoiles
             for (int i = 0; i < NB_NUAGES; i++)
             {
@@ -70,7 +70,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             return c;
         }
-        public override void Dispose()
+        public sealed override void Dispose()
         {
             base.Dispose();
             _texture.Destroy(_gl);
@@ -93,12 +93,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             gl.ClearColor(couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+
             gl.Disable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_LIGHTING);
             gl.Disable(OpenGL.GL_COLOR_MATERIAL);
-            gl.Disable(OpenGL.GL_DEPTH);
             gl.Disable(OpenGL.GL_DEPTH_TEST);
-            gl.DepthMask((byte)OpenGL.GL_FALSE);
+            //gl.DepthMask((byte)OpenGL.GL_FALSE);
 
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);

@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _flocons[i].type = r.Next(0, NB_TYPES_FLOCONS);
             }
 
-            texture.Create(gl, Configuration.getImagePath("flocons.png"));
+            texture.Create(gl, c.getParametre("Flocons", Configuration.getImagePath("flocons.png")));
         }
 
         public override CategorieConfiguration getConfiguration()

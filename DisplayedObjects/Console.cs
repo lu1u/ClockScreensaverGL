@@ -10,7 +10,6 @@ namespace ClockScreenSaverGL.DisplayedObjects
     public class Console : IDisposable
     {
         OpenGLFonte _fonte;
-        public const String CARACTERES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyzàéèôïöë0123456789,;:!?./*=&é\"'{([-|è`_\\ç^à@)]=}><";
         private class LIGNE
         {
             public LIGNE(Color c, String s)
@@ -36,8 +35,8 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         private Console(OpenGL gl)
         {
-            
-            _fonte = new OpenGLFonte(gl, CARACTERES, 12, FontFamily.GenericSansSerif, FontStyle.Regular);
+
+            _fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, 12, FontFamily.GenericSansSerif, FontStyle.Regular);
             _lignes = new List<LIGNE>();
         }
 

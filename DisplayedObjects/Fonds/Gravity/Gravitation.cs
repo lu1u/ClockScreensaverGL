@@ -17,26 +17,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
     {
         public const String CAT = "Gravitation";
         static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
-        public static readonly double RAYON_UNIVERS = 10;// c.getParametre("Rayon Univers", 8);
-        public static readonly double RATIO_RAYON = 0.0005;// c.getParametre("Ratio rayon planetes", 0.025);
-        public static readonly double RATIO_DISTANCES = 0.5 ;// c.getParametre("Ratio rayon planetes", 0.025);
-        public static double VITESSE_SUIVI_TO = 0.5;// c.getParametre("Vitesse ciblage", 0.4);
-        public static double VITESSE_SUIVI_FROM = 0.005;// c.getParametre("Vitesse camera", 0.2);
-        public static double DISTANCE_MIN_CAMERA = 15 * RATIO_RAYON ;// c.getParametre("Distance min camera", 0.5);
-        public static readonly double VITESSE = 0.001;// c.getParametre("Vitesse", 0.001);
-        public static readonly int DETAILS = c.getParametre("Details", 5);
-        public static readonly int DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30);
-        public static int NIVEAU_DETAIL = c.getParametre("Niveau detail", 800);
-        public static float ANGLE_VISION = 70;
+        public static double RAYON_UNIVERS = 10;// c.getParametre("Rayon Univers", 8);
+        public static double RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, true);
+        public static double RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, true);
+        public static double VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, true);
+        public static double VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, true);
+        public static double DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, true);
+        public static double VITESSE = c.getParametre("Vitesse", 0.001, true);
+        public static int DETAILS = c.getParametre("Details", 5, true);
+        public static int DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, true);
+        public static int NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, true);
         public static int NB_ROCHEUSES = c.getParametre("Nb Rocheuses", 4);
         public static int NB_ASTEROIDES = c.getParametre("Nb Asteroides", 300);
         public static int NB_GAZEUSES = c.getParametre("Nb Gazeuses", 4);
-        
+        public static float ANGLE_VISION = 70;
+
         public static readonly int DELAI_CHANGE_CAMERA = c.getParametre("Delai Change Camera", 40000);
         private TimerIsole _changeCamera = new TimerIsole(DELAI_CHANGE_CAMERA);
 
         private Texture _textureTop, _textureBottom, _textureLeft, _textureRight, _textureFront, _textureBack;
-        float[] COL_AMBIENT = {0.5f, 0.5f, 0.5f, 1.0f };//{ 0.1f, 0.1f, 0.1f, 1.0f };
+        float[] COL_AMBIENT = { 0.5f, 0.5f, 0.5f, 1.0f };//{ 0.1f, 0.1f, 0.1f, 1.0f };
         float[] COL_DIFFUSE = { 1.0f, 1.0f, 1.0f, 1.0f };
         float[] COL_SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };// { 0.8f, 0.8f, 0.8f, 1.0f };
         float[] COL_LIGHTPOS = { -2, 1.5f, -2.5f, 1 };
@@ -54,28 +54,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         public Gravitation(OpenGL gl) : base(gl)
         {
             _textureTop = new Texture();
-            _textureTop.Create(gl, Configuration.getImagePath("universe_top.png"));
+            _textureTop.Create(gl, c.getParametre("Universe top", Configuration.getImagePath("universe_top.png")));
             _textureBottom = new Texture();
-            _textureBottom.Create(gl, Configuration.getImagePath("universe_bottom.png"));
+            _textureBottom.Create(gl, c.getParametre("Universe bottom", Configuration.getImagePath("universe_bottom.png")));
             _textureLeft = new Texture();
-            _textureLeft.Create(gl, Configuration.getImagePath("universe_left.png"));
+            _textureLeft.Create(gl, c.getParametre("Universe left", Configuration.getImagePath("universe_left.png")));
             _textureRight = new Texture();
-            _textureRight.Create(gl, Configuration.getImagePath("universe_right.png"));
+            _textureRight.Create(gl, c.getParametre("Universe right", Configuration.getImagePath("universe_right.png")));
             _textureFront = new Texture();
-            _textureFront.Create(gl, Configuration.getImagePath("universe_front.png"));
+            _textureFront.Create(gl, c.getParametre("Universe front",Configuration.getImagePath( "universe_front.png")));
             _textureBack = new Texture();
-            _textureBack.Create(gl, Configuration.getImagePath("universe_back.png"));
-            
+            _textureBack.Create(gl, c.getParametre("Universe back", Configuration.getImagePath("universe_back.png")));
+
             #region AjouteCorps
             Planete.InitPlanetes(gl);
             Corps = new List<Planete>();
 
             // En premier: l'etoile
-            Planete c = new Planete(gl, 0, 0, Planete.ETOILE_MIN, 0, 0, 0);
-            Corps.Add(c);
+            Planete pl = new Planete(gl, 0, 0, Planete.ETOILE_MIN, 0, 0, 0);
+            Corps.Add(pl);
 
             // Mercure
-            double rayonOrbite = 1 * RATIO_DISTANCES ;
+            double rayonOrbite = 1 * RATIO_DISTANCES;
             double posOrbite = FloatRandom((float)(Math.PI * -2.0), (float)(Math.PI * 2.0));
             double vOrbite = CalculeVitesseOrbitale(Corps[0]._attraction, rayonOrbite);
             Planete planete = new Planete(gl, FloatRandom(10, 30) * SigneRandom(), FloatRandom(-30, 30), Planete.MERCURE, rayonOrbite, posOrbite, vOrbite, 0);
@@ -162,6 +162,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraFrom = new Vecteur3Ddbl(Corps[from]._position);
             cameraFrom.y += RAYON_UNIVERS / 10.0f;
             cameraTo = new Vecteur3Ddbl(Corps[to]._position);
+
+            c.setListenerParametreChange(onConfigurationChangee);
+        }
+
+        protected override void onConfigurationChangee(string valeur)
+        {
+            base.onConfigurationChangee(valeur);
+            RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, true);
+            RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, true);
+            VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, true);
+            VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, true);
+            DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, true);
+            VITESSE = c.getParametre("Vitesse", 0.001, true);
+            DETAILS = c.getParametre("Details", 5, true);
+            DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, true);
+            NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, true);
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -185,7 +201,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 //g.DrawString(m.nom + "\n" + m.rayon + "\n" + material, SystemFonts.DefaultFont, Brushes.White, 3, 3);
                 _affiche = new Texture();
                 _affiche.Create(_gl, bmp);
-            
+
             }*/
 
         }
@@ -233,7 +249,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-            gl.DepthMask((byte)OpenGL.GL_TRUE);
+            //gl.DepthMask((byte)OpenGL.GL_TRUE);
             gl.CullFace(OpenGL.GL_BACK);
 
 
@@ -289,7 +305,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             });
 
             foreach (Primitive3D pr in _primitives)
-                pr.dessine(gl);
+                if (!pr.ALPHABLEND)
+                    pr.dessine(gl);
+
+            foreach (Primitive3D pr in _primitives)
+                if (pr.ALPHABLEND)
+                    pr.dessine(gl);
 
             Console c = Console.getInstance(gl);
             c.AddLigne(Color.Green, "Gravitation");
@@ -449,9 +470,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
         private void ChangePlaneteCible()
         {
-            if (r.Next(20) == 0)
+            if (Probabilite(0.5f))
             {
-                // Une fois sur 20, on admet la possibilite de suivre un asteroide
+                // on admet la possibilite de suivre un asteroide
                 corpsSuivi = r.Next(Corps.Count);
             }
             else
@@ -536,7 +557,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                 case Keys.PageDown:
                     {
                         m?.setSpecular(m.specular[0] * 0.9f);
-                        return true;                                                               
+                        return true;
                     }
 
                 case Keys.Back:
@@ -551,7 +572,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                     }
 
                 case Keys.Subtract:
-                    m.shininess -- ;
+                    m.shininess--;
                     return true;
 
                 case Keys.Add:
@@ -571,7 +592,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         {
             gl.PushAttrib(OpenGL.GL_ENABLE_BIT);
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            gl.Disable( OpenGL.GL_LIGHTING);
+            gl.Disable(OpenGL.GL_LIGHTING);
             gl.Color(Couleur.R / 256.0f, Couleur.G / 256.0f, Couleur.B / 256.0f, 0.7f);
             gl.LineWidth(2);
             {
@@ -594,7 +615,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
                     gl.Color(1.0f, 1.0f, 1.0f);
                     gl.Vertex(0, -Taille, 0);
                     gl.Vertex(0, Taille, 0);
-                    
+
                     gl.End();
                 }
                 gl.PopMatrix();
@@ -602,7 +623,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             gl.PopAttrib();
         }
 
-        static void GetViewport(OpenGL gl, out float Largeur, out float Hauteur)
+        private static void GetViewport(OpenGL gl, out float Largeur, out float Hauteur)
         {
             int[] Params = new int[4];
             gl.GetInteger(OpenGL.GL_VIEWPORT, Params);
@@ -617,7 +638,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         // ENTREES:	Position 3D
         // SORTIES:	X et Y a l'ecran, Z dans le Z-Buffer
         ///////////////////////////////////////////////////////////////////////////////
-        static void GetPositionEcran(OpenGL gl, Vecteur3Ddbl Pos, out float X, out float Y, out float Z)
+        private static void GetPositionEcran(OpenGL gl, Vecteur3Ddbl Pos, out float X, out float Y, out float Z)
         {
             double[] modelMatrix = new double[16];
             double[] projMatrix = new double[16];
@@ -635,7 +656,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             Y = (float)sy[0];
             Z = (float)sz[0];
         }
-        
+
     }
 
 }

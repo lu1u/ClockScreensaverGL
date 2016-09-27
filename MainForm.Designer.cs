@@ -100,6 +100,7 @@ namespace ClockScreenSaverGL
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ClockScreenSaverGL";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.onFormClosed);
             this.Load += new System.EventHandler(this.onLoad);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OnMouseMove);

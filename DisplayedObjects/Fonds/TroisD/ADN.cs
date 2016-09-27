@@ -117,7 +117,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Enable(OpenGL.GL_CULL_FACE);
             gl.Disable(OpenGL.GL_BLEND);
             gl.Disable(OpenGL.GL_FOG);
-            gl.DepthMask((byte)OpenGL.GL_TRUE);
+            //gl.DepthMask((byte)OpenGL.GL_TRUE);
             gl.Enable(OpenGL.GL_DEPTH);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             gl.CullFace(OpenGL.GL_BACK);

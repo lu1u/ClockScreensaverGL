@@ -12,33 +12,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
     abstract class Boids : MateriauGlobal, IDisposable
     {
         #region Parametres
-        
-        public static readonly int MAX_X = 200;// c.getParametre("Max X", 100);
-        public static readonly int MAX_Y = 150;// c.getParametre("Max Y", 100);
-        public static readonly int MAX_Z = 100; //c.getParametre("Max Z", 100);
+
+        public static readonly float MAX_X = 10;
+        public static readonly float MAX_Y = 10;
+        public static readonly float MAX_Z = 10;
         static float TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION;
-        static int NB_IMAGES_ANIMATION;
         protected readonly int NB_BOIDS;
         #endregion
-
-
-
-
-#if OISEAUX
-        static readonly float HAUTEUR_CORPS = 0.25f * TAILLE;
-        static readonly float LONGUEUR_TETE = 1.25f * TAILLE;
-        static readonly float LONGUEUR_CORPS = -0.75f * TAILLE;
-        static readonly float LONGUEUR_QUEUE = -0.55f * TAILLE;
-        static readonly float LARGEUR_QUEUE = 0.75f * TAILLE;
-        static readonly float LARGEUR_AILES = 5.0f * TAILLE;
-        static readonly float COULEUR_FOND = 256.0f;
-        static readonly float COULEUR_BOIDS = 1024.0f;
-        static readonly float VITESSE_IMAGES = 4.0f;
-#endif
         protected List<Boid> _boids;
         protected float _angleCamera = 0;
-        uint _genLists =0;
-        public Boids(OpenGL gl, CategorieConfiguration cat, int Nb, float Taille, float MaxSpeed, float MaxForce, float DistanceVoisins, float Separation, float VitesseAnimation, int NbImagesAnimation ) :
+        uint _genLists = 0;
+        public Boids(OpenGL gl, CategorieConfiguration cat, int Nb, float Taille, float MaxSpeed, float MaxForce, float DistanceVoisins, float Separation, float VitesseAnimation) :
             base(gl)
         {
             NB_BOIDS = Nb;
@@ -48,25 +32,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             DISTANCE_VOISINS = DistanceVoisins;
             SEPARATION = Separation;
             VITESSE_ANIMATION = VitesseAnimation;
-            NB_IMAGES_ANIMATION = NbImagesAnimation;
-            _boids = new List<Boid>();// new Boid[NB_BOIDS];
+            _boids = new List<Boid>();
             InitBoids(_boids);
-            InitRender(gl);
-            
-        }
-
-
-
-        protected virtual void InitRender(OpenGL gl)
-        {
-            _genLists = gl.GenLists(NB_IMAGES_ANIMATION);
-
-            for (int i = 0; i < NB_IMAGES_ANIMATION; i++)
-            {
-                gl.NewList(_genLists + (uint)i, OpenGL.GL_COMPILE);
-                DessineBoid(gl, (float)i / NB_IMAGES_ANIMATION);
-                gl.EndList();
-            }
         }
 
         protected abstract Boid newBoid();
@@ -76,19 +43,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         /// <param name="_boids"></param>
         protected virtual void InitBoids(List<Boid> _boids)
         {
-           // for (int i = 0; i < NB_BOIDS; i++)
-           //     _boids[i] = new Boid(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
+            // for (int i = 0; i < NB_BOIDS; i++)
+            //     _boids[i] = new Boid(r.Next(-MAX_X, MAX_X), r.Next(-MAX_Y, MAX_Y), r.Next(-MAX_Z, MAX_Z));
         }
 
         protected abstract void DessineBoid(OpenGL gl, float noImage);
 
-        public override void Dispose()
+        public override void ClearBackGround(OpenGL gl, Color c)
         {
-            base.Dispose();
-            if  (_genLists != 0)
-                _gl.DeleteLists(_genLists, NB_IMAGES_ANIMATION);
+            gl.ClearColor(0, 0, 0, 1);
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
         }
-
 
         public override void AfficheOpenGL(OpenGL gl, Temps maintenant, Rectangle tailleEcran, Color couleur)
         {
@@ -102,12 +67,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _boids.Add(b);
             }
 
+            gl.LookAt(-0, -0, -MAX_Z * 1.5f, 0, 0, 0, 0, 1, 0);
+
             InitOpenGL(gl, maintenant, couleur);
 
-
             FrustumCulling frustum = new FrustumCulling(gl);
-
-
             foreach (Boid b in _boids)
                 if (frustum.isVisible(b._Position, TAILLE))
                 {
@@ -115,13 +79,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                     theta = (float)(theta / Math.PI * 180.0);// - 90.0f;
                     gl.Color(b._couleur.R / 256.0f, b._couleur.G / 256.0f, b._couleur.B / 256.0f);
                     gl.PushMatrix();
-                    gl.Translate(b._Position.x, b._Position.y, b._Position.z);
-                    gl.Rotate(0, 0, theta);
-                    gl.CallList(_genLists + (uint)b.image);
-
-                    gl.End();
+                    {
+                        gl.Translate(b._Position.x, b._Position.y, b._Position.z);
+                        gl.Rotate(0, 0, theta);
+                        b.dessine(gl);// gl.CallList(_genLists + (uint)b._image);
+                    }
                     gl.PopMatrix();
                 }
+
+
+
 #if TRACER
             RenderStop(CHRONO_TYPE.RENDER);
 #endif
@@ -129,26 +96,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
         protected abstract void InitOpenGL(OpenGL gl, Temps maintenant, Color couleur);
 
+        /// <summary>
+        /// Deplacement des boids
+        /// </summary>
+        /// <param name="maintenant"></param>
+        /// <param name="tailleEcran"></param>
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            _angleCamera += maintenant._intervalle * 0.1f;
+            _angleCamera += maintenant._intervalle * 1.0f;
 
-            
             foreach (Boid b in _boids)
                 b.flock(_boids);
 
-            float dImage = NB_IMAGES_ANIMATION * maintenant._intervalle * VITESSE_ANIMATION ;
+            float dImage = maintenant._intervalle * VITESSE_ANIMATION;
             foreach (Boid b in _boids)
             {
                 b.update(maintenant);
-
-
-                b.image += dImage * b._vitesseAnimation;
-                if (b.image >= NB_IMAGES_ANIMATION)
-                    b.image = 0;
+                b._image += dImage * b._vitesseAnimation;
             }
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
@@ -159,20 +126,19 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         /// <summary>
         /// Classe des "boids": objets se deplacant en bancs
         /// </summary>
-        protected class Boid
+        protected abstract class Boid
         {
             const float TWO_PI = (float)Math.PI * 2.0f;
-            private static Random rand = new Random(DateTime.Now.Millisecond);
             public Vecteur3D _Position;
             public Vecteur3D _Vitesse;
             public Vecteur3D _Acceleration;
-            public float image;
+            public float _image;
             public float _vitesseAnimation;
             public Color _couleur;
             public Boid(float x, float y, float z)
             {
                 _Acceleration = new Vecteur3D(0, 0);
-                image = DisplayedObject.FloatRandom(0, Boids.NB_IMAGES_ANIMATION);
+                _image = DisplayedObject.FloatRandom(0, (float)(Math.PI * 2.0));
                 _vitesseAnimation = DisplayedObject.FloatRandom(0.8f, 1.2f);
                 float angle = DisplayedObject.FloatRandom(0, TWO_PI);
                 _Vitesse = new Vecteur3D((float)Math.Cos(angle), (float)Math.Sin(angle));
@@ -180,32 +146,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _Position = new Vecteur3D(x, y, z);
             }
 
-#if version1
-            // We accumulate a new acceleration each time based on three rules
-            public void flock(Boid[] boids)
-            {
-                Vecteur3D sep = Separation(boids);   // Separation
-                Vecteur3D ali = Alignement(boids);      // Alignment
-                Vecteur3D coh = Cohesion(boids);   // Cohesion
-                 
-                // Arbitrarily weight these forces
-                sep.multiplier_par(1.5f);
-                ali.multiplier_par(1.0f);
-                coh.multiplier_par(1.0f);
-                // additionner the force vectors to acceleration
-                _Acceleration.additionner(sep);
-                _Acceleration.additionner(ali);
-                _Acceleration.additionner(coh);
-            }
-#endif
-
             // We accumulate a new acceleration each time based on three rules
             public void flock(List<Boid> boids)
             {
-                //Vecteur3D sep = Separation(boids);   // Separation
-                //Vecteur3D ali = Alignement(boids);      // Alignment
-                //Vecteur3D coh = Cohesion(boids);   // Cohesion
-
                 Vecteur3D sep, ali, coh;
                 flocking(boids, out sep, out ali, out coh);
 
@@ -221,9 +164,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             private void flocking(List<Boid> boids, out Vecteur3D sep, out Vecteur3D ali, out Vecteur3D coh)
             {
-                sep = new Vecteur3D(0, 0, 0);
-                ali = new Vecteur3D(0, 0, 0);
-                coh = new Vecteur3D(0, 0, 0);
+                sep = new Vecteur3D();
+                ali = new Vecteur3D();
+                coh = new Vecteur3D();
                 int countSep = 0;
                 int countAlign = 0;
                 int countCoh = 0;
@@ -255,6 +198,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                         }
                     }
 
+                // Separation
                 if (countSep > 0)
                 {
                     sep.diviser_par((float)countSep);
@@ -269,6 +213,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                     }
                 }
 
+                // Alignement
                 if (countAlign > 0)
                 {
                     ali.diviser_par((float)countAlign);
@@ -279,6 +224,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
                 }
 
+                // Cohesion
                 if (countCoh > 0)
                 {
                     coh.diviser_par(countCoh);
@@ -302,43 +248,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             protected virtual void Restreint()
             {
-                if (_Position.x < -MAX_X)
-                    _Position.x += MAX_X * 2;
-                if (_Position.x > MAX_X)
-                    _Position.x -= MAX_X * 2;
-                if (_Position.y < -MAX_Y)
-                    _Position.y += MAX_Y * 2;
-                if (_Position.y > MAX_Y)
-                    _Position.y -= MAX_Y * 2;
-                /*if (_Position.z < -MAX_Z)
-                    _Position.z += MAX_Z * 2;
-                if (_Position.z > MAX_Z)
-                    _Position.z -= MAX_Z * 2;*/
-                /*
-            if (_Position.x < -MAX_X)
-                if (_Vitesse.x < 0)
-                    _Vitesse.x = -_Vitesse.x;
+                Restreint(ref _Position.x, MAX_X);
+                Restreint(ref _Position.y, MAX_Y);
+                Restreint(ref _Position.z, MAX_Z);
+            }
 
-            if (_Position.x > MAX_X)
-                if (_Vitesse.x > 0)
-                    _Vitesse.x = -_Vitesse.x;
+            private void Restreint(ref float v, float max)
+            {
+                while (v > max)
+                    v = -max;
 
-
-            if (_Position.y < -MAX_Y)
-                if (_Vitesse.y < 0)
-                    _Vitesse.y = -_Vitesse.y;
-
-            if (_Position.y > MAX_Y)
-                if (_Vitesse.y > 0)
-                    _Vitesse.y = -_Vitesse.y;
-            */
-                if (_Position.z < -MAX_Z)
-                    if (_Vitesse.z < 0)
-                        _Vitesse.z = -_Vitesse.z;
-
-                if (_Position.z > MAX_Z)
-                    if (_Vitesse.z > 0)
-                        _Vitesse.z = -_Vitesse.z;
+                while (v < -max)
+                    v = max;
             }
 
             // A method that calculates and applies a steering force towards a target
@@ -356,111 +277,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 return steer;
             }
 
+            public abstract void dessine(OpenGL gl);
 
-#if version1
-            // Separation
-            // Method checks for nearby boids and steers away
-            Vecteur3D Separation(Boid[] boids)
-            {
-                Vecteur3D steer = new Vecteur3D(0, 0, 0);
-                int count = 0;
-                // For every boid in the system, check if it's too close
-                foreach (Boid other in boids)
-                    if (other != this)
-                    {
-                        float d = _Position.Distance(other._Position);
-                        // If the distance is greater than 0 and less than an arbitrary amount
-                        if (d < SEPARATION)
-                        {
-                            // Calculate vector pointing away from neighbor
-                            Vecteur3D diff = _Position - other._Position;
-                            diff.Normalize();
-                            diff.diviser_par(d);        // Weight by distance
-                            steer.additionner(diff);
-                            count++;            // Keep track of how many
-                        }
-                    }
-                // Average -- divide by how many
-                if (count > 0)
-                {
-                    steer.diviser_par((float)count);
-
-                    // As long as the vector is greater than 0
-                    if (steer.Longueur() > 0)
-                    {
-                        // Implement Reynolds: Steering = Desired - Velocity
-                        steer.Normalize();
-                        steer.multiplier_par(MAX_SPEED);
-                        steer.soustraire(_Vitesse);
-                        steer.Limiter(MAX_FORCE);
-                    }
-                }
-                return steer;
-            }
-
-            // Alignment
-            // For every nearby boid in the system, calculate the average velocity
-            Vecteur3D Alignement(Boid[] boids)
-            {
-                Vecteur3D sum = new Vecteur3D(0, 0);
-                int count = 0;
-                foreach (Boid other in boids)
-                    if (other != this)
-                    {
-                        float d = _Position.Distance(other._Position);
-                        if (d < DISTANCE_VOISINS)
-                        {
-                            sum.additionner(other._Vitesse);
-                            count++;
-                        }
-                    }
-
-                if (count > 0)
-                {
-                    sum.diviser_par((float)count);
-                    // First two lines of code below could be condensed with new Vecteur3D setMag() method
-                    // Not using this method until Processing.js catches up
-                    // sum.setMag(maxspeed);
-
-                    // Implement Reynolds: Steering = Desired - Velocity
-                    sum.Normalize();
-                    sum.multiplier_par(MAX_SPEED);
-                    Vecteur3D steer = sum - _Vitesse;
-                    steer.Limiter(MAX_FORCE);
-                    return steer;
-                }
-                else
-                    return sum;// new Vecteur3D(0, 0);
-            }
-
-            // Cohesion
-            // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
-            Vecteur3D Cohesion(Boid[] boids)
-            {
-                Vecteur3D sum = new Vecteur3D(0, 0);   // Start with empty vector to accumulate all locations
-                int count = 0;
-                foreach (Boid other in boids)
-                    if (other != this)
-                    {
-                        float d = _Position.Distance(other._Position);
-                        if (d < DISTANCE_VOISINS)
-                        {
-                            sum.additionner(other._Position); // additionner location
-                            count++;
-                        }
-                    }
-
-                if (count > 0)
-                {
-                    sum.diviser_par(count);
-                    return seek(sum);  // Steer towards the location
-                }
-                else
-                    return sum;// Vecteur3D(0, 0);
-
-            }
-        }
-#endif
         }
     }
 }

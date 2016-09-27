@@ -25,15 +25,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         public const string CAT = "Automne.OpenGL";
         static private CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f);
-        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f);
-        private static readonly float VITESSE_Y = c.getParametre("VitesseChute", 8.0f);
-        private static readonly float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
-        private static readonly float MAX_VENT = c.getParametre("MaxVent", 3f);
+        private static float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, true);
+        private static float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, true);
+        private static float VITESSE_Y = c.getParametre("VitesseChute", 8.0f, true);
+        private static float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f,true);
+        private static float MAX_VENT = c.getParametre("MaxVent", 3f, true);
         private readonly int NB_FEUILLES = c.getParametre("NbFeuilles", 10);
-        private readonly float TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 3.0f);
-        private readonly float DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f);
-        private readonly float NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3);
+        private static float TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, true);
+        private static float DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, true);
+        private static float NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, true);
         #endregion
 
         sealed private class Feuille
@@ -56,9 +56,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         const float VIEWPORT_Z = 1f;
 
         const int NB_TYPES_FEUILLES = 5;
-        Texture[] texture = new Texture[NB_TYPES_FEUILLES];
+        Texture _texture;
 
-        public Automne(OpenGL gl) 
+        public Automne(OpenGL gl)
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _xRotation = _tailleCubeX * 0.75f;
@@ -66,12 +66,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             _feuilles = new Feuille[NB_FEUILLES];
             for (int i = 0; i < NB_FEUILLES; i++)
             {
-                _feuilles[i] = new Feuille();
+                NouvelleFeuille(ref _feuilles[i]);
+                /*_feuilles[i] = new Feuille();
 
                 _feuilles[i].x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
-                _feuilles[i].z = FloatRandom(-_tailleCubeZ * 2, _zCamera);
+                _feuilles[i].z = FloatRandom(-_tailleCubeZ * 2, _zCamera);*/
                 _feuilles[i].y = FloatRandom(-_tailleCubeY * 16, _tailleCubeY * 16);
-
+                /*
                 _feuilles[i].vx = FloatRandom(-0.1f, 0.1f);
                 _feuilles[i].vy = FloatRandom(VITESSE_Y * 0.75f, VITESSE_Y * 1.5f);
                 _feuilles[i].vz = FloatRandom(-0.1f, 0.1f);
@@ -81,11 +82,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _feuilles[i].az = FloatRandom(0, 360);
                 _feuilles[i].type = r.Next(0, NB_TYPES_FEUILLES);
 
-                _feuilles[i].diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f);
+                _feuilles[i].diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f);*/
             }
 
-            texture[0] = new Texture();
-            texture[0].Create(gl, Configuration.getImagePath("feuille1.png"));
+            _texture = new Texture();
+            _texture.Create(gl, c.getParametre("texture feuilles", Configuration.getImagePath("automne.png")));
+            /*texture[0] = new Texture();
+            texture[0].Create(gl, Configuration.getImagePath("automne.png"));
             texture[1] = new Texture();
             texture[1].Create(gl, Configuration.getImagePath("feuille2.png"));
             texture[2] = new Texture();
@@ -93,8 +96,25 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             texture[3] = new Texture();
             texture[3].Create(gl, Configuration.getImagePath("feuille4.png"));
             texture[4] = new Texture();
-            texture[4].Create(gl, Configuration.getImagePath("feuille5.png"));
+            texture[4].Create(gl, Configuration.getImagePath("feuille5.png"));*/
+
+            c.setListenerParametreChange(onConfigurationChangee);
         }
+
+        protected override void onConfigurationChangee(string name)
+        {
+            base.onConfigurationChangee(name);
+            VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, true);
+            PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, true);
+            VITESSE_Y = c.getParametre("VitesseChute", 8.0f, true);
+            VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
+            MAX_VENT = c.getParametre("MaxVent", 3f, true);
+            TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, true);
+            DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, true);
+            NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, true);
+
+        }
+
         public override CategorieConfiguration getConfiguration()
         {
             return c;
@@ -102,15 +122,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         private void NouvelleFeuille(ref Feuille f)
         {
             if (f == null)
-            {
                 f = new Feuille();
-                f.type = r.Next(0, NB_TYPES_FEUILLES);
-                f.diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f);
-            }
-
             f.x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
             f.z = FloatRandom(-_tailleCubeZ * 2, _zCamera);
-            f.y = VIEWPORT_Y * 16;
+            f.y = VIEWPORT_Y * f.z;
 
             f.vx = FloatRandom(-0.1f, 0.1f);
             f.vy = FloatRandom(VITESSE_Y * 0.75f, VITESSE_Y * 1.5f);
@@ -120,6 +135,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             f.ay = FloatRandom(0, 360);
             f.az = FloatRandom(0, 360);
             f.type = r.Next(0, NB_TYPES_FEUILLES);
+            f.diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f) * TAILLE_FEUILLE;
         }
 
         /// <summary>
@@ -150,7 +166,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             gl.Fog(OpenGL.GL_FOG_DENSITY, 0.02f);
             gl.Fog(OpenGL.GL_FOG_START, _tailleCubeZ);
             gl.Fog(OpenGL.GL_FOG_END, _tailleCubeZ * 10);
-           
+
             gl.LoadIdentity();
             gl.Translate(0, 0, -_zCamera);
             gl.Disable(OpenGL.GL_LIGHTING);
@@ -161,15 +177,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Color(col);
 
-            int derniereTexture = -1;
-
+             _texture.Bind(gl);
             foreach (Feuille o in _feuilles)
             {
-                if (derniereTexture != o.type)
-                {
-                    texture[o.type].Bind(gl);
-                    derniereTexture = o.type;
-                }
+                float largeurTxtr = 1.0f / NB_TYPES_FEUILLES;
 
                 gl.PushMatrix();
                 gl.Translate(o.x, o.y, o.z);
@@ -182,8 +193,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                         float f = (float)i / (float)NB_FACES_FEUILLES;
                         float d = o.diedre * (float)Math.Cos((double)f * Math.PI * 2.0);
 
-                        gl.TexCoord(f, 0.0f); gl.Vertex(f * TAILLE_FEUILLE, d, -TAILLE_FEUILLE/2);
-                        gl.TexCoord(f, 1.0f); gl.Vertex(f * TAILLE_FEUILLE, d, TAILLE_FEUILLE/2);
+                        gl.TexCoord((o.type + f)* largeurTxtr, 0.0f);    gl.Vertex(f * TAILLE_FEUILLE, d, -TAILLE_FEUILLE / 2);
+                        gl.TexCoord((o.type + f)* largeurTxtr, 1.0f);    gl.Vertex(f * TAILLE_FEUILLE, d, TAILLE_FEUILLE / 2);
                     }
                 }
                 gl.End();
@@ -220,7 +231,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             // Deplace les flocons
             for (int i = 0; i < NB_FEUILLES; i++)
             {
-                if (_feuilles[i].y < -VIEWPORT_Y * 20)
+                if (_feuilles[i].y < -VIEWPORT_Y * 40)
                 {
                     NouvelleFeuille(ref _feuilles[i]);
                     //    trier = true;

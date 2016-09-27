@@ -241,6 +241,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         /// <param name="f"></param>
         /// <param name="k"></param>
         /// <returns></returns>
+        /*
         public override bool KeyDown(Form f, Keys k)
         {
             CategorieConfiguration c = getConfiguration();
@@ -263,7 +264,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             }
             return base.KeyDown(f, k); ;
         }
-
+        */
 
 
         /// <summary>

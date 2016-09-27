@@ -35,7 +35,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.FontaineParticulesPluie
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur( new EmetteurPluie(VITESSE_X, VITESSE_Y));
 
-            AjouteTexture(Configuration.getImagePath(@"ete\flares.png"), 4);
+            AjouteTexture(c.getParametre("Flares", Configuration.getImagePath(@"ete\flares.png")), 4);
 
             AjouteModificateur(new ModificateurExclusion(SystemeParticules2D.SystemeParticules2D.MIN_X,
                SystemeParticules2D.SystemeParticules2D.MIN_Y, SystemeParticules2D.SystemeParticules2D.MAX_X, SystemeParticules2D.SystemeParticules2D.MAX_Y,

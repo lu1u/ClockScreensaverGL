@@ -137,26 +137,6 @@ namespace ClockScreenSaverGL {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap feuille1 {
-            get {
-                object obj = ResourceManager.GetObject("feuille1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap feuille2 {
-            get {
-                object obj = ResourceManager.GetObject("feuille2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Jeudi.
         /// </summary>
         public static string Jeudi {

@@ -74,7 +74,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 s._particules[indice].alpha = 1;
                 s._particules[indice].debutVie = maintenant._totalMillisecondes;
                 s._particules[indice].finVie = maintenant._totalMillisecondes + 2000;
-
+                s._particules[indice]._couleur[0] = couleur.R / 512.0f;
+                s._particules[indice]._couleur[1] = couleur.G / 512.0f;
+                s._particules[indice]._couleur[2] = couleur.B / 512.0f;
+                s._particules[indice]._couleur[3] = 1;
+                s._particules[indice]._couleurIndividuelle = true;
                 float vitesse = _vitesseParticule * DisplayedObject.FloatRandom(0.95f, 1.05f);
                 s._particules[indice].vx = -(float)Math.Sin(_angle) * vitesse;
                 s._particules[indice].vy = -(float)Math.Cos(_angle) * vitesse;

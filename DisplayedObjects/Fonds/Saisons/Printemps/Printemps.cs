@@ -17,7 +17,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
     {
         #region PARAMETRES
         const String CAT = "Tree";
-        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static public CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         public static readonly byte ALPHA = (byte)c.getParametre("ALPHA", 128);
         public static readonly int DELAI_RECOMMENCE = c.getParametre("Delai nouvel arbre", 10) * 1000;
         public static readonly float LARGEUR_TRONC = c.getParametre("Largeur Tronc", 10);

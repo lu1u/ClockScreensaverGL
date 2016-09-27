@@ -197,5 +197,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             if (isVisible(Centre, P4, P1)) return true;
             return false;
         }
+
+        public void isVisibleBas( Vecteur3D p)
+        {
+
+        }
     }
 }
