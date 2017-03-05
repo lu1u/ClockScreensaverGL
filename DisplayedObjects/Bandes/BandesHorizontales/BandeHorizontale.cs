@@ -23,12 +23,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeHorizontale
         public static readonly int TailleFonte = c.getParametre( "TailleFonte", 30);
         private OpenGLFonte _glFonte;
 
-        public BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha)
+        protected BandeHorizontale(OpenGL gl, int valMax, int intervalle, float largeurcase, float origineX, float Py, int largeur, byte alpha)
             : base(gl, valMax, intervalle, largeurcase, TailleFonte, origineX, largeur, alpha)
 
         {
             _glFonte = new OpenGLFonte(gl, "0123456789", TailleFonte, FontFamily.GenericSansSerif, FontStyle.Regular);
-            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre( "VY", 20f));
+            _trajectoire = new TrajectoireDiagonale(_origine, Py, 0.0f, c.getParametre( "VY", 20f ) );
             _taillebande = new SizeF(largeur, _hauteurFonte * 2);
         }
 

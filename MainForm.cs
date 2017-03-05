@@ -71,7 +71,7 @@ namespace ClockScreenSaverGL
         enum FONDS
         {
             ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, ADN,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, MYRIADE, ADN,
         };
 
         const FONDS PREMIER_FOND = FONDS.ESPACE;
@@ -115,7 +115,7 @@ namespace ClockScreenSaverGL
                 InitializeComponent();
 
                 _temps = new Temps(DateTime.Now, _derniereFrame);
-                _fondDeSaison = c.getParametre(PARAM_FONDDESAISON, true);
+                _fondDeSaison = c.getParametre( PARAM_FONDDESAISON, true );
             }
             catch (Exception ex)
             {
@@ -165,7 +165,7 @@ namespace ClockScreenSaverGL
         {
             OpenGL gl = openGLControl.OpenGL;
 
-             if (!initial)
+            if (!initial)
                 gl.PopAttrib();
 
             gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_FOG_BIT | OpenGL.GL_LIGHTING_BIT);
@@ -217,10 +217,12 @@ namespace ClockScreenSaverGL
                 case FONDS.BOIDS_OISEAUX: return new BoidsOiseaux(gl);
                 case FONDS.BOIDS_POISSONS: return new BoidsPoissons(gl);
                 case FONDS.MOLECULE: return new Molecule(gl);
+                case FONDS.MYRIADE: return new Myriade(gl);
+
                 default:
                     return new Metaballes(gl);
-            }           
-            
+            }
+
         }
 
 
@@ -270,7 +272,7 @@ namespace ClockScreenSaverGL
                 Cursor.Hide();
                 _fontHelp = new Font(FontFamily.GenericSansSerif, 20);
 
-                timerChangeFond.Interval = c.getParametre(PARAM_DELAI_CHANGE_FOND, 3) * 60 * 1000;
+                timerChangeFond.Interval = c.getParametre( PARAM_DELAI_CHANGE_FOND, 3 ) * 60 * 1000;
                 timerChangeFond.Enabled = true;
 #if TRACER
                 cpuCounter = new PerformanceCounter();
@@ -346,7 +348,7 @@ namespace ClockScreenSaverGL
         /// <param name="g"></param>
         private void remplitDebug(OpenGL gl)
         {
-            double NbMillisec = _temps._temps.Subtract(lastFrame).TotalMilliseconds;
+            double NbMillisec = _temps.temps.Subtract(lastFrame).TotalMilliseconds;
             DisplayedObjects.Console console = DisplayedObjects.Console.getInstance(gl);
 
 #if DEBUG
@@ -367,7 +369,7 @@ namespace ClockScreenSaverGL
                 console.AddLigne(Color.White, b.DumpRender());
 
             //g.DrawString(s.ToString(), SystemFonts.DefaultFont, Brushes.LightGray, 0, 10);
-            lastFrame = _temps._temps;
+            lastFrame = _temps.temps;
         }
 
 #endif
@@ -386,7 +388,7 @@ namespace ClockScreenSaverGL
             foreach (DisplayedObject b in _listeObjets)
                 b.Deplace(_temps, bnd);
 
-            if (_jourActuel != _temps._JourDeLAnnee)
+            if (_jourActuel != _temps.jourDeLAnnee)
             {
                 // Detection de changement de date, avertir les objets qui sont optimises pour ne changer
                 // qu'une fois par jour
@@ -395,10 +397,10 @@ namespace ClockScreenSaverGL
                 foreach (DisplayedObject b in _listeObjets)
                     b.DateChangee(gl, _temps);
 
-                _jourActuel = _temps._JourDeLAnnee;
+                _jourActuel = _temps.jourDeLAnnee;
             }
 
-            _derniereFrame = _temps._temps;
+            _derniereFrame = _temps.temps;
         }
 
         void onOpenGLDraw(object sender, SharpGL.RenderEventArgs args)
@@ -429,10 +431,10 @@ namespace ClockScreenSaverGL
                 gl.Hint(OpenGL.GL_LINE_SMOOTH_HINT, OpenGL.GL_FASTEST);
             }
 
-                // Deplacer et Afficher tous les objets
-                foreach (DisplayedObject b in _listeObjets)
+            // Deplacer et Afficher tous les objets
+            foreach (DisplayedObject b in _listeObjets)
                 b.ClearBackGround(gl, Couleur);
-            
+
             if (wireframe)
             {
                 gl.LineWidth(2);
@@ -442,7 +444,7 @@ namespace ClockScreenSaverGL
             foreach (DisplayedObject b in _listeObjets)
             {
                 gl.PushMatrix();
-                gl.PushAttrib(OpenGL.GL_ENABLE_BIT| OpenGL.GL_COLOR_BUFFER_BIT| OpenGL.GL_DEPTH_BUFFER_BIT);
+                gl.PushAttrib(OpenGL.GL_ENABLE_BIT | OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
                 b.AfficheOpenGL(gl, _temps, Bounds, Couleur);
                 gl.PopAttrib();
                 gl.PopMatrix();
@@ -454,7 +456,7 @@ namespace ClockScreenSaverGL
             if (_afficheDebug)
             {
                 foreach (DisplayedObject b in _listeObjets)
-                    if ( b is Fond)
+                    if (b is Fond)
                         ((Fond)b).fillConsole(gl);
 
                 DisplayedObjects.Console.getInstance(gl).trace(gl, Bounds);
@@ -496,24 +498,24 @@ namespace ClockScreenSaverGL
                 return;
             }
 
-            _fondDeSaison = c.getParametre(PARAM_FONDDESAISON, true);
+            _fondDeSaison = c.getParametre( PARAM_FONDDESAISON, true );
             // Ajout de tous les objets graphiques, en finissant par celui qui sera affiche en dessus des autres
             INDICE_FOND = 0;
-            _listeObjets.Add(createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), true));
+            _listeObjets.Add(createBackgroundObject((FONDS)c.getParametre( PARAM_TYPEFOND, 0 ), true));
 
             INDICE_TRANSITION = 1;
             _listeObjets.Add(new Transition(gl));
 
-            if (c.getParametre("Copyright", true))
+            if (c.getParametre( "Copyright", true ) )
                 // Copyright
                 _listeObjets.Add(new TexteCopyright(gl, -4, 100));
             // citations
-            if (c.getParametre("Citation", true))
+            if (c.getParametre( "Citation", true ) )
                 _listeObjets.Add(new Citations(gl, this, 200, 200));
 
             _listeObjets.Add(new Actualites(gl));
             // Meteo
-            if (c.getParametre("Meteo", true))
+            if (c.getParametre( "Meteo", true ) )
                 _listeObjets.Add(new PanneauInfos(gl, meteoADroite));
         }
 
@@ -548,7 +550,7 @@ namespace ClockScreenSaverGL
                     //case Keys.H: _afficherAide = !_afficherAide; break;
                     case DisplayedObject.TOUCHE_REINIT:
                         _listeObjets[0].Dispose();
-                        _listeObjets[0] = createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                        _listeObjets[0] = createBackgroundObject((FONDS)c.getParametre( PARAM_TYPEFOND, 0 ), _fondDeSaison);
                         timerChangeFond.Stop();
                         timerChangeFond.Start();
                         break;
@@ -561,8 +563,8 @@ namespace ClockScreenSaverGL
                         {
                             // Changement de mode de fond
                             _fondDeSaison = !_fondDeSaison;
-                            c.setParametre( PARAM_FONDDESAISON, _fondDeSaison);
-                            _listeObjets[0] = createBackgroundObject((FONDS)c.getParametre(PARAM_TYPEFOND, 0), _fondDeSaison);
+                            c.setParametre(PARAM_FONDDESAISON, _fondDeSaison);
+                            _listeObjets[0] = createBackgroundObject((FONDS)c.getParametre( PARAM_TYPEFOND, 0 ), _fondDeSaison);
                         }
                         break;
                     case DisplayedObject.TOUCHE_PROCHAIN_FOND:
@@ -578,7 +580,7 @@ namespace ClockScreenSaverGL
                     case Keys.D:
                         {
                             _afficheDebug = !_afficheDebug;
-                            c.setParametre( "Debug", _afficheDebug);
+                            c.setParametre("Debug", _afficheDebug);
                         }
                         break;
 #endif
@@ -602,7 +604,7 @@ namespace ClockScreenSaverGL
 
         private void ChangeFond(FONDS type)
         {
-            c.setParametre( PARAM_TYPEFOND, (int)type);
+            c.setParametre(PARAM_TYPEFOND, (int)type);
             // Remplacer le premier objet de la liste par le nouveau fond
             DisplayedObject dO = _listeObjets[INDICE_FOND];
             DisplayedObject tr = _listeObjets[INDICE_TRANSITION];

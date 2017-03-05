@@ -32,7 +32,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         //readonly float _hauteurChiffre;
         readonly OpenGLFonte _glFonte;
         public HeureTexte(OpenGL gl, int Px, int Py)
-            : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, -c.getParametre("VX", 15), 0, c.getParametre("TailleFonte", 80), c.getParametre("Alpha", (byte)180))
+            : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, -c.getParametre( "VX", 15 ), 0, c.getParametre( "TailleFonte", 80 ), c.getParametre( "Alpha", (byte) 180 ) )
         {
             _glFonte = new OpenGLFonte(gl, "?0123456789:", HAUTEUR_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);
         }
@@ -41,7 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
             return c;
         }
         public HeureTexte(OpenGL gl, int Px, int Py, int tailleFonte)
-           : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, 0, 0, tailleFonte, c.getParametre("Alpha", (byte)180))
+           : base(gl, Px, SystemInformation.VirtualScreen.Height - HAUTEUR_FONTE * 2, 0, 0, tailleFonte, c.getParametre( "Alpha", (byte) 180 ) )
         {
             HAUTEUR_FONTE = tailleFonte;
             _glFonte = new OpenGLFonte(gl, "?0123456789:", HAUTEUR_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);
@@ -60,10 +60,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            texte = maintenant._Heure + ":"
-                + maintenant._Minute.ToString("D2") + ":"
-                + maintenant._Seconde.ToString("D2") + ":"
-                + maintenant._Millieme.ToString("D3");
+            texte = maintenant.heure + ":"
+                + maintenant.minute.ToString("D2") + ":"
+                + maintenant.seconde.ToString("D2") + ":"
+                + maintenant.milliemesDeSecondes.ToString("D3");
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 return g.MeasureString(texte, _fonte);
         }
@@ -82,10 +82,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
         protected override void drawOpenGL(OpenGL gl, Rectangle tailleEcran, Color couleur, Temps maintenant)
         {
-            string texte = maintenant._Heure + ":"
-                + maintenant._Minute.ToString("D2") + ":"
-                + maintenant._Seconde.ToString("D2") + ":"
-                + maintenant._Millieme.ToString("D3");
+            string texte = maintenant.heure + ":"
+                + maintenant.minute.ToString("D2") + ":"
+                + maintenant.seconde.ToString("D2") + ":"
+                + maintenant.milliemesDeSecondes.ToString("D3");
            _glFonte.drawOpenGL(gl, texte, _trajectoire._Px, _trajectoire._Py, couleur);
         }
     }

@@ -36,8 +36,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                     s._particules[indice].x = X;
                     s._particules[indice].y = Y;
                     s._particules[indice].alpha = 1;
-                    s._particules[indice].debutVie = maintenant._totalMillisecondes;
-                    s._particules[indice].finVie = maintenant._totalMillisecondes + 2000;
+                    s._particules[indice].debutVie = maintenant.totalMilliSecondes;
+                    s._particules[indice].finVie = maintenant.totalMilliSecondes + 2000;
 
                     float vitesse = DisplayedObject.FloatRandom(0.01f, 1.0f) * _vitesseParticule;
                     float angle = DisplayedObject.FloatRandom(0, (float)Math.PI*2.0f);

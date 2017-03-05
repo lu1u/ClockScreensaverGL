@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         {
             _nuages = new Nuage[NB_NUAGES];
 
-            _texture.Create(gl, c.getParametre("Nuages", Configuration.getImagePath("nuages.png")));
+            _texture.Create(gl, c.getParametre( "Nuages", Configuration.getImagePath( "nuages.png" ) ) );
             // Initialiser les etoiles
             for (int i = 0; i < NB_NUAGES; i++)
             {
@@ -180,10 +180,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
 
-            angle += VITESSE_ROULIS * maintenant._intervalle;
+            angle += VITESSE_ROULIS * maintenant.intervalleDepuisDerniereFrame;
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
-            float deltaZ = VITESSE * maintenant._intervalle;
-            float deltaX = VITESSE_LATERALE * maintenant._intervalle * (float)Math.Sin(angle);
+            float deltaZ = VITESSE * maintenant.intervalleDepuisDerniereFrame;
+            float deltaX = VITESSE_LATERALE * maintenant.intervalleDepuisDerniereFrame * (float)Math.Sin(angle);
             // Deplace les nuages
             bool trier = false;
             for (int i = 0; i < NB_NUAGES; i++)
@@ -207,7 +207,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     if (O1.z < O2.z) return -1;
                     return 0;
                 });
-            _dernierDeplacement = maintenant._temps;
+            _dernierDeplacement = maintenant.temps;
 
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);

@@ -40,14 +40,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         {
             getConfiguration()?.fillConsole(gl);
         }
-        /// <summary>
-        /// Appellee en notification d'un changement interactif de configuration
-        /// </summary>
-        /// <param name="valeur"></param>
-        protected virtual void onConfigurationChangee(string valeur)
-        {
 
-        }
         public override bool KeyDown(Form f, Keys k)
         {
             CategorieConfiguration c = getConfiguration();

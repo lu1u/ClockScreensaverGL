@@ -94,7 +94,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 _flocons[i].type = r.Next(0, NB_TYPES_FLOCONS);
             }
 
-            texture.Create(gl, c.getParametre("Flocons", Configuration.getImagePath("flocons.png")));
+            texture.Create(gl, c.getParametre( "Flocons", Configuration.getImagePath( "flocons.png" ) ) );
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -196,12 +196,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            float depuisdebut = (float)(debut.Subtract(maintenant._temps).TotalMilliseconds / 1000.0);
+            float depuisdebut = (float)(debut.Subtract(maintenant.temps).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
-            float vitesseRot = maintenant._intervalle * 100;
+            float vitesseRot = maintenant.intervalleDepuisDerniereFrame * 100;
 
-            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant._intervalle);
-            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant._intervalle);
+            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
+            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
             float px, pz;
             bool trier = false;
             // Deplace les flocons
@@ -215,13 +215,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 else
                 {
                     // Deplacement
-                    _flocons[i].x += ((_flocons[i].vx + _xWind) * maintenant._intervalle);
-                    _flocons[i].y -= (_flocons[i].vy * maintenant._intervalle);
-                    _flocons[i].z += (_flocons[i].vz * maintenant._intervalle);
+                    _flocons[i].x += ((_flocons[i].vx + _xWind) * maintenant.intervalleDepuisDerniereFrame);
+                    _flocons[i].y -= (_flocons[i].vy * maintenant.intervalleDepuisDerniereFrame);
+                    _flocons[i].z += (_flocons[i].vz * maintenant.intervalleDepuisDerniereFrame);
 
                     // Variation de vitesse
-                    Varie(ref _flocons[i].vx, -1, 1, 10, maintenant._intervalle);
-                    Varie(ref _flocons[i].vz, -1, 1, 10, maintenant._intervalle);
+                    Varie(ref _flocons[i].vx, -1, 1, 10, maintenant.intervalleDepuisDerniereFrame);
+                    Varie(ref _flocons[i].vz, -1, 1, 10, maintenant.intervalleDepuisDerniereFrame);
                     // Rotation due a la position de la camera
                     px = (CosTheta * (_flocons[i].x - _xRotation)) - (SinTheta * _flocons[i].z) + _xRotation;
                     pz = (SinTheta * (_flocons[i].x - _xRotation)) + (CosTheta * _flocons[i].z);
@@ -235,8 +235,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             }
 
 
-            Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant._intervalle);
-            Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant._intervalle);
+            Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant.intervalleDepuisDerniereFrame);
+            Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant.intervalleDepuisDerniereFrame);
 
             if (trier)
                 Array.Sort(_flocons, delegate(Flocon O1, Flocon O2)

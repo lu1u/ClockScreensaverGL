@@ -146,7 +146,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            _etapeTransition += maintenant._intervalle;
+            _etapeTransition += maintenant.intervalleDepuisDerniereFrame;
             if (_etapeTransition > DureeTransition)
             {
                 _transitionEnCours = false;

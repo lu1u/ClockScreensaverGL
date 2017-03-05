@@ -1,10 +1,5 @@
 ﻿/*
- * Crée par SharpDevelop.
- * Utilisateur: lucien
- * Date: 24/06/2014
- * Heure: 21:29
- * 
- * Pour changer ce modèle utiliser Outils  Options  Codage  Editer les en-têtes standards.
+ * Gestion de la couleur globale de l'économiseur qui est presque monochrome
  */
 using ClockScreenSaverGL.Config;
 using System;
@@ -17,14 +12,15 @@ namespace ClockScreenSaverGL
     public class CouleurGlobale
     {
         public const string CAT = "CouleurGlobale";
+        public const double VITESSE_CHANGEMENT_COULEUR = 0.05 ;
         const string HUE = "hue";
         const string VALUE = "value";
         const string SATURATION = "saturation";
         static protected CategorieConfiguration conf = Config.Configuration.getCategorie(CAT);
 
-        public double _Hue = conf.getParametre( "Teinte", 0.5f, true);
-        public double _Saturation = conf.getParametre("Saturation", 0.9f, true);
-        public double _Luminance = conf.getParametre( "Valeur", 0.75f, true);
+        public double hue = conf.getParametre( "Teinte", 0.5f);
+        public double saturation = conf.getParametre("Saturation", 0.9f);
+        public double luminance = conf.getParametre( "Valeur", 0.75f);
         private DateTime dernier = DateTime.Now;
 
         /// <summary>
@@ -34,25 +30,24 @@ namespace ClockScreenSaverGL
         {
             DateTime maintenant = DateTime.Now;
 
-            _Hue += 0.05f * (double)(maintenant.Subtract(dernier).TotalMilliseconds / 1000.0f);
-            while (_Hue > 1.0f)
-                _Hue -= 1.0f;
+            hue += VITESSE_CHANGEMENT_COULEUR * (maintenant.Subtract(dernier).TotalMilliseconds / 1000.0f);
+            while (hue > 1.0f)
+                hue -= 1.0f;
 
             dernier = maintenant;
         }
 
         public void ChangeHue(int Sens)
         {
-            Change(ref _Hue, Sens, HUE);
-
+            Change(ref hue, Sens, HUE);
         }
 
         public Color ChangeTeinte(float change)
         {
             CouleurGlobale c = new CouleurGlobale();
-            c._Hue = this._Hue;
-            c._Luminance = this._Luminance;
-            c._Saturation = this._Saturation;
+            c.hue = hue;
+            c.luminance = luminance;
+            c.saturation = saturation;
 
             c.ChangeTeinte(change);
             return c.GetRGB();
@@ -61,12 +56,12 @@ namespace ClockScreenSaverGL
         
         public void ChangeSaturation(int Sens)
         {
-            Change(ref _Saturation, Sens, SATURATION);
+            Change(ref saturation, Sens, SATURATION);
         }
 
         public void ChangeValue(int Sens)
         {
-            Change(ref _Luminance, Sens, VALUE);
+            Change(ref luminance, Sens, VALUE);
         }
 
         /// <summary>
@@ -92,7 +87,7 @@ namespace ClockScreenSaverGL
 
         public override String ToString()
         {
-            return "H:" + _Hue.ToString("0.00") + ",S:" + _Saturation.ToString("0.00") + ",V:" + _Luminance.ToString("0.00");
+            return "H:" + hue.ToString("0.00") + ",S:" + saturation.ToString("0.00") + ",V:" + luminance.ToString("0.00");
         }
 
         /// <summary>
@@ -102,9 +97,9 @@ namespace ClockScreenSaverGL
         public Color GetRGB()
         {
             double v, r, g, b;
-            double Luminance = _Luminance;
-            double Hue = _Hue;
-            double Saturation = _Saturation;
+            double Luminance = luminance;
+            double Hue = hue;
+            double Saturation = saturation;
 
             r = Luminance;   // default to gray
             g = Luminance;

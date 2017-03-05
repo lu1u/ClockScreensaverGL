@@ -25,15 +25,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
         public const string CAT = "Automne.OpenGL";
         static private CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, true);
-        private static float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, true);
-        private static float VITESSE_Y = c.getParametre("VitesseChute", 8.0f, true);
-        private static float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f,true);
-        private static float MAX_VENT = c.getParametre("MaxVent", 3f, true);
-        private readonly int NB_FEUILLES = c.getParametre("NbFeuilles", 10);
-        private static float TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, true);
-        private static float DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, true);
-        private static float NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, true);
+        private static float VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, (a) => { VITESSE_ROTATION = (float)Convert.ToDouble(a); } );
+        private static float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, (a) => { PERIODE_ROTATION = (float)Convert.ToDouble(a); } );
+        private static float VITESSE_Y = c.getParametre("VitesseChute", 8.0f, (a) => { VITESSE_Y = (float)Convert.ToDouble(a); } );
+        private static float VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f,(a) => { VITESSE_DELTA_VENT = (float)Convert.ToDouble(a); } );
+        private static float MAX_VENT = c.getParametre("MaxVent", 3f, (a) => { MAX_VENT = (float)Convert.ToDouble(a); } );
+        private static readonly int NB_FEUILLES = c.getParametre("NbFeuilles", 10 );
+        private static float TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, (a) => { TAILLE_FEUILLE = (float)Convert.ToDouble(a); } );
+        private static float DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, (a) => { DIEDRE_FEUILLE = (float)Convert.ToDouble(a); } );
+        private static float NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, (a) => { NB_FACES_FEUILLES = (float)Convert.ToDouble(a); } );
         #endregion
 
         sealed private class Feuille
@@ -67,52 +67,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
             for (int i = 0; i < NB_FEUILLES; i++)
             {
                 NouvelleFeuille(ref _feuilles[i]);
-                /*_feuilles[i] = new Feuille();
-
-                _feuilles[i].x = FloatRandom(-_tailleCubeX * 50, _tailleCubeX * 50);
-                _feuilles[i].z = FloatRandom(-_tailleCubeZ * 2, _zCamera);*/
                 _feuilles[i].y = FloatRandom(-_tailleCubeY * 16, _tailleCubeY * 16);
-                /*
-                _feuilles[i].vx = FloatRandom(-0.1f, 0.1f);
-                _feuilles[i].vy = FloatRandom(VITESSE_Y * 0.75f, VITESSE_Y * 1.5f);
-                _feuilles[i].vz = FloatRandom(-0.1f, 0.1f);
-
-                _feuilles[i].ax = FloatRandom(0, 360);
-                _feuilles[i].ay = FloatRandom(0, 360);
-                _feuilles[i].az = FloatRandom(0, 360);
-                _feuilles[i].type = r.Next(0, NB_TYPES_FEUILLES);
-
-                _feuilles[i].diedre = FloatRandom(DIEDRE_FEUILLE * 0.5f, DIEDRE_FEUILLE * 2.0f);*/
             }
 
             _texture = new Texture();
-            _texture.Create(gl, c.getParametre("texture feuilles", Configuration.getImagePath("automne.png")));
-            /*texture[0] = new Texture();
-            texture[0].Create(gl, Configuration.getImagePath("automne.png"));
-            texture[1] = new Texture();
-            texture[1].Create(gl, Configuration.getImagePath("feuille2.png"));
-            texture[2] = new Texture();
-            texture[2].Create(gl, Configuration.getImagePath("feuille3.png"));
-            texture[3] = new Texture();
-            texture[3].Create(gl, Configuration.getImagePath("feuille4.png"));
-            texture[4] = new Texture();
-            texture[4].Create(gl, Configuration.getImagePath("feuille5.png"));*/
-
-            c.setListenerParametreChange(onConfigurationChangee);
-        }
-
-        protected override void onConfigurationChangee(string name)
-        {
-            base.onConfigurationChangee(name);
-            VITESSE_ROTATION = c.getParametre("VitesseRotation", 0.2f, true);
-            PERIODE_ROTATION = c.getParametre("PeriodeRotation", 20.0f, true);
-            VITESSE_Y = c.getParametre("VitesseChute", 8.0f, true);
-            VITESSE_DELTA_VENT = c.getParametre("VitesseDeltaVent", 1f);
-            MAX_VENT = c.getParametre("MaxVent", 3f, true);
-            TAILLE_FEUILLE = c.getParametre("TailleFeuilles", 5.0f, true);
-            DIEDRE_FEUILLE = c.getParametre("DiedreFeuilles", 0.25f, true);
-            NB_FACES_FEUILLES = c.getParametre("Nb Faces", 3, true);
-
+            _texture.Create(gl, c.getParametre( "texture feuilles", Configuration.getImagePath( "automne.png" ) ) );
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -220,12 +179,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            float depuisdebut = (float)(debut.Subtract(maintenant._temps).TotalMilliseconds / 1000.0);
+            float depuisdebut = (float)(debut.Subtract(maintenant.temps).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
-            float vitesseRot = maintenant._intervalle * 100;
+            float vitesseRot = maintenant.intervalleDepuisDerniereFrame * 100;
 
-            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant._intervalle);
-            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant._intervalle);
+            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
+            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
             float px, pz;
             //bool trier = false;
             // Deplace les flocons
@@ -239,13 +198,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 else
                 {
                     // Deplacement
-                    _feuilles[i].x += ((_feuilles[i].vx + _xWind) * maintenant._intervalle);
-                    _feuilles[i].y -= (_feuilles[i].vy * maintenant._intervalle);
-                    _feuilles[i].z += (_feuilles[i].vz * maintenant._intervalle);
+                    _feuilles[i].x += ((_feuilles[i].vx + _xWind) * maintenant.intervalleDepuisDerniereFrame);
+                    _feuilles[i].y -= (_feuilles[i].vy * maintenant.intervalleDepuisDerniereFrame);
+                    _feuilles[i].z += (_feuilles[i].vz * maintenant.intervalleDepuisDerniereFrame);
 
                     // Variation de vitesse
-                    Varie(ref _feuilles[i].vx, -1, 1, 10, maintenant._intervalle);
-                    Varie(ref _feuilles[i].vz, -1, 1, 10, maintenant._intervalle);
+                    Varie(ref _feuilles[i].vx, -1, 1, 10, maintenant.intervalleDepuisDerniereFrame);
+                    Varie(ref _feuilles[i].vz, -1, 1, 10, maintenant.intervalleDepuisDerniereFrame);
                     // Rotation due a la position de la camera
                     px = (CosTheta * (_feuilles[i].x - _xRotation)) - (SinTheta * _feuilles[i].z) + _xRotation;
                     pz = (SinTheta * (_feuilles[i].x - _xRotation)) + (CosTheta * _feuilles[i].z);
@@ -258,8 +217,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Saisons
                 }
             }
 
-            Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant._intervalle);
-            Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant._intervalle);
+            Varie(ref _xWind, -MAX_VENT, MAX_VENT, VITESSE_DELTA_VENT, maintenant.intervalleDepuisDerniereFrame);
+            Varie(ref _xRotation, -_tailleCubeX / 2, _tailleCubeX / 2, 10, maintenant.intervalleDepuisDerniereFrame);
 
             //if (trier)
             Array.Sort(_feuilles, delegate (Feuille O1, Feuille O2)

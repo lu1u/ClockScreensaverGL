@@ -55,7 +55,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
             _lignes.Add(new LIGNE(couleur, Texte));
         }
 
-        public void trace( OpenGL gl, Rectangle tailleEcran)
+        public void trace(OpenGL gl, Rectangle tailleEcran, float X = 0, float Y = 0 )
         {
             gl.PushMatrix();
             gl.MatrixMode(OpenGL.GL_PROJECTION);
@@ -70,10 +70,10 @@ namespace ClockScreenSaverGL.DisplayedObjects
             gl.Enable(OpenGL.GL_BLEND);
             gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
-            float y = tailleEcran.Height - _fonte.Hauteur(); ;
+            float y = tailleEcran.Height - _fonte.Hauteur() - Y ;
             foreach( LIGNE ligne in _lignes)
             {
-                _fonte.drawOpenGL(gl, ligne.texte, 0, y, ligne.couleur);
+                _fonte.drawOpenGL(gl, ligne.texte, X, y, ligne.couleur);
                 y -= _fonte.Hauteur();
             }
 

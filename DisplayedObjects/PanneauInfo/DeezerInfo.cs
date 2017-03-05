@@ -41,7 +41,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// <returns></returns>
         internal bool MustRefresh(Temps maintenant)
         {
-            return maintenant._temps.Subtract(_derniereMaj).TotalSeconds > _delai;
+            return maintenant.temps.Subtract(_derniereMaj).TotalSeconds > _delai;
         }
 
         internal void Refresh()

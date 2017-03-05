@@ -12,9 +12,9 @@ namespace ClockScreenSaverGL.Config
         private static Log _instance;
         public const string CAT = "Log";
         static private CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
-        static bool LOG_VERBOSE = c.getParametre("Verbose", false, true);
-        static bool LOG_WARNING = c.getParametre("Warning", false, true);
-        static bool LOG_ERROR = c.getParametre("Error", true, true);
+        static bool LOG_VERBOSE = c.getParametre("Verbose", false);
+        static bool LOG_WARNING = c.getParametre("Warning", false);
+        static bool LOG_ERROR = c.getParametre("Error", true);
         TextWriter _tw;
 
         private Log()

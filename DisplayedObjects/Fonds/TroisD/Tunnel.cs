@@ -120,7 +120,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #endif
             float depuisdebut = (float)(debut.Subtract(_DernierDeplacement).TotalMilliseconds / 1000.0);
             float rotation = (float)Math.Cos(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
-            float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1.0f };
+            //float[] col = { couleur.R / 512.0f, couleur.G / 512.0f, couleur.B / 512.0f, 1.0f };
 
             gl.ClearColor(0, 0, 0, 1);
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
@@ -153,6 +153,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.Material(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_SHININESS, SHININESS);
             */
             setGlobalMaterial(gl, couleur);
+            changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, _tailleCubeZ * 20);
 
             gl.Rotate(0, 0, rotation);
            // gl.Color(col);
@@ -192,15 +193,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            float depuisdebut = (float)(debut.Subtract(maintenant._temps).TotalMilliseconds / 1000.0);
+            float depuisdebut = (float)(debut.Subtract(maintenant.temps).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
-            float vitesseRot = maintenant._intervalle * 100;
+            float vitesseRot = maintenant.intervalleDepuisDerniereFrame * 100;
 
-            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant._intervalle);
-            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant._intervalle);
+            float CosTheta = (float)Math.Cos(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
+            float SinTheta = (float)Math.Sin(vitesseCamera * maintenant.intervalleDepuisDerniereFrame);
             float px, py;
 
-            float dZ = (VITESSE_ANNEAU * maintenant._intervalle);
+            float dZ = (VITESSE_ANNEAU * maintenant.intervalleDepuisDerniereFrame);
 
             for (int i = 0; i < NB_ANNEAUX; i++)
                 for (int j = 0; j < TAILLE_ANNEAU; j++)
@@ -227,7 +228,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 PlaceAnneau(NB_ANNEAUX - 1);
             }
 
-            _DernierDeplacement = maintenant._temps;
+            _DernierDeplacement = maintenant.temps;
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif

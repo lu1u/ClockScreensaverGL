@@ -120,7 +120,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            _decalageX -= VITESSE * maintenant._intervalle;
+            _decalageX -= VITESSE * maintenant.intervalleDepuisDerniereFrame;
 
             if (_actuFactory._lignes != null)
                 lock (_actuFactory._lignes)
@@ -141,7 +141,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 
         public static int SourceCourante()
         {
-            return c.getParametre("Derniere Source", 0);
+            return c.getParametre( "Derniere Source", 0 );
         }
         public static void SourceCourante(int source)
         {

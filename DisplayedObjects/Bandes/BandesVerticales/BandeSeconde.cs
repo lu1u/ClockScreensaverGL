@@ -18,14 +18,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
 
 
         public BandeSeconde(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaSeconde", (byte)100))
+            : base(gl, 60, 5, LargeurSeconde, OrigineX, Py, largeur, c.getParametre( "AlphaSeconde", (byte) 100 ) )
         {
         }
 
         protected override void getValue(Temps maintenant, out float value, out float decalage)
         {
-            decalage = maintenant._Millieme / 1000.0f;
-            value = maintenant._Seconde + (maintenant._Millieme / 1000.0f);
+            decalage = maintenant.milliemesDeSecondes / 1000.0f;
+            value = maintenant.seconde + (maintenant.milliemesDeSecondes / 1000.0f);
         }
     }
 }

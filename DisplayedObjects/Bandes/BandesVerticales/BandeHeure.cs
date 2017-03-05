@@ -17,14 +17,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes.BandeVerticale
     public sealed class BandeHeure : BandeVerticale
     {
         public BandeHeure(OpenGL gl, float LargeurSeconde, float OrigineX, float Py, int largeur)
-            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur, c.getParametre("AlphaHeure", (byte)40))
+            : base(gl, 24, 1, LargeurSeconde, OrigineX, Py, largeur, c.getParametre( "AlphaHeure", (byte) 40 ) )
         {
         }
 
         protected override void getValue(Temps maintenant, out float value, out float decalage)
         {
-            decalage = (maintenant._Minute + (maintenant._Seconde + (maintenant._Millieme / 1000.0f)) / 60.0f) / 60.0f;
-            value = maintenant._Heure;
+            decalage = (maintenant.minute + (maintenant.seconde + (maintenant.milliemesDeSecondes / 1000.0f)) / 60.0f) / 60.0f;
+            value = maintenant.heure;
         }
 
     }

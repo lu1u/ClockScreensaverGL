@@ -24,7 +24,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
         {
 
             _traj.Avance(bounds, tailleEmetteur, maintenant);
-            float dG = _g * maintenant._intervalle;
+            float dG = _g * maintenant.intervalleDepuisDerniereFrame;
             int NbParticules = s._nbParticules;
 
             for (int i = 0; i < NbParticules; i++)

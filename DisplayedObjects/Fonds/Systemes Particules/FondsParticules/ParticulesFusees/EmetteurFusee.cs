@@ -35,10 +35,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
         }
         public override void Deplace(SystemeParticules2D s, Temps maintenant, Color couleur)
         {
-            _pX += (float)Math.Sin(_angle) * _vitesse * maintenant._intervalle ;
-            _pY += (float)Math.Cos(_angle) * _vitesse * maintenant._intervalle;
-            _angle += _vitesseAngle * maintenant._intervalle;
-            DisplayedObject.Varie(ref _vitesseAngle, -4, 4, 25, maintenant._intervalle);
+            _pX += (float)Math.Sin(_angle) * _vitesse * maintenant.intervalleDepuisDerniereFrame ;
+            _pY += (float)Math.Cos(_angle) * _vitesse * maintenant.intervalleDepuisDerniereFrame;
+            _angle += _vitesseAngle * maintenant.intervalleDepuisDerniereFrame;
+            DisplayedObject.Varie(ref _vitesseAngle, -4, 4, 25, maintenant.intervalleDepuisDerniereFrame);
 
             bool rebond = false;
             if (_pX < SystemeParticules2D.MIN_X)
@@ -72,8 +72,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D
                 s._particules[indice].x = _pX;
                 s._particules[indice].y = _pY;
                 s._particules[indice].alpha = 1;
-                s._particules[indice].debutVie = maintenant._totalMillisecondes;
-                s._particules[indice].finVie = maintenant._totalMillisecondes + 2000;
+                s._particules[indice].debutVie = maintenant.totalMilliSecondes;
+                s._particules[indice].finVie = maintenant.totalMilliSecondes + 2000;
                 s._particules[indice]._couleur[0] = couleur.R / 512.0f;
                 s._particules[indice]._couleur[1] = couleur.G / 512.0f;
                 s._particules[indice]._couleur[2] = couleur.B / 512.0f;

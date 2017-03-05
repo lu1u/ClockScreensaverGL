@@ -12,17 +12,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         readonly int NB_EMETTEURS = c.getParametre("Nb Emetteurs", 2);
         static readonly int NB_PARTICULES = c.getParametre("Nb Particules", 10000);
-        readonly float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.1f);
-        readonly float TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.02f);
-        readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.01f);
-        readonly float VITESSE_ANGLE = c.getParametre("VitesseAngle", 2.0f);
-        readonly float VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.1f);
+        static float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.1f, (a) => { ALPHA_MODIFIEUR = (float)Convert.ToDouble(a);  } );
+        static float TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.02f);
+        static float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.01f);
+        static float VITESSE_ANGLE = c.getParametre("VitesseAngle", 2.0f);
+        static float VITESSE_PARTICULE = c.getParametre("VitesseParticule", 0.1f);
         Texture[] _texture = new Texture[3];
         
         public ParticulesGalaxie(OpenGL gl) : base(gl, NB_PARTICULES)
         {
 
-            AjouteTexture(c.getParametre("nuages petits", Configuration.getImagePath("nuages_petits.png")), 3);
+            AjouteTexture(c.getParametre( "nuages petits", Configuration.getImagePath( "nuages_petits.png" ) ), 3);
 
 
             for (int i = 0; i < NB_EMETTEURS; i++)

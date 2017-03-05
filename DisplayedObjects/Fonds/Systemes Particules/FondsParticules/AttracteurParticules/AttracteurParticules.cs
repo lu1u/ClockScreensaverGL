@@ -23,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
 
         public AttracteurParticules(OpenGL gl) : base(gl, NB_PARTICULES)
         {
-            AjouteTexture(c.getParametre("Particule", Configuration.getImagePath("particule.png")), 1);
+            AjouteTexture(c.getParametre( "Particule", Configuration.getImagePath( "particule.png" ) ), 1);
             for (int i = 0; i < NB_EMETTEURS; i++)
             {
                 Trajectoire t = new TrajectoireOvale(0, 0, MAX_X*0.8f, MAX_Y*0.8f, VITESSE_EMETTEUR * FloatRandom(0.5f, 1.5f), -(float)Math.PI/2.0f);

@@ -53,7 +53,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             gl.PopAttrib();
         }
 
-        static void CalculePoints(OpenGL gl, Vecteur3Ddbl Position, double taille, out Vecteur3Ddbl vPoint0, out Vecteur3Ddbl vPoint1, out Vecteur3Ddbl vPoint2, out Vecteur3Ddbl vPoint3)
+        public static void CalculePoints(OpenGL gl, Vecteur3Ddbl Position, double taille, out Vecteur3Ddbl vPoint0, out Vecteur3Ddbl vPoint1, out Vecteur3Ddbl vPoint2, out Vecteur3Ddbl vPoint3)
         {
 
             float[] mat = new float[16];

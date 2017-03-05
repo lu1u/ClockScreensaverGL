@@ -19,7 +19,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 
         public Cubes(OpenGL gl) : base(gl, c)
         {
-            VITESSE_ROTATION = c.getParametre("Vitesse Rotation", 0.5f);
+            VITESSE_ROTATION = c.getParametre( "Vitesse Rotation", 0.5f );
             TRANSLATE_Z = ECART_CUBE * NB_CUBES_Z * -0.55f;
             LIGHTPOS[0] = ECART_CUBE * NB_CUBES_X;
             LIGHTPOS[1] = ECART_CUBE * NB_CUBES_Y;

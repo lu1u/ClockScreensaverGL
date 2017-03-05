@@ -161,6 +161,7 @@
     <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\BoidsOiseaux.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Boids\BoidsPoissons.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Molecule.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\Myriade.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Nebuleuse.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\FrustumCulling.cs" />
     <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Cubes.cs" />
@@ -232,7 +233,6 @@
     <Compile Include="DisplayedObjects\PanneauActualites\Actualites.cs" />
     <Compile Include="DisplayedObjects\PanneauActualites\ActuFactory.cs" />
     <Compile Include="DisplayedObjects\PanneauActualites\LigneActu.cs" />
-    <Compile Include="DisplayedObjects\PanneauInfo\DeezerInfo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\LignePrevisionMeteo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\PanneauInfo.cs" />
     <Compile Include="DisplayedObjects\PanneauInfo\MeteoInfo.cs" />
@@ -267,6 +267,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="ClockScreenSaverGL_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

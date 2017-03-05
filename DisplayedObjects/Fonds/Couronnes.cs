@@ -14,12 +14,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public const String CAT = "Couronnes";
         private const string PARAM_WIREFRAME = "WireFrame";
         private const string PARAM_ADDITIVE = "Additive";
-        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
         private readonly int NB_COURONNES = c.getParametre("NbCouronnes", 5);
         private readonly int NB_SECTEURS = c.getParametre("Details Secteurs", 120);
         private readonly float RAYON_MAX = c.getParametre("Rayon Max", 1.5f);
-        private bool ADDITIVE = c.getParametre(PARAM_ADDITIVE, false, true);
-        private bool WIRE_FRAME = c.getParametre(PARAM_WIREFRAME, false, true);
+        static private bool ADDITIVE = c.getParametre(PARAM_ADDITIVE, false, (a) => { ADDITIVE = Convert.ToBoolean(a); });
+        static private bool WIRE_FRAME = c.getParametre(PARAM_WIREFRAME, false, (a) => { WIRE_FRAME = Convert.ToBoolean(a); });
         private readonly int NB_SEGMENTS_MAX = c.getParametre("Nb Segments Max", 40);
         private readonly int NB_SEGMENTS_MIN = c.getParametre("Nb Segments Min", 2);
 
@@ -61,17 +61,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 _couronnes[i].periodeRayon = FloatRandom(0.001f, 20);
                 _couronnes[i].vitesseRayon = FloatRandom(0.010f, 0.1f) * SigneRandom();
             }
-
-            c.setListenerParametreChange(onConfigurationChangee);
+            
         }
 
-        protected override void onConfigurationChangee(string valeur)
-        {
-            ADDITIVE = c.getParametre(PARAM_ADDITIVE, false, true);
-            WIRE_FRAME = c.getParametre(PARAM_WIREFRAME, false, true);
-
-            base.onConfigurationChangee(valeur);
-        }
 
         public override CategorieConfiguration getConfiguration()
         {
@@ -152,7 +144,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                 c.deltaRayon = 1.0f + (float)Math.Sin(depuisdebut / c.periodeRayon) * c.vitesseRayon;
             }
 
-            _dernierDeplacement = maintenant._temps;
+            _dernierDeplacement = maintenant.temps;
         }
 
 

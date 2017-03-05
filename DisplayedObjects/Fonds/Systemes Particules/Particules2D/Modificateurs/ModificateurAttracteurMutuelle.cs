@@ -23,7 +23,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
         public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
             int NbParticules = s._nbParticules;
-            float dG = _g * maintenant._intervalle;
+            float dG = _g * maintenant.intervalleDepuisDerniereFrame;
 
             for (int i = 0; i < NbParticules; i++)
                 if (s._particules[i].active)
@@ -37,7 +37,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
                             if (dist > (s._particules[i].taille+ s._particules[j].taille) * SEUIL)
                             {
                                 // Attraction proportionnelle a la distance au carre
-                                double DistanceCube = dist * dist * dist;
+                                double DistanceCube = dist * dist;
 
                                 s._particules[i].vx -= s._particules[j].taille * (float)(dG * (distX / DistanceCube));
                                 s._particules[i].vy -= s._particules[j].taille * (float)(dG * (distY / DistanceCube));

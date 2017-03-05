@@ -31,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Bandes
         /// <param name="decalage"></param>
         protected abstract void getValue(Temps maintenant, out float value, out float decalage);
 
-        public Bande(OpenGL gl, int valMax, int intervalle, float largeurcase, int hauteurfonte, float origineX, int largeur, byte alpha) :
+        protected Bande(OpenGL gl, int valMax, int intervalle, float largeurcase, int hauteurfonte, float origineX, int largeur, byte alpha) :
             base(gl)
         {
             _valeurMax = valMax;

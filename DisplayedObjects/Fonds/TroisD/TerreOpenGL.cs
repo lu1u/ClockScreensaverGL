@@ -20,9 +20,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         static readonly int NB_TRANCHES = c.getParametre("NbTranches", 64);
         static readonly int NB_MERIDIENS = c.getParametre("NbMeridiens", 64);
-        static float VITESSE = c.getParametre("Vitesse", 5f, true );
-        static float LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, true); // Longitude du drapeau + correction en fonction de la texture
-        static float LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, true); // Latitude du drapeau
+        static float VITESSE = c.getParametre("Vitesse", 5f);
+        static float LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, (a) => { LONGITUDE_DRAPEAU = (float)Convert.ToDouble(a); } ); // Longitude du drapeau + correction en fonction de la texture
+        static float LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, (a) => { LATITUDE_DRAPEAU = (float)Convert.ToDouble(a); } ); // Latitude du drapeau
         static int DETAILS_DRAPEAU = c.getParametre("Details drapeau", 10);
         #endregion
 
@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public TerreOpenGL(OpenGL gl) : base(gl)
         //: base(1.0f, 1.0f, 1.0f, 0)
         {
-            _textureTerre.Create(gl, c.getParametre("Terre", Configuration.getImagePath("terre.png")));
+            _textureTerre.Create(gl, c.getParametre( "Terre", Configuration.getImagePath( "terre.png" ) ) );
 
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;
@@ -52,20 +52,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             for (int i = 0; i < DETAILS_DRAPEAU; i++)
                 _zDrapeau[i] = 0.002f * (float)Math.Sin(i * 4.0 * Math.PI / DETAILS_DRAPEAU);
-
-            c.setListenerParametreChange(onConfigurationChangee);
-        }
-
-        /// <summary>
-        /// Appellee en notification d'un changement interactif de configuration
-        /// </summary>
-        /// <param name="valeur"></param>
-        protected override void onConfigurationChangee(string valeur)
-        {
-           LONGITUDE_DRAPEAU = 270 + c.getParametre("Longitude", 5.97f, true); // Longitude du drapeau + correction en fonction de la texture
-           LATITUDE_DRAPEAU = 0 + c.getParametre("Latitude", 45.28f, true); // Latitude du drapeau
-           
-           base.onConfigurationChangee(valeur);
+            
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -164,7 +151,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            _rotation += maintenant._intervalle * VITESSE;
+            _rotation += maintenant.intervalleDepuisDerniereFrame * VITESSE;
 
             if ((_frame++) % 2 == 0)
             {

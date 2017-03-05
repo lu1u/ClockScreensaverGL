@@ -13,16 +13,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         const String CAT = "GravitationParticules";
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        static readonly int NB_PARTICULES = c.getParametre("Nb Particules", 100);
-        static readonly int TIMER_CREATE = c.getParametre("Delai creation particule", 200);
-        static readonly float G = 0.02f;// c.getParametre("G", 0.1f);
-        static readonly float MULT_DIST = 1.0f;// c.getParametre("G", 0.1f);
-        static readonly float VITESSE_RECENTRE = 0.1f;// c.getParametre("G", 0.1f);
+        static int NB_PARTICULES = c.getParametre("Nb Particules", 100);
+        readonly int TIMER_CREATE = c.getParametre("Delai creation particule", 200);
+        readonly float G = c.getParametre("G", 0.02f);
+        readonly float MULT_DIST = c.getParametre("Mult dist", 1.0f);
+        readonly float VITESSE_RECENTRE = c.getParametre("Vitesse recentre", 0.1f);
 
         public GravitationParticules(OpenGL gl) : base(gl, NB_PARTICULES)
         {
 
-            AjouteTexture(c.getParametre("Particule", Configuration.getImagePath("particuleTexture.png")), 1);
+            AjouteTexture(c.getParametre( "Particule", Configuration.getImagePath( "particuleTexture.png" ) ), 1);
 
             AjouteEmetteur(new EmetteurGravitation(G, MULT_DIST, TIMER_CREATE));
 

@@ -219,7 +219,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
             base.Deplace(maintenant, tailleEcran);
-            angle += maintenant._intervalle * VITESSE_PANORAMIQUE;
+            angle += maintenant.intervalleDepuisDerniereFrame * VITESSE_PANORAMIQUE;
             foreach (DisplayedObject o in _objets)
                 o.Deplace(maintenant, tailleEcran);
 

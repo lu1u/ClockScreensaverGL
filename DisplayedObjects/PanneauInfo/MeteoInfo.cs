@@ -485,7 +485,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             if (!_donneesPretes)
                 return false;
 
-            return maintenant._temps > _finPrevisions;
+            return maintenant.temps > _finPrevisions;
         }
 
         /***

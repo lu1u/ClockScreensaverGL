@@ -39,8 +39,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                     int indice = s.FindUnusedParticle();
                     s._particules[indice].x = _traj._Px;
                     s._particules[indice].y = _traj._Py;
-                    s._particules[indice].debutVie = maintenant._totalMillisecondes;
-                    s._particules[indice].finVie = maintenant._totalMillisecondes + 300000;
+                    s._particules[indice].debutVie = maintenant.totalMilliSecondes;
+                    s._particules[indice].finVie = maintenant.totalMilliSecondes + 300000;
 
                     s._particules[indice].vx = -_traj._Vx + _vitesseParticule * DisplayedObject.FloatRandom(-0.2f, 0.2f);
                     s._particules[indice].vy = -_traj._Vy + _vitesseParticule * DisplayedObject.FloatRandom(-0.2f, 0.2f);

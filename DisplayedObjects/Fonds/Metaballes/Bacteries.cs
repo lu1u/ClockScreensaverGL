@@ -42,17 +42,17 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		{
 
 			base.GetPreferences( ref L, ref H, ref N, ref C ) ;
-			L = c.getParametre("Largeur", 400 ) ;
-			H = c.getParametre("Hauteur", 300 ) ;
-			N = c.getParametre("Nombre", 30 ) ;
-			C = c.getParametre("Niveaux", 512 ) ;
+			L = c.getParametre( "Largeur", 400 );
+			H = c.getParametre( "Hauteur", 300 );
+			N = c.getParametre( "Nombre", 30 );
+			C = c.getParametre( "Niveaux", 512 );
 		}
 		
 		protected override void ConstruitMetaballes()
 		{
-			TailleMax = c.getParametre("TailleMax", 30f) ;
-			TailleMin =c.getParametre("TailleMin", 20f ) ;
-			IntensiteMax = c.getParametre("IntensiteMax", 1.0f) ;
+			TailleMax = c.getParametre( "TailleMax", 30f );
+			TailleMin =c.getParametre( "TailleMin", 20f );
+			IntensiteMax = c.getParametre( "IntensiteMax", 1.0f );
 			IntensiteMin = IntensiteMax / 2.0f ;
 			
 			for ( int i = 0; i < NbMetaballes; i++)

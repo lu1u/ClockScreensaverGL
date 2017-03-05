@@ -24,16 +24,15 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         public const string CAT = "JeuDeLaVie";
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        protected readonly byte ALPHA = c.getParametre("Alpha", (byte)40);
-        protected readonly float COULEUR_NAISSANCE = c.getParametre("CouleurNaissance", 0.3f);
-        protected readonly float COULEUR_NORMAL = c.getParametre("CouleurNormale", 0.4f);
         protected readonly int LARGEUR = c.getParametre("Largeur", 60);
         protected readonly int HAUTEUR = c.getParametre("Hauteur", 50);
-        protected readonly int SKIP = c.getParametre("Skip", 2);
-        protected readonly float VITESSE_ANGLE = c.getParametre("Vitesse Angle", 2.0f);
-        protected readonly float LOOK_AT_X = c.getParametre("LookAtX", 0.1f);
-        protected readonly float LOOK_AT_Y = 0.02f;// c.getParametre("LookAtY", 0.05f);
-        protected readonly float LOOK_AT_Z = c.getParametre("LookAtZ", -0.3f);
+        static protected float COULEUR_NAISSANCE = c.getParametre("CouleurNaissance", 0.3f,(a) => { COULEUR_NAISSANCE = (float)Convert.ToDouble(a); });
+        static protected float COULEUR_NORMAL = c.getParametre("CouleurNormale", 0.4f,(a) => { COULEUR_NORMAL = (float)Convert.ToDouble(a); });
+        static protected int   SKIP = c.getParametre("Skip", 2,(a) => { SKIP = Convert.ToInt32(a); });
+        protected float VITESSE_ANGLE = c.getParametre("Vitesse Angle", 2.0f);
+        static protected float LOOK_AT_X = c.getParametre("LookAtX", 0.1f, (a) => { LOOK_AT_X = (float)Convert.ToDouble(a); });
+        static protected float LOOK_AT_Y = c.getParametre("LookAtY", 0.02f, (a) => { LOOK_AT_Y = (float)Convert.ToDouble(a); });
+        static protected float LOOK_AT_Z = c.getParametre("LookAtZ", -0.3f, (a) => { LOOK_AT_Z = (float)Convert.ToDouble(a); });
         #endregion
         protected byte[,] cellules;
         protected byte[,] cellulestemp;
@@ -44,7 +43,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
         private int _colonneMin, _colonneMax, _largeurCalcul;
         float _angle = 0;
         protected Texture textureCellule = new Texture();
-        public Life(OpenGL gl): base(gl)
+        public Life(OpenGL gl) : base(gl)
         {
             _largeurCalcul = LARGEUR / SKIP;
             _colonneMin = -_largeurCalcul;
@@ -52,7 +51,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             cellules = new byte[LARGEUR, HAUTEUR];
             cellulestemp = new byte[LARGEUR, HAUTEUR];
             InitCellules();
-            textureCellule.Create(gl, c.getParametre("texture particule", Configuration.getImagePath("particule.png")));
+            textureCellule.Create(gl, c.getParametre( "texture particule", Configuration.getImagePath( "particule.png" ) ) );
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -87,16 +86,16 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             gl.Enable(OpenGL.GL_TEXTURE_2D);
             gl.Disable(OpenGL.GL_BLEND);
 
-            Color Naissance = getCouleurOpaqueAvecAlpha(couleur, 70);
+            Color Naissance = getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NAISSANCE*255));
             byte[] cNaissance = { Naissance.R, Naissance.G, Naissance.B };
-            Color Normal = getCouleurOpaqueAvecAlpha(couleur, 150);
+            Color Normal = getCouleurOpaqueAvecAlpha(couleur, Convert.ToByte(COULEUR_NORMAL * 255));
             byte[] cNormal = { Normal.R, Normal.G, Normal.B };
-            
-            gl.LookAt(LOOK_AT_X, LOOK_AT_Y, LOOK_AT_Z, 0,-0.1f, 0, 0, -1, 0);
+
+            gl.LookAt(LOOK_AT_X, LOOK_AT_Y, LOOK_AT_Z, 0, -0.1f, 0, 0, -1, 0);
             gl.Scale(1.7f / LARGEUR, 1.7f / HAUTEUR, 1);
             gl.Rotate(0, 0, _angle);
             byte ancienType = MORT;
-            
+
             textureCellule.Bind(gl);
             gl.Translate(-LARGEUR / 2, -HAUTEUR / 2, 0);
             gl.Begin(OpenGL.GL_QUADS);
@@ -120,7 +119,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
                         gl.TexCoord(1.0f, 1.0f); gl.Vertex(x + 1, y);
                         gl.TexCoord(1.0f, 0.0f); gl.Vertex(x + 1, y + 1);
                     }
-                   
+
                 }
             gl.End();
 
@@ -143,7 +142,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
 
-            _angle += maintenant._intervalle * VITESSE_ANGLE;
+            _angle += maintenant.intervalleDepuisDerniereFrame * VITESSE_ANGLE;
             int xMin, xMax;
             DecoupeEnBandes(out xMin, out xMax);
 

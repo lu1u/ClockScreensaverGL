@@ -5,15 +5,13 @@
  * Heure: 22:50
  * 
  */
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Windows.Forms;
-using System.Text;
+using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-using ClockScreenSaverGL.Config;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 {
@@ -24,10 +22,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         const string COULEURS_INVERSE = "CouleursInversees";
         const string NEGATIF = "NegatifCouleurs";
         const string CAT = "Metaballes";
-        private static CategorieConfiguration cat = Configuration.getCategorie(CAT);
-        protected double RatioCouleur;
-        protected static bool _CouleursInverses;
-        protected static bool _NegatifCouleurs;
+        private static CategorieConfiguration c = Configuration.getCategorie(CAT);
+        protected static double RATIO_COULEURS = c.getParametre( "Ratio couleurs", 0.3f, (a) => { RATIO_COULEURS = (float)Convert.ToDouble(a); });
+        protected static bool COULEUR_INVERSES = c.getParametre(COULEURS_INVERSE, false, (a) => { COULEUR_INVERSES = Convert.ToBoolean(a); });
+        protected static bool NEGATIF_COULEURS = c.getParametre(NEGATIF, false, (a) => { NEGATIF_COULEURS = Convert.ToBoolean(a); });
         #endregion
 
         protected readonly int NiveauxCouleurs;
@@ -44,9 +42,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         public Metaballes(OpenGL gl) : base(gl)
         {
             CategorieConfiguration c = getConfiguration();
-            RatioCouleur = c.getParametre("RatioCouleur", 0.3f, true);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
-            _CouleursInverses = c.getParametre(COULEURS_INVERSE, false, true);
-            _NegatifCouleurs = c.getParametre(NEGATIF, false, true);
+            RATIO_COULEURS = c.getParametre( "RatioCouleur", 0.3f );    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
+            COULEUR_INVERSES = c.getParametre( COULEURS_INVERSE, false );
+            NEGATIF_COULEURS = c.getParametre( NEGATIF, false );
 
 
             GetPreferences(ref Largeur, ref Hauteur, ref NbMetaballes, ref NiveauxCouleurs);
@@ -56,27 +54,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 
             _rectBitmap = new Rectangle(0, 0, Largeur, Hauteur);
             ConstruitMetaballes();
-
-            c.setListenerParametreChange(onConfigurationChangee);
-        }
-
-        /// <summary>
-        /// Appellee en notification d'un changement interactif de configuration
-        /// </summary>
-        /// <param name="valeur"></param>
-        protected override void onConfigurationChangee(string valeur)
-        {
-            CategorieConfiguration c = getConfiguration();
-            RatioCouleur = c.getParametre("RatioCouleur", 0.3f, true);    // Plus la valeur est grande, plus la couleur sera foncee. 255 au minimum
-            _CouleursInverses = c.getParametre(COULEURS_INVERSE, false, true);
-            _NegatifCouleurs = c.getParametre(NEGATIF, false, true);
-
-            base.onConfigurationChangee(valeur);
         }
 
         public override CategorieConfiguration getConfiguration()
         {
-            return cat;
+            return c;
         }
         /// <summary>
         /// Lit les preferences a chaque version de metaballes
@@ -88,10 +70,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
         protected virtual void GetPreferences(ref int L, ref int H, ref int N, ref int C)
         {
             CategorieConfiguration c = getConfiguration();
-            L = c.getParametre("Largeur", 400);
-            H = c.getParametre("Hauteur", 300);
-            N = c.getParametre("Nombre", 8);
-            C = c.getParametre("NiveauxCouleur", 255);
+            L = c.getParametre( "Largeur", 400 );
+            H = c.getParametre( "Hauteur", 300 );
+            N = c.getParametre( "Nombre", 8 );
+            C = c.getParametre( "NiveauxCouleur", 255 );
         }
 
         protected virtual void ConstruitMetaballes()
@@ -124,7 +106,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
             // Deplacement des metaballes
             for (int i = 0; i < NbMetaballes; i++)
             {
-                _metaballes[i]._Px += (_metaballes[i]._Vx * maintenant._intervalle);
+                _metaballes[i]._Px += (_metaballes[i]._Vx * maintenant.intervalleDepuisDerniereFrame);
 
                 if ((_metaballes[i]._Px < 0) && (_metaballes[i]._Vx < 0))
                     _metaballes[i]._Vx = Math.Abs(_metaballes[i]._Vx);
@@ -132,7 +114,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
                     if ((_metaballes[i]._Px > Largeur) && (_metaballes[i]._Vx > 0))
                     _metaballes[i]._Vx = -Math.Abs(_metaballes[i]._Vx);
 
-                _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant._intervalle);
+                _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant.intervalleDepuisDerniereFrame);
                 if ((_metaballes[i]._Py < 0) && (_metaballes[i]._Vy < 0))
                     _metaballes[i]._Vy = Math.Abs(_metaballes[i]._Vy);
                 else
@@ -279,7 +261,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
                 double PI2 = Math.PI * 2;
                 double r, g, b;
 
-                if (_CouleursInverses)
+                if (COULEUR_INVERSES)
                 {
                     r = (255 - c.R);
                     g = (255 - c.G);
@@ -292,11 +274,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
                     b = c.B;
                 }
 
-                r = r * RatioCouleur / NiveauxCouleurs;
-                g = g * RatioCouleur / NiveauxCouleurs;
-                b = b * RatioCouleur / NiveauxCouleurs;
+                r = r * RATIO_COULEURS / NiveauxCouleurs;
+                g = g * RATIO_COULEURS / NiveauxCouleurs;
+                b = b * RATIO_COULEURS / NiveauxCouleurs;
 
-                if (_NegatifCouleurs)
+                if (NEGATIF_COULEURS)
                     for (int x = 0; x < NiveauxCouleurs; x++)
                     {
                         double i = Math.Abs(Math.Cos(x * PI2 / NiveauxCouleurs) * NiveauxCouleurs);

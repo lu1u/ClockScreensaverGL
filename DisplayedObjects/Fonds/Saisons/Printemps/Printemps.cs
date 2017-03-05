@@ -92,14 +92,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 #endif
             if (_tree.DoneGrowing)
             {
-                if (maintenant._temps.Subtract(_finCroissance).TotalMilliseconds > DELAI_RECOMMENCE)
+                if (maintenant.temps.Subtract(_finCroissance).TotalMilliseconds > DELAI_RECOMMENCE)
                     _tree = new Tree(tailleEcran.Width, tailleEcran.Height * 0.3f, 0, LARGEUR_TRONC, LARGEUR_ARBRE, HAUTEUR_ARBRE, LONGUEUR_BRANCHE, DISTANCE_MIN, DISTANCE_MAX, NB_CIBLES, HAUTEUR_TRONC);
             }
             else
-                _finCroissance = maintenant._temps;
+                _finCroissance = maintenant.temps;
             if (UneFrameSur(2))
                 _tree.Grow();
-            _oscillation += maintenant._intervalle * 1.5f;
+            _oscillation += maintenant.intervalleDepuisDerniereFrame * 1.5f;
             _tree.Oscillation((float)Math.Sin(_oscillation) * 0.02f);
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);

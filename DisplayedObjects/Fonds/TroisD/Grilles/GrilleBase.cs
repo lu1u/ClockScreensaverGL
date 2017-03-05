@@ -111,6 +111,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
             gl.Fog(OpenGL.GL_FOG_END, fogEnd);
             setGlobalMaterial(gl, couleur);
 
+            changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, 20);
             gl.Translate(0, 0, TRANSLATE_Z);
             gl.Rotate(_angleVue / 2.0f, _angleVue, _angleVue / 3.0f);
             gl.CallList(_genLists);
@@ -125,7 +126,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            _angleVue += VITESSE_ROTATION * maintenant._intervalle;
+            _angleVue += VITESSE_ROTATION * maintenant.intervalleDepuisDerniereFrame;
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);
 #endif

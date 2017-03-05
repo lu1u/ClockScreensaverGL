@@ -17,11 +17,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         const string CAT = "Molecules";
         static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         int TAILLE_FONTE = c.getParametre("Taille Fonte", 24);
-        float ZCAMERA = c.getParametre("ZCamera", -5.0f, true);
-        float VITESSE_CAM = c.getParametre("VitesseCamera", 5.0f, true);
-        float ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f, true);
-        float RAYON_LIENS = c.getParametre("Rayon liens", 0.2f, true);
-        int FICHIER_EN_COURS = c.getParametre("Fichier en cours", -1, true);
+        static float ZCAMERA = c.getParametre("ZCamera", -5.0f, (a) => { ZCAMERA = (float)Convert.ToDouble(a); } );
+        static float VITESSE_CAM = c.getParametre("VitesseCamera", 5.0f, (a) => { VITESSE_CAM = (float)Convert.ToDouble(a); } );
+        static float ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f, (a) => { ECHELLE_RAYON = (float)Convert.ToDouble(a); } );
+        static float RAYON_LIENS = c.getParametre("Rayon liens", 0.2f, (a) => { RAYON_LIENS = (float)Convert.ToDouble(a); } );
+        static int FICHIER_EN_COURS = c.getParametre("Fichier en cours", -1, (a) => { FICHIER_EN_COURS = Convert.ToInt32(a); } );
+        TimerIsole _changeMolecule = new TimerIsole(c.getParametre("Delai change", 60000));
+
         #endregion
 
         private class Atome
@@ -39,8 +41,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             public float x2, y2, z2;
         }
 
-        List<Atome> _atomes;
-        List<Lien> _liens;
+        List<Atome> _atomes = new List<Atome>();
+        List<Lien> _liens = new List<Lien>();
         List<string> _fichiers;
 
         OpenGLFonte _fonte;
@@ -49,10 +51,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         Sphere _sphere = new Sphere();
         Cylinder _cylindre = new Cylinder();
         string _nomMolecule;
-
+        
         public Molecule(OpenGL gl) : base(gl)
         {
-            c.setListenerParametreChange(onConfigurationChangee);
             _fonte = new OpenGLFonte(gl, OpenGLFonte.CARACTERES, TAILLE_FONTE, FontFamily.GenericSansSerif, FontStyle.Bold);
             _sphere.CreateInContext(gl);
             _sphere.NormalGeneration = SharpGL.SceneGraph.Quadrics.Normals.Smooth;
@@ -74,9 +75,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             LitFichiers();
             ProchainFichier();
-
-            if (_liens == null || _liens.Count == 0)
-                ECHELLE_RAYON *= 2.0f;
 
             LIGHTPOS =new float[] { -5, -2f, 0, 1 };
         }
@@ -116,8 +114,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         private void LireFichierPdb(string fichier)
         {
             _nomMolecule = Path.GetFileNameWithoutExtension(fichier);
-            _atomes = new List<Atome>();
-            _liens = new List<Lien>();
+            _atomes.Clear();
+            _liens.Clear();
             StreamReader file = new StreamReader(fichier);
             string line;
             while ((line = file.ReadLine()) != null)
@@ -160,6 +158,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                 l.y2 -= y;
                 l.z2 -= z;
             }
+
+            if (_liens == null || _liens.Count == 0)
+                ECHELLE_RAYON = c.getParametre( "Echelle rayon", 1.0f ) * 2.0f;
+            else
+                ECHELLE_RAYON = c.getParametre( "Echelle rayon", 1.0f ); 
         }
 
         /// <summary>
@@ -296,14 +299,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             return line;
         }
 
-        protected override void onConfigurationChangee(string name)
-        {
-            base.onConfigurationChangee(name);
-            ZCAMERA = c.getParametre("ZCamera", -5.0f, true);
-            VITESSE_CAM = c.getParametre("VitesseCamera", 5.0f, true);
-            ECHELLE_RAYON = c.getParametre("Echelle rayon", 1.0f, true);
-            RAYON_LIENS = c.getParametre("Rayon liens", 0.2f, true);
-        }
 
         public override CategorieConfiguration getConfiguration()
         {
@@ -313,7 +308,28 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
             base.Deplace(maintenant, tailleEcran);
-            _angleCamera += maintenant._intervalle * VITESSE_CAM;
+            _angleCamera += maintenant.intervalleDepuisDerniereFrame * VITESSE_CAM;
+
+
+            if ( maintenant.intervalleDepuisDerniereFrame > 0.5f)
+            {
+                // Trop lent: essayer de diminuer les details
+
+                if( _sphere.Slices > 5)
+                    _sphere.Slices--;
+
+                if (_sphere.Stacks > 5)
+                    _sphere.Stacks--;
+            }
+            else
+            if ( maintenant.intervalleDepuisDerniereFrame < 0.05f)
+            {
+                // Rapide : augmenter les details
+                _sphere.Slices++;
+                _sphere.Stacks++;
+            }
+            if (_changeMolecule.Ecoule())
+                ProchainFichier();
         }
 
 

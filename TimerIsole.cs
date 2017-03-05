@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿/***
+ * Un 'timer' indépendant de toute autres ressources
+ */
+
+using System;
 
 namespace ClockScreenSaverGL
 {

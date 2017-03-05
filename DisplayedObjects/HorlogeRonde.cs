@@ -435,15 +435,15 @@ namespace ClockScreenSaverGL.DisplayedObjects
             gl.End();
 
             gl.Disable(OpenGL.GL_TEXTURE_2D);
-            DessineAiguille(gl, maintenant._Seconde, 60.0f, 0.8f, -0.2f, EPAISSEUR_TROTTEUSE / 2.0f);
+            DessineAiguille(gl, maintenant.seconde, 60.0f, 0.8f, -0.2f, EPAISSEUR_TROTTEUSE / 2.0f);
             //Minutes
-            DessineAiguille(gl, maintenant._Minute + maintenant._Seconde / 60.0f, 60.0f, 0.7f, 0, EPAISSEUR_MINUTES / 2.0f);
+            DessineAiguille(gl, maintenant.minute + maintenant.seconde / 60.0f, 60.0f, 0.7f, 0, EPAISSEUR_MINUTES / 2.0f);
             // Heure
-            DessineAiguille(gl, maintenant._Heure + maintenant._Minute / 60.0f, 12.0f, 0.5f, 0, EPAISSEUR_HEURES / 2.0f);
+            DessineAiguille(gl, maintenant.heure + maintenant.minute / 60.0f, 12.0f, 0.5f, 0, EPAISSEUR_HEURES / 2.0f);
 
             // Secondes continues
             gl.Translate(0, -((_diametre * RATIO_TROTTEUSE_CONTINUE) * 0.9f), 0);
-            DessineAiguille(gl, maintenant._Millieme, 1000.0f, 0.12f, -0.02f, EPAISSEUR_TROTTEUSE_CONTINUE / 2.0f);
+            DessineAiguille(gl, maintenant.milliemesDeSecondes, 1000.0f, 0.12f, -0.02f, EPAISSEUR_TROTTEUSE_CONTINUE / 2.0f);
 
             gl.MatrixMode(OpenGL.GL_PROJECTION);
             gl.PopMatrix();

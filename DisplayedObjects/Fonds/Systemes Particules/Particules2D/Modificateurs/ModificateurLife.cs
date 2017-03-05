@@ -15,7 +15,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
             for (int i = NbParticules-1; i >= 0; i--)
                 if (s._particules[i].active)
                 {
-                    if (maintenant._totalMillisecondes > s._particules[i].finVie )
+                    if (maintenant.totalMilliSecondes > s._particules[i].finVie )
                     {
                         s._particules[i].active = false ;
                         s.Trier = true;

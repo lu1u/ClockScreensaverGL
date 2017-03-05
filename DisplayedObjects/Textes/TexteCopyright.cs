@@ -18,10 +18,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private const string _texte = "Lucien Pilloni 2014" ;
         private SizeF _Taille;
 		public TexteCopyright(OpenGL gl, int Px, int Py):
-			base( gl, Px, Py, c.getParametre("VX", 4), 
-			     		c.getParametre("VY", 4), 
-			     		c.getParametre("TailleFonte", 32),
-			     		c.getParametre("Alpha", (byte)10))
+			base( gl, Px, Py, c.getParametre( "VX", 4 ), 
+			     		c.getParametre( "VY", 4 ), 
+			     		c.getParametre( "TailleFonte", 32 ),
+			     		c.getParametre( "Alpha", (byte) 10 ) )
 		{
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 _Taille = g.MeasureString(_texte, _fonte);

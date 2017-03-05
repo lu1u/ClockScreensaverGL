@@ -1,32 +1,27 @@
-﻿
-using ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD;
+﻿using ClockScreenSaverGL.Config;
 using SharpGL;
 using SharpGL.SceneGraph.Assets;
-
-using SharpGL.SceneGraph.Quadrics;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System;
 using System.Windows.Forms;
-using System.Drawing.Imaging;
-using ClockScreenSaverGL.Config;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 {
-    class Gravitation : Fond, IDisposable
+    class Gravitation : ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.TroisD, IDisposable
     {
         public const String CAT = "Gravitation";
         static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
         public static double RAYON_UNIVERS = 10;// c.getParametre("Rayon Univers", 8);
-        public static double RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, true);
-        public static double RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, true);
-        public static double VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, true);
-        public static double VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, true);
-        public static double DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, true);
-        public static double VITESSE = c.getParametre("Vitesse", 0.001, true);
-        public static int DETAILS = c.getParametre("Details", 5, true);
-        public static int DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, true);
-        public static int NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, true);
+        public static double RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, (a) => { RATIO_RAYON = Convert.ToDouble(a); } );
+        public static double RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, (a) => { RATIO_DISTANCES = Convert.ToDouble(a); });
+        public static double VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, (a) => { VITESSE_SUIVI_TO = Convert.ToDouble(a); });
+        public static double VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, (a) => { VITESSE_SUIVI_FROM = Convert.ToDouble(a); });
+        public static double DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, (a) => { DISTANCE_MIN_CAMERA = Convert.ToDouble(a); });
+        public static double VITESSE = c.getParametre("Vitesse", 0.001, (a) => { VITESSE = Convert.ToDouble(a); });
+        public static int DETAILS = c.getParametre("Details", 5, (a) => { DETAILS = Convert.ToInt32(a); });
+        public static int DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, (a) => { DETAILS_ASTEROIDS = Convert.ToInt32(a); });
+        public static int NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, (a) => { NIVEAU_DETAIL = Convert.ToInt32(a); });
         public static int NB_ROCHEUSES = c.getParametre("Nb Rocheuses", 4);
         public static int NB_ASTEROIDES = c.getParametre("Nb Asteroides", 300);
         public static int NB_GAZEUSES = c.getParametre("Nb Gazeuses", 4);
@@ -51,20 +46,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
         int corpsSuivi;
         public static Vecteur3Ddbl cameraFrom, cameraTo, cameraCible;
         private int nbAsteroides;
-        public Gravitation(OpenGL gl) : base(gl)
+        public Gravitation(OpenGL gl) : base(gl,0,0,0,0)
         {
             _textureTop = new Texture();
-            _textureTop.Create(gl, c.getParametre("Universe top", Configuration.getImagePath("universe_top.png")));
+            _textureTop.Create(gl, c.getParametre( "Universe top", Configuration.getImagePath( "universe_top.png" ) ) );
             _textureBottom = new Texture();
-            _textureBottom.Create(gl, c.getParametre("Universe bottom", Configuration.getImagePath("universe_bottom.png")));
+            _textureBottom.Create(gl, c.getParametre( "Universe bottom", Configuration.getImagePath( "universe_bottom.png" ) ) );
             _textureLeft = new Texture();
-            _textureLeft.Create(gl, c.getParametre("Universe left", Configuration.getImagePath("universe_left.png")));
+            _textureLeft.Create(gl, c.getParametre( "Universe left", Configuration.getImagePath( "universe_left.png" ) ) );
             _textureRight = new Texture();
-            _textureRight.Create(gl, c.getParametre("Universe right", Configuration.getImagePath("universe_right.png")));
+            _textureRight.Create(gl, c.getParametre( "Universe right", Configuration.getImagePath( "universe_right.png" ) ) );
             _textureFront = new Texture();
-            _textureFront.Create(gl, c.getParametre("Universe front",Configuration.getImagePath( "universe_front.png")));
+            _textureFront.Create(gl, c.getParametre( "Universe front", Configuration.getImagePath( "universe_front.png" ) ) );
             _textureBack = new Texture();
-            _textureBack.Create(gl, c.getParametre("Universe back", Configuration.getImagePath("universe_back.png")));
+            _textureBack.Create(gl, c.getParametre( "Universe back", Configuration.getImagePath( "universe_back.png" ) ) );
 
             #region AjouteCorps
             Planete.InitPlanetes(gl);
@@ -161,23 +156,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
             cameraFrom = new Vecteur3Ddbl(Corps[from]._position);
             cameraFrom.y += RAYON_UNIVERS / 10.0f;
-            cameraTo = new Vecteur3Ddbl(Corps[to]._position);
-
-            c.setListenerParametreChange(onConfigurationChangee);
-        }
-
-        protected override void onConfigurationChangee(string valeur)
-        {
-            base.onConfigurationChangee(valeur);
-            RATIO_RAYON = c.getParametre("Ratio rayon planetes", 0.0005, true);
-            RATIO_DISTANCES = c.getParametre("Ratio distance planetes", 0.5, true);
-            VITESSE_SUIVI_TO = c.getParametre("Vitesse ciblage", 0.4, true);
-            VITESSE_SUIVI_FROM = c.getParametre("Vitesse camera", 0.005, true);
-            DISTANCE_MIN_CAMERA = c.getParametre("Distance min camera", 0.01, true);
-            VITESSE = c.getParametre("Vitesse", 0.001, true);
-            DETAILS = c.getParametre("Details", 5, true);
-            DETAILS_ASTEROIDS = c.getParametre("Details asteroides", 30, true);
-            NIVEAU_DETAIL = c.getParametre("Niveau detail", 800, true);
+            cameraTo = new Vecteur3Ddbl(Corps[to]._position);            
         }
 
         public override CategorieConfiguration getConfiguration()
@@ -251,6 +230,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             gl.Disable(OpenGL.GL_FOG);
             //gl.DepthMask((byte)OpenGL.GL_TRUE);
             gl.CullFace(OpenGL.GL_BACK);
+            changeZoom(gl, tailleEcran.Width, tailleEcran.Height, 0.001f, (float)RAYON_UNIVERS * 2.0f);
 
 
             gl.LookAt(cameraFrom.x, cameraFrom.y, cameraFrom.z, cameraTo.x, cameraTo.y, cameraTo.z, 0, 1, 0);
@@ -428,12 +408,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
 
 
             for (int i = 1; i < Corps.Count; i++)
-                Corps[i].Avance(maintenant._intervalle);
+                Corps[i].Avance(maintenant.intervalleDepuisDerniereFrame);
 
             cameraCible = Corps[corpsSuivi]._position;
 
             Vecteur3Ddbl decalage = cameraCible - cameraTo;
-            cameraTo += decalage * (maintenant._intervalle * VITESSE_SUIVI_TO);
+            cameraTo += decalage * (maintenant.intervalleDepuisDerniereFrame * VITESSE_SUIVI_TO);
 
             if (_changeCamera.Ecoule())
             {
@@ -447,14 +427,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Gravity
             cameraFrom -= decalage;
 
 
-            if (maintenant._intervalle < (1.0f / 40.0))
+            if (maintenant.intervalleDepuisDerniereFrame < (1.0f / 40.0))
             {
                 NIVEAU_DETAIL++;
                 c.setParametre("Niveau detail", NIVEAU_DETAIL);
                 construitAffiche();
             }
             else
-                if (maintenant._intervalle > (1.0f / 20.0f))
+                if (maintenant.intervalleDepuisDerniereFrame > (1.0f / 20.0f))
                 if (NIVEAU_DETAIL > 10)
                 {
                     NIVEAU_DETAIL--;

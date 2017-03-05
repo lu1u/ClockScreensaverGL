@@ -31,8 +31,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
                 s._particules[indice].x = DisplayedObject.FloatRandom(SystemeParticules2D.SystemeParticules2D.MIN_X, SystemeParticules2D.SystemeParticules2D.MAX_X);
                 s._particules[indice].y = SystemeParticules2D.SystemeParticules2D.MIN_Y * 0.8f;
                 s._particules[indice].alpha = 1;
-                s._particules[indice].debutVie = maintenant._totalMillisecondes;
-                s._particules[indice].finVie = maintenant._totalMillisecondes + 20000;
+                s._particules[indice].debutVie = maintenant.totalMilliSecondes;
+                s._particules[indice].finVie = maintenant.totalMilliSecondes + 20000;
 
                 s._particules[indice].vx = (float)DisplayedObject.FloatRandom(-1f, 1f) * _vitesseX;
                 s._particules[indice].vy = (float)DisplayedObject.FloatRandom(-0f, 2f) * _vitesseY;

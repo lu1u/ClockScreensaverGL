@@ -17,14 +17,14 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         public const string CAT = "Espace";
         static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
-        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)255,true);
-        private static readonly float TAILLE_ETOILE = c.getParametre("Taille", 0.15f, true);
+        private static readonly byte ALPHA = c.getParametre("Alpha", (byte)255);
+        private static readonly float TAILLE_ETOILE = c.getParametre("Taille", 0.15f);
         private static readonly int NB_ETOILES = c.getParametre("NbEtoiles", 2000);
-        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f, true);
-        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f, true);
-        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f, true);
-        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f, true);
-        private static readonly float VITESSE = c.getParametre("Vitesse", 8f, true);
+        private static readonly float PERIODE_TRANSLATION = c.getParametre("PeriodeTranslation", 13.0f);
+        private static readonly float PERIODE_ROTATION = c.getParametre("PeriodeRotation", 10.0f);
+        private static readonly float VITESSE_ROTATION = c.getParametre("VitesseRotation", 50f);
+        private static readonly float VITESSE_TRANSLATION = c.getParametre("VitesseTranslation", 0.2f);
+        private static readonly float VITESSE = c.getParametre("Vitesse", 8f);
         #endregion
 
         const float VIEWPORT_X = 5f;
@@ -49,7 +49,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             : base(gl, VIEWPORT_X, VIEWPORT_Y, VIEWPORT_Z, 100)
         {
             _etoiles = new Etoile[NB_ETOILES];
-            _texture.Create(gl, c.getParametre("Etoile", Configuration.getImagePath("etoile.png")));
+            _texture.Create(gl, c.getParametre( "Etoile", Configuration.getImagePath( "etoile.png" ) ) );
 
             // Initialiser les etoiles
             for (int i = 0; i < NB_ETOILES; i++)
@@ -153,8 +153,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
             float depuisdebut = (float)(_debutAnimation.Subtract(_dernierDeplacement).TotalMilliseconds / 1000.0);
             float vitesseCamera = (float)Math.Sin(depuisdebut / PERIODE_ROTATION) * VITESSE_ROTATION;
-            float deltaZ = VITESSE * maintenant._intervalle;
-            float deltaWind = (float)Math.Sin(depuisdebut / PERIODE_TRANSLATION) * VITESSE_TRANSLATION * maintenant._intervalle;
+            float deltaZ = VITESSE * maintenant.intervalleDepuisDerniereFrame;
+            float deltaWind = (float)Math.Sin(depuisdebut / PERIODE_TRANSLATION) * VITESSE_TRANSLATION * maintenant.intervalleDepuisDerniereFrame;
             // Deplace les etoiles
             bool trier = false;
             for (int i = 0; i < NB_ETOILES; i++)
@@ -178,7 +178,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
                     if (O1.z < O2.z) return -1;
                     return 0;
                 });
-            _dernierDeplacement = maintenant._temps;
+            _dernierDeplacement = maintenant.temps;
 
 #if TRACER
             RenderStop(CHRONO_TYPE.DEPLACE);

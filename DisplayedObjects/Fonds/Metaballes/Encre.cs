@@ -43,20 +43,20 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 		protected override void GetPreferences( ref int L, ref int H, ref int N, ref int C )
 		{
 			base.GetPreferences( ref L, ref H, ref N, ref C ) ;
-			L = c.getParametre("Largeur", 400 ) ;
-			H = c.getParametre("Hauteur", 300 ) ;
-			N = c.getParametre("Nombre", 10 ) ;
-			C = c.getParametre("Niveaux", 512 ) ;
+			L = c.getParametre( "Largeur", 400 );
+			H = c.getParametre( "Hauteur", 300 );
+			N = c.getParametre( "Nombre", 10 );
+			C = c.getParametre( "Niveaux", 512 );
 		}
 		
 		protected override void ConstruitMetaballes()
 		{
-			TailleMax		= c.getParametre("TailleMax", 100f ) ;
-			TailleMin		= c.getParametre("TailleMin", 30f ) ;
-			IntensiteMax	= c.getParametre("IntensiteMax", 1.0f) ;
+			TailleMax		= c.getParametre( "TailleMax", 100f );
+			TailleMin		= c.getParametre( "TailleMin", 30f );
+			IntensiteMax	= c.getParametre( "IntensiteMax", 1.0f );
 			
 			IntensiteMin	= 0 ;
-			NbMax = c.getParametre("Nombre", 10 ) ;
+			NbMax = c.getParametre( "Nombre", 10 );
 			NbMetaballes = 0 ;
 			xEmetteur = Largeur/2 ;
 			
@@ -79,7 +79,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 			// Deplacement des metaballes
 			for ( int i = 0 ;i < NbMetaballes ; i++)
 			{
-                _metaballes[i]._Px += (_metaballes[i]._Vx * maintenant._intervalle);
+                _metaballes[i]._Px += (_metaballes[i]._Vx * maintenant.intervalleDepuisDerniereFrame);
 				
 				if ( (_metaballes[i]._Px < -_metaballes[i]._Taille ) && (_metaballes[i]._Vx < 0) ||	// Trop a gauche
 				    ( (_metaballes[i]._Px - _metaballes[i]._Taille) > Largeur ) && (_metaballes[i]._Vx > 0) || // Trop a droite
@@ -92,31 +92,31 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 				}
 				else
 
-                    _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant._intervalle);
+                    _metaballes[i]._Py += (_metaballes[i]._Vy * maintenant.intervalleDepuisDerniereFrame);
 				
 				// Variations de la vitesse horizontale + Variations sinusoidales en fonction de la profondeur
 				_metaballes[i]._Vx += //((float)Math.Sin( _metaballes[i]._Py / Hauteur * Math.PI*4.0 ))*0.25f
-                    +FloatRandom(-20, 20) * maintenant._intervalle;
+                    +FloatRandom(-20, 20) * maintenant.intervalleDepuisDerniereFrame;
 				
 				// De moins en moins opaque
 				if ( _metaballes[i]._Intensite > IntensiteMin)
-                    _metaballes[i]._Intensite -= (_metaballes[i]._Intensite * 0.1 * maintenant._intervalle);
+                    _metaballes[i]._Intensite -= (_metaballes[i]._Intensite * 0.1 * maintenant.intervalleDepuisDerniereFrame);
 				
 				// de plus en plus grandes
 				if ( _metaballes[i]._Taille < TailleMax )
 				{
-                    _metaballes[i]._Taille += (_metaballes[i]._Taille * 0.1 * maintenant._intervalle);
+                    _metaballes[i]._Taille += (_metaballes[i]._Taille * 0.1 * maintenant.intervalleDepuisDerniereFrame);
 					_metaballes[i]._TailleCarre = _metaballes[i]._Taille * _metaballes[i]._Taille;
 				}
 			}
 			
             // Ajouter eventuellement une metaballe
 			if ( NbMetaballes < NbMax)
-				if ( maintenant._temps.Subtract( derniereCreation ).TotalMilliseconds> 800 )
+				if ( maintenant.temps.Subtract( derniereCreation ).TotalMilliseconds> 800 )
 			{
 				NouvelleMetaballe(ref _metaballes[NbMetaballes]) ;
 				NbMetaballes++ ;
-				derniereCreation = maintenant._temps ;
+				derniereCreation = maintenant.temps ;
 			}
 			
 			// Deplacer l'emetteur
@@ -166,7 +166,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 			{
 				double r, g, b ;
 				
-				if  ( _CouleursInverses )
+				if  ( COULEUR_INVERSES )
 				{
 					r = (255-c.R) ;
 					g = (255-c.G) ;
@@ -179,11 +179,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Metaballes
 					b = c.B;
 				}
 				
-				r = r * RatioCouleur / NiveauxCouleurs ;
-				g = g * RatioCouleur / NiveauxCouleurs ;
-				b = b * RatioCouleur / NiveauxCouleurs ;
+				r = r * RATIO_COULEURS / NiveauxCouleurs ;
+				g = g * RATIO_COULEURS / NiveauxCouleurs ;
+				b = b * RATIO_COULEURS / NiveauxCouleurs ;
 				
-				if ( _NegatifCouleurs )
+				if ( NEGATIF_COULEURS )
 					for (int x = 0; x < NiveauxCouleurs; x++)
 				{
 					

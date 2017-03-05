@@ -16,8 +16,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
 
         public override void Applique(SystemeParticules2D s, Temps maintenant)
         {
-            float dX = _gX * maintenant._intervalle;
-            float dY = _gY * maintenant._intervalle;
+            float dX = _gX * maintenant.intervalleDepuisDerniereFrame;
+            float dY = _gY * maintenant.intervalleDepuisDerniereFrame;
             int NbParticules = s._nbParticules;
             for (int i = 0; i < NbParticules; i++)
                 if (s._particules[i].active)

@@ -56,7 +56,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         #endregion PARAMETRES ;
 
         private MeteoInfo _meteo;
-        private DeezerInfo _deezer;
+        //private DeezerInfo _deezer;
         private HorlogeRonde _horloge;
         private HeureTexte _heureTexte;
         private DateTexte _dateTexte;
@@ -72,7 +72,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         {
             _taille = new SizeF(DIAMETRE_HORLOGE + MARGE_HORLOGE * 2, SystemInformation.VirtualScreen.Height);
             _meteo = new MeteoInfo();
-            _deezer = new DeezerInfo(EXE_DEEZERINFO, DELAI_DEEZER);
+            //_deezer = new DeezerInfo(EXE_DEEZERINFO, DELAI_DEEZER);
             _horloge = new HorlogeRonde(gl, DIAMETRE_HORLOGE, 0, 0);
             _heureTexte = new HeureTexte(gl, 0, 0, TAILLE_TEXTE_HEURE);
             _dateTexte = new DateTexte(gl, 0, 0, TAILLE_TEXTE_DATE);
@@ -198,6 +198,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// <param name="Y"></param>
         private void afficheDeezer(Graphics g, ref float Y)
         {
+            /*
             if (_deezer != null)
             {
                 using (Font fonteTitreMeteo = new Font(FontFamily.GenericSansSerif, TAILLE_TITRE_METEO, FontStyle.Bold, GraphicsUnit.Pixel))
@@ -214,7 +215,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                     g.DrawString(_deezer.Infos, fonteTexteMeteo, Brushes.White, MARGE_H + TAILLE_ICONE_METEO, Y);
                     Y += g.MeasureString(_deezer.Infos, fonteTexte).Height * RATIO_INTERLIGNE;
                 }
-            }
+            }*/
         }
 
         private void afficheMeteo(Graphics g, ref float Y)
@@ -280,10 +281,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             if (_meteo.MustRefresh(maintenant))
                 _meteo = new MeteoInfo();
 
-            if (_deezer.MustRefresh(maintenant))
+           /* if (_deezer.MustRefresh(maintenant))
                 _deezer.Refresh();
-
-            if (_meteo.HasNewInfo() || _deezer.HasNewInfo())
+                */
+            if (_meteo.HasNewInfo())// || _deezer.HasNewInfo())
                 _bitmap = null;
 
 
@@ -305,7 +306,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             base.Dispose();
 
             _bitmap?.Dispose();
-            _deezer?.Dispose();
+            //_deezer?.Dispose();
             _meteo?.Dispose();
             _horloge?.Dispose();
             _heureTexte?.Dispose();

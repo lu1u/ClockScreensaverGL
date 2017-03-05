@@ -23,12 +23,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         private string _date; // Sera initialise dans OnDateChange
 
         public DateTexte(OpenGL gl, int Px, int Py)
-            : base(gl, Px, 0, c.getParametre("VX", -17), 0, c.getParametre("TailleFonte", 60), c.getParametre("Alpha", (byte)160))
+            : base(gl, Px, 0, c.getParametre( "VX", -17 ), 0, c.getParametre( "TailleFonte", 60 ), c.getParametre( "Alpha", (byte) 160 ) )
         {
         }
 
         public DateTexte(OpenGL gl, int Px, int Py, int tailleFonte)
-            : base(gl, Px, 0, 0, 0, tailleFonte, c.getParametre("Alpha", (byte)160))
+            : base(gl, Px, 0, 0, 0, tailleFonte, c.getParametre( "Alpha", (byte) 160 ) )
         {
         }
 
@@ -38,7 +38,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         }
         protected override SizeF getTexte(Temps maintenant, out string texte)
         {
-            _date = maintenant._temps.ToLongDateString();
+            _date = maintenant.temps.ToLongDateString();
             texte = _date;
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 return g.MeasureString(_date, _fonte);
@@ -47,7 +47,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
 
         public override void DateChangee(OpenGL gl, Temps maintenant)
         {
-            _date = maintenant._temps.ToLongDateString();
+            _date = maintenant.temps.ToLongDateString();
             using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 _taille = g.MeasureString(_date, _fonte);
         }

@@ -17,9 +17,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         static CategorieConfiguration c = Configuration.getCategorie(CAT);
         static readonly int NB_EMETTEURS =c.getParametre("Nb Emetteurs", 1);
         static readonly int NB_PARTICULES =c.getParametre("Nb Particules", 5000);
-        readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f, true);
-        readonly float GRAVITE_Y = -c.getParametre("Gravite Y", 0.5f, true);
-        readonly float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.4f, true);
+        readonly float GRAVITE_X = c.getParametre("Gravite X", 0.0f);
+        readonly float GRAVITE_Y = -c.getParametre("Gravite Y", 0.5f);
+        readonly float ALPHA_MODIFIEUR = c.getParametre("Modifieur Alpha", 0.4f);
         readonly float TAILLE_MODIFIEUR = c.getParametre("Modifieur Taille", 0.001f);
         readonly float TAILLE_PARTICULE = c.getParametre("TailleParticule", 0.002f);
         readonly float VITESSE_PARTICULE =  c.getParametre("VitesseParticule", 0.5f);
@@ -29,10 +29,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
             for (int i = 0; i < NB_EMETTEURS; i++)
                 AjouteEmetteur(new EmetteurFeuArtifice(TAILLE_PARTICULE, VITESSE_PARTICULE, 2000));
 
-            AttributBlend = SystemeParticules2D.SystemeParticules2D.PARTICULES_BLEND_ADDITIVE;
+            AttributBlend = PARTICULES_BLEND_ADDITIVE;
 
-            AjouteModificateur(new ModificateurExclusion(SystemeParticules2D.SystemeParticules2D.MIN_X,
-                SystemeParticules2D.SystemeParticules2D.MIN_Y, SystemeParticules2D.SystemeParticules2D.MAX_X, SystemeParticules2D.SystemeParticules2D.MAX_Y,
+            AjouteModificateur(new ModificateurExclusion(MIN_X,
+                MIN_Y, MAX_X, MAX_Y,
                 ModificateurExclusion.Exclusions.EXCLURE_A_DROITE | ModificateurExclusion.Exclusions.EXCLURE_A_GAUCHE | ModificateurExclusion.Exclusions.EXCLURE_EN_DESSOUS));
 
             AjouteModificateur(new ModificateurLife());

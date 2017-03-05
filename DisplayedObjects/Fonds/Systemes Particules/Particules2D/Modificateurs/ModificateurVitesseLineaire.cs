@@ -11,8 +11,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
             for (int i = 0; i < s._nbParticules; i++)
                 if (s._particules[i].active)
                 {
-                    s._particules[i].x += s._particules[i].vx * maintenant._intervalle;
-                    s._particules[i].y += s._particules[i].vy * maintenant._intervalle;
+                    s._particules[i].x += s._particules[i].vx * maintenant.intervalleDepuisDerniereFrame;
+                    s._particules[i].y += s._particules[i].vy * maintenant.intervalleDepuisDerniereFrame;
                 }
         }
     }

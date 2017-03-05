@@ -35,11 +35,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Particules
         public override void Deplace(SystemeParticules2D.SystemeParticules2D s, Temps maintenant, Color couleur)
         {
             traj.Avance(bounds, tailleEmetteur, maintenant);
-            angle += _vitesseAngle * maintenant._intervalle;
+            angle += _vitesseAngle * maintenant.intervalleDepuisDerniereFrame;
             // Ajouter une particule ?            
             if (_timer.Ecoule())
                 for ( int i = 0; i < _nbBras;i++)
-                    Ajoute(s, angle + ((double)i*(Math.PI*2.0)/(double)_nbBras), maintenant._totalMillisecondes, couleur);
+                    Ajoute(s, angle + ((double)i*(Math.PI*2.0)/(double)_nbBras), maintenant.totalMilliSecondes, couleur);
         }
 
         private void Ajoute(SystemeParticules2D.SystemeParticules2D s, double angleBras, double maintenant, Color couleur)

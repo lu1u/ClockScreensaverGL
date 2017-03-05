@@ -31,7 +31,7 @@ namespace ClockScreenSaverGL
 		/// <param name="Taille"></param>
 		public override void Avance( Rectangle Bounds, SizeF Taille, Temps maintenant )
 		{
-			_Px += (_Vx * maintenant._intervalle) ;
+			_Px += (_Vx * maintenant.intervalleDepuisDerniereFrame) ;
 			
 			if ((_Px < Bounds.Left) && (_Vx < 0))
 				_Vx = Math.Abs(_Vx) ;
@@ -39,7 +39,7 @@ namespace ClockScreenSaverGL
 				if ( ((_Px + Taille.Width) > Bounds.Right ) && (_Vx > 0))
 					_Vx = - Math.Abs(_Vx ) ;
 
-            _Py += (_Vy * maintenant._intervalle);
+            _Py += (_Vy * maintenant.intervalleDepuisDerniereFrame);
 			if ((_Py < Bounds.Top) && (_Vy < 0))
 				_Vy = Math.Abs(_Vy) ;
 			else
@@ -53,7 +53,7 @@ namespace ClockScreenSaverGL
 		/// <param name="Taille"></param>
         public override void Avance(RectangleF Bounds, SizeF Taille, Temps maintenant)
 		{
-            _Px += (_Vx * maintenant._intervalle);
+            _Px += (_Vx * maintenant.intervalleDepuisDerniereFrame);
 			
 			if ((_Px < Bounds.Left) && (_Vx < 0))
 				_Vx = Math.Abs(_Vx) ;
@@ -61,7 +61,7 @@ namespace ClockScreenSaverGL
 				if ( ((_Px + Taille.Width) > Bounds.Right ) && (_Vx > 0))
 					_Vx = - Math.Abs(_Vx ) ;
 
-            _Py += (_Vy * maintenant._intervalle);
+            _Py += (_Vy * maintenant.intervalleDepuisDerniereFrame);
 			if ((_Py < Bounds.Top) && (_Vy < 0))
 				_Vy = Math.Abs(_Vy) ;
 			else

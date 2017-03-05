@@ -71,11 +71,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
             CENTREX = LARGEUR / 2;
             CENTREY = HAUTEUR / 2;
             _textureSoleil = new Texture();
-            _textureSoleil.Create(gl, c.getParametre("Soleil", Configuration.getImagePath(REPERTOIRE_ETE + @"\soleil.png")));
+            _textureSoleil.Create(gl, c.getParametre( "Soleil", Configuration.getImagePath( REPERTOIRE_ETE + @"\soleil.png" ) ) );
             _textureFond = new Texture();
-            _textureFond.Create(gl, c.getParametre("Fond", Configuration.getImagePath(REPERTOIRE_ETE + @"\fondEte.png")));
+            _textureFond.Create(gl, c.getParametre( "Fond", Configuration.getImagePath( REPERTOIRE_ETE + @"\fondEte.png" ) ) );
             _textureFlares = new Texture();
-            _textureFlares.Create(gl, c.getParametre("Flares", Configuration.getImagePath(REPERTOIRE_ETE + @"\flares.png")));
+            _textureFlares.Create(gl, c.getParametre( "Flares", Configuration.getImagePath( REPERTOIRE_ETE + @"\flares.png" ) ) );
             Init(gl);
         }
 
@@ -234,9 +234,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Saisons.Ete
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            Varie(ref _vent, -100f, 300f, 0.4f, maintenant._intervalle); //_vent = (float)Math.Cos((double)maintenant._temps.Ticks * 0.00000005) * 0.5f + 0.4f;
-            _xSoleil += VX_SOLEIL * maintenant._intervalle;
-            _ySoleil += VY_SOLEIL * maintenant._intervalle;
+            Varie(ref _vent, -100f, 300f, 0.4f, maintenant.intervalleDepuisDerniereFrame); //_vent = (float)Math.Cos((double)maintenant._temps.Ticks * 0.00000005) * 0.5f + 0.4f;
+            _xSoleil += VX_SOLEIL * maintenant.intervalleDepuisDerniereFrame;
+            _ySoleil += VY_SOLEIL * maintenant.intervalleDepuisDerniereFrame;
             /*if (_xSoleil > LARGEUR + TAILLE_SOLEIL || _ySoleil < -TAILLE_SOLEIL)
                 Init();*/
 #if TRACER

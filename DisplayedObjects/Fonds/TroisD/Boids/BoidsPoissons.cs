@@ -11,13 +11,13 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
         static readonly int NB = c.getParametre("Nb", 400);
-        static float FOG_DENSITY = c.getParametre("Fog density", 0.015f, true);
-        static float MAX_SPEED = c.getParametre("Max Speed",0.95f, true);
-        static float MAX_FORCE = c.getParametre("Max force", 0.011f, true);
-        static float TAILLE = c.getParametre("Taille", 0.17f, true);
-        static float DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
-        static float SEPARATION = c.getParametre("Separation", 3.7f, true);
-        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 0.9f, true);
+        static float FOG_DENSITY = c.getParametre("Fog density", 0.015f, (a) => { FOG_DENSITY = (float)Convert.ToDouble(a); } );
+        static float MAX_SPEED = c.getParametre("Max Speed",0.95f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); } );
+        static float MAX_FORCE = c.getParametre("Max force", 0.011f, (a) => { MAX_FORCE= (float)Convert.ToDouble(a); } );
+        static float TAILLE = c.getParametre("Taille", 0.17f, (a) => { TAILLE = (float)Convert.ToDouble(a); } );
+        static float DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); } );
+        static float SEPARATION = c.getParametre("Separation", 3.7f, (a) => { SEPARATION = (float)Convert.ToDouble(a); } );
+        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 0.9f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); } );
 
         static float HAUTEUR_CORPS = 0.5f * TAILLE;
         static float LONGUEUR_TETE = 0.75f * TAILLE;
@@ -31,24 +31,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             LIGHTPOS[0] = 0;
             LIGHTPOS[1] = MAX_Y;
             LIGHTPOS[0] = 0;
-            c.setListenerParametreChange(onConfigurationChangee);
-        }
-
-
-        protected override void onConfigurationChangee(string valeur)
-        {
-            MAX_SPEED = c.getParametre("Max Speed", 20f, true);
-            MAX_FORCE = c.getParametre("Max force", 0.1f, true);
-            TAILLE = c.getParametre("Taille", 2.5f, true);
-            DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
-            SEPARATION = c.getParametre("Separation", 7.5f, true);
-            VITESSE_ANIMATION = c.getParametre("Vitesse animation", 1.5f, true);
-            HAUTEUR_CORPS = 0.5f * TAILLE;
-            LONGUEUR_TETE = 0.75f * TAILLE;
-            LONGUEUR_CORPS = 1.25f * TAILLE;
-            LONGUEUR_QUEUE = -0.35f * TAILLE;
-            HAUTEUR_QUEUE = 0.35f * TAILLE;
-            base.onConfigurationChangee(valeur);
         }
 
         public override void ClearBackGround(OpenGL gl, Color couleur)

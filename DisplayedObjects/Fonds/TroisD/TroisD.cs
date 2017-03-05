@@ -21,14 +21,18 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         protected float _tailleCubeX, _tailleCubeY, _tailleCubeZ;
         public const float MAX_COORD = Int32.MaxValue;
         public const float MIN_COORD = Int32.MinValue;
-        
+        protected static float FOV ;
+
         protected TroisD(OpenGL gl, float vpX, float vpY, float vpZ, float zCam): base(gl)
         {
             _tailleCubeX = vpX;
             _tailleCubeY = vpY;
             _tailleCubeZ = vpZ;
             _zCamera = zCam;
+            FOV = getConfiguration().getParametre( "FOV", 60.0f, (a) => { FOV = (float) Convert.ToDouble( a ); } );
         }
+
+        
         /*
         static public void RotateAxeY(ref float x, ref float y, ref float z, float Theta, float axeX, float axeZ)
         {
@@ -125,7 +129,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             gl.End();
         }
     */
-        
+
         protected static Vecteur3D NormaleTriangle(Vecteur3D P1, Vecteur3D P2, Vecteur3D P3)
         {
             Vecteur3D v = new Vecteur3D();
@@ -141,5 +145,26 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             float angle = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
             return (float)Math.Acos(angle);
         }*/
+
+        /// <summary>
+        /// Change le zoom de la camera
+        /// </summary>
+        /// <param name="gl"></param>
+        /// <param name="FOV"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="nearPlane">ATTENTION Bug! ne marche pas si nearplane = 0</param>
+        /// <param name="farPlane"></param>
+        protected static void changeZoom(OpenGL gl, int width, int height, float nearPlane, float farPlane)
+        {
+            gl.Viewport(0, 0, width, height);
+            gl.MatrixMode(OpenGL.GL_PROJECTION);
+            gl.LoadIdentity();
+            gl.Perspective(FOV, (float)width / height, nearPlane, farPlane);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+        }
+
     }
+
+
 }

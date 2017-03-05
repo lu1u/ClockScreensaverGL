@@ -4,7 +4,7 @@
  * Date: 14/12/2014
  * Heure: 23:18
  * 
- * Stockage optimise de l'heure pour calculer une seule fois
+ * Stockage optimise de l'heure pour tout calculer une seule fois
  */
 using System;
 
@@ -15,28 +15,28 @@ namespace ClockScreenSaverGL
 	/// </summary>
 	public class Temps
 	{
-		public DateTime _temps ;
-		public int _Annee, _Mois, _JourDuMois, _JourDeLAnnee ;
-		public int _Heure, _Minute, _Seconde, _Millieme ;
-		public float _intervalle ;
-		public DateTime _derniere ;
-        public double _totalMillisecondes;
+		public DateTime temps ;
+		public int annee, mois, jourDuMois, jourDeLAnnee ;
+		public int heure, minute, seconde, milliemesDeSecondes ;
+		public float intervalleDepuisDerniereFrame ;
+		public DateTime tempsDerniereFrame ;
+        public double totalMilliSecondes;
         public static readonly DateTime BASEDATE = new DateTime(1970, 1, 1);
 
         public Temps(DateTime t, DateTime derniere )
 		{
-			_temps = t ;
-			_Annee = t.Year ;
-			_Mois = t.Month ;
-			_JourDuMois = t.Day ;
-			_JourDeLAnnee = t.DayOfYear ;
-			_Heure = t.Hour ;
-			_Minute = t.Minute ;
-			_Seconde = t.Second ;
-			_Millieme = t.Millisecond ;
-            _totalMillisecondes = t.Subtract(BASEDATE).TotalMilliseconds ;
-            _derniere = derniere ;
-			_intervalle = (float)(t.Subtract(derniere).TotalMilliseconds / 1000.0);
+			temps = t ;
+			annee = t.Year ;
+			mois = t.Month ;
+			jourDuMois = t.Day ;
+			jourDeLAnnee = t.DayOfYear ;
+			heure = t.Hour ;
+			minute = t.Minute ;
+			seconde = t.Second ;
+			milliemesDeSecondes = t.Millisecond ;
+            totalMilliSecondes = t.Subtract(BASEDATE).TotalMilliseconds ;
+            tempsDerniereFrame = derniere ;
+			intervalleDepuisDerniereFrame = (float)(t.Subtract(derniere).TotalMilliseconds / 1000.0);
 		}
 
         public static double Maintenant()

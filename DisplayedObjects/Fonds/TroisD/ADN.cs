@@ -13,11 +13,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         const String CAT = "ADN";
         static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
-        static float RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, true);
-        static float LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, true);
+        static float RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, (a) => { RAYON_SPHERE = (float)Convert.ToDouble(a); } );
+        static float LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, (a) => { LONGUEUR_RAYON = (float)Convert.ToDouble(a); } );
         static int NB_ETAGES = c.getParametre("Nb Etages", 20);
-        static float MIN_Y = c.getParametre("MinY", -18.0f, true);
-        static float MAX_Y = c.getParametre("Max", 18.0f, true);
+        static float MIN_Y = c.getParametre("MinY", -18.0f, (a) => { MIN_Y = (float)Convert.ToDouble(a); } );
+        static float MAX_Y = c.getParametre("Max", 18.0f, (a) => { MAX_Y = (float)Convert.ToDouble(a); } );
 
         private class Etage
         {
@@ -28,23 +28,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
         };
 
         List<Etage> _etages = new List<Etage>();
-        /* static readonly float SHININESS = c.getParametre("Shininess", 30f);
-         static readonly float[] COL_SPECULAR = { 0.5f, 0.5f, 0.5f, 1.0f };//{
-         static readonly float[] COL_AMBIENT = { 0.0f, 0.0f, 0.0f, 1.0f };//{ 
-         static readonly float[] COL_EMISSION = { 0.00f, 0.00f, 0.00f, 1.0f };
-         static readonly float[] COL_DIFFUSE = { 0.4f, 0.4f, 0.4f, 1.0f };
-         static readonly float[] COL_LIGHTPOS = { -3f, 2f, 3, 1 };
-         static readonly float[] SPECULAR_LIGHT = { 0.8f, 0.8f, 0.8f }; //set the 
-         static readonly float[] AMBIENT_LIGHT = { 0.01f, 0.01f, 0.01f }; //set the 
-         static readonly float[] DIFFUSE_LIGHT = { 0.1f, 0.1f, 0.1f }; //set the 
-         */
         Sphere _sphere = new Sphere();
         Cylinder _cylindre = new Cylinder();
         float _angle = 0;
         public ADN(OpenGL gl) : base(gl)
         {
-            c.setListenerParametreChange(onConfigurationChangee);
-
             float y = MAX_Y;
             float angle = 0;
             for (int i = 0; i < NB_ETAGES; i++)
@@ -83,22 +71,6 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
             _cylindre.Height = LONGUEUR_RAYON;
         }
 
-        /// <summary>
-        /// Appellee en notification d'un changement interactif de configuration
-        /// </summary>
-        /// <param name="valeur"></param>
-        protected override void onConfigurationChangee(string valeur)
-        {
-            RAYON_SPHERE = c.getParametre("Rayon Sphere", 1.5f, true);
-            LONGUEUR_RAYON = c.getParametre("Longueur Rayon", 10.0f, true);
-            NB_ETAGES = c.getParametre("Nb Etages", 20);
-            MIN_Y = c.getParametre("MinY", -18.0f, true);
-            MAX_Y = c.getParametre("Max", 18.0f, true);
-            _sphere.Radius = RAYON_SPHERE;
-            _cylindre.Height = LONGUEUR_RAYON;
-
-            base.onConfigurationChangee(valeur);
-        }
 
         public override CategorieConfiguration getConfiguration()
         {
@@ -194,10 +166,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD
 
         public override void Deplace(Temps maintenant, Rectangle tailleEcran)
         {
-            _angle += 2.5f * maintenant._intervalle;
+            _angle += 2.5f * maintenant.intervalleDepuisDerniereFrame;
 
             foreach (Etage e in _etages)
-                e.y += maintenant._intervalle * 1.0f;
+                e.y += maintenant.intervalleDepuisDerniereFrame * 1.0f;
 
             Etage et = _etages.First();
             if (et.y > MAX_Y)

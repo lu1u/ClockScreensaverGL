@@ -15,35 +15,23 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
         static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
 
         static readonly int NB = c.getParametre("Nb", 200);
-        static float MAX_SPEED = c.getParametre("Max Speed", 3.5f, true);
-        static float MAX_FORCE = c.getParametre("Max force", 0.01f, true);
-        static float TAILLE = c.getParametre("Taille", 0.33f, true);
-        static float DISTANCE_VOISINS = c.getParametre("Distance voisins", 3.7f, true);
-        static float SEPARATION = c.getParametre("Separation", 1.5f, true);
-        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 2.0f, true);
-        static float DIMINUE_VITESSE_V = c.getParametre("Diminution vitesse verticale", 0.9999f, true);
-        static float DIMINUE_ACCELERATION_V = c.getParametre("Diminution acceleration verticale", 0.9999f, true);
+        static float MAX_SPEED = c.getParametre("Max Speed", 3.5f, (a) => { MAX_SPEED = (float)Convert.ToDouble(a); } );
+        static float MAX_FORCE = c.getParametre("Max force", 0.01f, (a) => { MAX_FORCE= (float)Convert.ToDouble(a); } );
+        static float TAILLE = c.getParametre("Taille", 0.33f, (a) => { TAILLE = (float)Convert.ToDouble(a); } );
+        static float DISTANCE_VOISINS = c.getParametre("Distance voisins", 3.7f, (a) => { DISTANCE_VOISINS = (float)Convert.ToDouble(a); } );
+        static float SEPARATION = c.getParametre("Separation", 1.5f, (a) => { SEPARATION = (float)Convert.ToDouble(a); } );
+        static float VITESSE_ANIMATION = c.getParametre("Vitesse animation", 2.0f, (a) => { VITESSE_ANIMATION = (float)Convert.ToDouble(a); } );
+        static float DIMINUE_VITESSE_V = c.getParametre("Diminution vitesse verticale", 0.9999f, (a) => { DIMINUE_VITESSE_V= (float)Convert.ToDouble(a); } );
+        static float DIMINUE_ACCELERATION_V = c.getParametre("Diminution acceleration verticale", 0.9999f, (a) => { DIMINUE_ACCELERATION_V= (float)Convert.ToDouble(a); } );
 
         Texture _texture = new Texture();
 
 
         public BoidsOiseaux(OpenGL gl) : base(gl, c, NB, TAILLE, MAX_SPEED, MAX_FORCE, DISTANCE_VOISINS, SEPARATION, VITESSE_ANIMATION)
         {
-            _texture.Create(gl, c.getParametre("Oiseau", Configuration.getImagePath("oiseau.png")));
-            c.setListenerParametreChange(onConfigurationChangee);
+            _texture.Create(gl, c.getParametre( "Oiseau", Configuration.getImagePath( "oiseau.png" ) ) );
         }
-
-        protected override void onConfigurationChangee(string valeur)
-        {
-            MAX_SPEED = c.getParametre("Max Speed", 20f, true);
-            MAX_FORCE = c.getParametre("Max force", 0.1f, true);
-            TAILLE = c.getParametre("Taille", 2.5f, true);
-            DISTANCE_VOISINS = c.getParametre("Distance voisins", 25.0f, true);
-            SEPARATION = c.getParametre("Separation", 7.5f, true);
-            VITESSE_ANIMATION = c.getParametre("Vitesse animation", 1.5f, true);
-            base.onConfigurationChangee(valeur);
-        }
-
+        
         public override void Dispose()
         {
             base.Dispose();

@@ -26,7 +26,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
     {
         #region Parametres
         const string CAT = "Citation";
-        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+        static protected CategorieConfiguration c = Configuration.getCategorie(CAT);
         public static readonly float RATIO_TAILLE_FONTE = c.getParametre("RatioTailleFonte", 0.4f);
         private static readonly int DELAI_CHANGEMENT = 1000 * 60 * c.getParametre("DelaiChange", 1);	// x minutes entre les changements de citation
         private static readonly int TailleMax = c.getParametre("TailleMax", 48);
@@ -37,8 +37,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Textes
         #endregion
         List<string> _citations;
         
-        private String _citation;
-        private String _auteur;
+        private string _citation;
+        private string _auteur;
         private DateTime _changement;
         private int _derniereCitation;
         private RectangleF _rectCitation, _rectAuteur;

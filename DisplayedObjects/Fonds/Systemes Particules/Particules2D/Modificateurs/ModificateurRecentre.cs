@@ -28,10 +28,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.SystemeParticules2D.Modifica
 
 
             // Decaler toutes les particules pour attirer la plus grosse au centre
-            float decalageX = s._particules[indice].x * _vitesse * maintenant._intervalle;
-            float decalageY = s._particules[indice].y * _vitesse * maintenant._intervalle;
-            float decalageVX = s._particules[indice].vx * _vitesse * maintenant._intervalle;
-            float decalageVY = s._particules[indice].vy * _vitesse * maintenant._intervalle;
+            float decalageX = s._particules[indice].x * _vitesse * maintenant.intervalleDepuisDerniereFrame;
+            float decalageY = s._particules[indice].y * _vitesse * maintenant.intervalleDepuisDerniereFrame;
+            float decalageVX = s._particules[indice].vx * _vitesse * maintenant.intervalleDepuisDerniereFrame;
+            float decalageVY = s._particules[indice].vy * _vitesse * maintenant.intervalleDepuisDerniereFrame;
 
             for (int i = 0; i < s._nbParticules; i++)
                 if (s._particules[i].active)

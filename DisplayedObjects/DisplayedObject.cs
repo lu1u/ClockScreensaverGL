@@ -43,7 +43,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
         public abstract CategorieConfiguration getConfiguration();
 
 
-        public DisplayedObject(OpenGL gl)
+        protected DisplayedObject(OpenGL gl)
         {
             _gl = gl;
         }
@@ -83,8 +83,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
          */
         protected bool UneFrameSur(int NbFrames)
         {
-            _noFrame++;
-            return (_noFrame % NbFrames == 0);
+           return ((_noFrame++) % NbFrames == 0);
         }
 
         /// <summary>
@@ -291,7 +290,7 @@ namespace ClockScreenSaverGL.DisplayedObjects
                           GraphicsUnit.Pixel, imgAttribs);
         }
 
-        static protected void DrawBitmapNuance(Graphics g, Bitmap bmp, float x, float y, float l, float h, Color couleur)
+        static protected void DrawBitmapNuance(Graphics g, Image bmp, float x, float y, float l, float h, Color couleur)
         {
             float[][] ptsArray =
                 {

@@ -106,12 +106,12 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 #if TRACER
             RenderStart(CHRONO_TYPE.DEPLACE);
 #endif
-            _angleCamera += maintenant._intervalle * 1.0f;
+            _angleCamera += maintenant.intervalleDepuisDerniereFrame * 1.0f;
 
             foreach (Boid b in _boids)
                 b.flock(_boids);
 
-            float dImage = maintenant._intervalle * VITESSE_ANIMATION;
+            float dImage = maintenant.intervalleDepuisDerniereFrame * VITESSE_ANIMATION;
             foreach (Boid b in _boids)
             {
                 b.update(maintenant);
@@ -138,11 +138,11 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
             public Boid(float x, float y, float z)
             {
                 _Acceleration = new Vecteur3D(0, 0);
-                _image = DisplayedObject.FloatRandom(0, (float)(Math.PI * 2.0));
-                _vitesseAnimation = DisplayedObject.FloatRandom(0.8f, 1.2f);
-                float angle = DisplayedObject.FloatRandom(0, TWO_PI);
-                _Vitesse = new Vecteur3D((float)Math.Cos(angle), (float)Math.Sin(angle));
-
+                _image = FloatRandom(0, (float)(Math.PI * 2.0));
+                _vitesseAnimation = FloatRandom(0.7f, 1.3f);
+                float angle = FloatRandom(0, TWO_PI);
+                float vitesse = FloatRandom(-MAX_SPEED, MAX_SPEED);
+                _Vitesse = new Vecteur3D((float)Math.Cos(angle)*vitesse, (float)Math.Sin(angle)*vitesse);
                 _Position = new Vecteur3D(x, y, z);
             }
 
@@ -239,7 +239,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
                 _Vitesse.additionner(_Acceleration);
                 // Limiter speed
                 _Vitesse.Limiter(MAX_SPEED);
-                _Position.additionner(_Vitesse * maintenant._intervalle);
+                _Position.additionner(_Vitesse * maintenant.intervalleDepuisDerniereFrame);
                 // Reset accelertion to 0 each cycle
                 _Acceleration.set(0, 0, 0);
 
@@ -255,6 +255,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Boids
 
             private void Restreint(ref float v, float max)
             {
+                max = max * 1.5f;
                 while (v > max)
                     v = -max;
 

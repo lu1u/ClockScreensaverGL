@@ -32,13 +32,13 @@ namespace ClockScreenSaverGL.Trajectoires
 
         public override void Avance(RectangleF Bounds, SizeF Taille, Temps maintenant)
         {
-            _angle += _vitesseAngulaire * maintenant._intervalle;
+            _angle += _vitesseAngulaire * maintenant.intervalleDepuisDerniereFrame;
             CalculePosition();
         }
 
         public override void Avance(Rectangle Bounds, SizeF Taille, Temps maintenant)
         {
-            _angle += _vitesseAngulaire * maintenant._intervalle;
+            _angle += _vitesseAngulaire * maintenant.intervalleDepuisDerniereFrame;
             CalculePosition();
         }
     }
