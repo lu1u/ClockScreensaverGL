@@ -33,7 +33,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
         public static void InitTexture()
         {
             TYPE_FEUILLES = DisplayedObject.r.Next(0, 2);
-            _b = (Bitmap)Bitmap.FromFile(Configuration.getImagePath(TYPE_FEUILLES == 0 ? "feuille1.png" : "feuille2.png"));
+            _b = (Bitmap)Bitmap.FromFile(Configuration.getImagePath(TYPE_FEUILLES == 0 ? @"printemps\feuille1.png" : @"printemps\feuille2.png"));
 
             _texture = null;
         }
@@ -148,7 +148,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.Printemps
 
             _texture.Bind(gl);
             gl.PushMatrix();
-            gl.Translate(Position.X + dx, Position.Y + dy, 0);
+            gl.Translate(Position.X + dx, Position.Y + dy  , 0);
             gl.Rotate(0, 0, _angle + dy*0.5f);
             gl.Begin(OpenGL.GL_QUADS);
             gl.TexCoord(0.0f, 0.0f); gl.Vertex(- (_taille / 2), - (_taille / 2));

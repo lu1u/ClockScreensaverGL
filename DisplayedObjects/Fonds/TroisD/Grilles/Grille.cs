@@ -1,8 +1,5 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using ClockScreenSaverGL.Config;
 using SharpGL;
-using ClockScreenSaverGL.Configuration;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
 {
@@ -10,7 +7,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
     {
         #region Parametres
         public const string CAT = "Grille";
-        static CategorieConfiguration c = Conf.getCategorie(CAT);
+        static CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
         private readonly int NB_BARRES_X = c.getParametre("Nb Cubes X", 40);
         private readonly int NB_BARRES_Y = c.getParametre("Nb Cubes Y", 40);
         private readonly int NB_BARRES_Z = c.getParametre("Nb Cubes Z", 40);
@@ -36,7 +33,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.Fonds.TroisD.Grilles
             fogEnd = ECART_GRILLE * NB_BARRES_X * 0.75f;
         }
 
-
+        public override CategorieConfiguration getConfiguration()
+        {
+            return c;
+        }
 
         protected override void GenererListe(OpenGL gl)
         {

@@ -85,6 +85,7 @@ namespace ClockScreenSaverGL.Config
             flush();
         }
 
+#if SHARPGL
         /// <summary>
         /// Ajoute les parametre dans la console texte
         /// </summary>
@@ -106,7 +107,7 @@ namespace ClockScreenSaverGL.Config
                 else
                     c.AddLigne( p.nom.Equals( keyCourante ) ? Color.White : Color.Gray, p.nom + " = " + p.valueToString() );
         }
-
+#endif
         /// <summary>
         /// S'assurer que les modifications sur la categorie sont bien ecrites dans le fichier
         /// </summary>
@@ -238,9 +239,9 @@ namespace ClockScreenSaverGL.Config
             return true;
         }
 
-        #endregion Public Methods
+#endregion Public Methods
 
-        #region Private Methods
+#region Private Methods
 
         /// <summary>
         /// Lit les parametres dans le fichier de la categorie (un par ligne)
@@ -277,9 +278,9 @@ namespace ClockScreenSaverGL.Config
             }
         }
 
-        #endregion Private Methods
+#endregion Private Methods
 
-        #region setParametre
+#region setParametre
 
         public void setParametre( string nom, bool valeur )
         {
@@ -314,9 +315,9 @@ namespace ClockScreenSaverGL.Config
             //_parametreChange?.Invoke(valueName);
         }
 
-        #endregion setParametre
+#endregion setParametre
 
-        #region getParametre
+#region getParametre
 
         public int getParametre( string name, int defaut, Action<object> actionModif = null )
         {
@@ -376,6 +377,6 @@ namespace ClockScreenSaverGL.Config
             return defaut;
         }
 
-        #endregion getParametre
+#endregion getParametre
     }
 }

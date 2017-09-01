@@ -1,19 +1,16 @@
-﻿///
+﻿using ClockScreenSaverGL.Config;
+using SharpGL;
+using SharpGL.SceneGraph.Assets;
+///
 /// Une ligne d'actualite extraite d'un flux RSS
 ///
 ///
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpGL;
 using System.Drawing;
-using System.Text.RegularExpressions;
-using SharpGL.SceneGraph.Assets;
 using System.Drawing.Imaging;
-using System.Windows.Forms;
 using System.Net;
-using ClockScreenSaverGL.Config;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
 {
@@ -76,7 +73,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
             // Creer la texture representant le texte de cette information
             using (Font fTitre = new Font(FontFamily.GenericSansSerif, Actualites.TAILLE_TITRE, FontStyle.Bold))
             using (Font fDescription = new Font(FontFamily.GenericSansSerif, Actualites.TAILLE_DESCRIPTION, FontStyle.Regular))
-            using (Font fSource = new Font(FontFamily.GenericSansSerif, Actualites.TAILLE_SOURCE, FontStyle.Italic))
+            using ( Font fSource = new Font( FontFamily.GenericSansSerif, Actualites.TAILLE_SOURCE, FontStyle.Italic ) )
             {
                 using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
                 {
@@ -124,6 +121,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     if (afficheDesc)
                         TextRenderer.DrawText(g, _description, fDescription, new Rectangle((int)x, (int)y, (int)largeurDesc, (int)hauteurDesc * 4), Color.White,
                             TextFormatFlags.Left |
+                            TextFormatFlags.NoPrefix|
                               TextFormatFlags.TextBoxControl |
                               TextFormatFlags.WordBreak |
                               TextFormatFlags.EndEllipsis);

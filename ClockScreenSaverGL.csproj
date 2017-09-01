@@ -86,7 +86,7 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>TRACE;DEBUG;TRACER</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TRACER, SHARPGL</DefineConstants>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup>
@@ -100,7 +100,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
-    <DefineConstants>TRACE;TRACER</DefineConstants>
+    <DefineConstants>TRACE;TRACER, SHARPGL</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClockScreenSaverGL.Program</StartupObject>
@@ -152,6 +152,8 @@
     <Compile Include="DisplayedObjects\Fonds\Couronnes.cs" />
     <Compile Include="DisplayedObjects\Fonds\Gravity\Asteroide.cs" />
     <Compile Include="DisplayedObjects\Fonds\Gravity\Material.cs" />
+    <Compile Include="DisplayedObjects\Fonds\TroisD\Grilles\Grille.cs" />
+    <Compile Include="DisplayedObjects\Fonds\VielleConsole.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\EmetteurGravitation.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\GravitationParticules\GravitationParticules.cs" />
     <Compile Include="DisplayedObjects\Fonds\Systemes Particules\FondsParticules\Rebond\RebondParticules.cs" />
@@ -267,7 +269,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="ClockScreenSaverGL_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />

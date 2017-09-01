@@ -100,11 +100,10 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                 LitRSS(_sourcesActualite[sourceALire]);
 
                 // Attendre un petit peu
-                //do
+                for ( int i =0; i < 10 && _continuerThread; i++ )
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
-                //while (_continuerThread && _sourcesActualite.Count >= Actualites.MAX_LIGNES);
             }
             Actualites.SourceCourante(sourceALire);
 
@@ -172,9 +171,9 @@ namespace ClockScreenSaverGL.DisplayedObjects.PanneauActualites
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception )
             {
-                _lignes.Add(new LigneActu(url_a_charger, "Impossible de charger les informations", DateTime.Now, e.Message, null));
+                //_lignes.Add(new LigneActu(url_a_charger, "Impossible de charger les informations", DateTime.Now, e.Message, null));
             }
         }
 

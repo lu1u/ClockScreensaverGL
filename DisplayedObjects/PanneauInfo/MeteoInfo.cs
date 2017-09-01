@@ -8,14 +8,17 @@ using ClockScreenSaverGL.Config;
 /// 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 
 namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 {
     class MeteoInfo : IDisposable
     {
+        const string CAT = "meteo";
+        static protected CategorieConfiguration c = Config.Configuration.getCategorie(CAT);
+
+        static readonly string CHEMIN_FICHIER = c.getParametre("chemin fichier", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData).ToString(), "clockscreensaver meteo.txt"));
+
         #region MEMBRES_PUBLICS
         const int NB_JOURS_PREVISIONS = 4;
         public bool _donneesPretes;
@@ -28,7 +31,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         private string _url;
         private DateTime _datePrevisions;
         private DateTime _finPrevisions;
-        WebBrowser _wb;
+        //WebBrowser _wb;
         static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
         public MeteoInfo()
@@ -78,7 +81,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// <returns></returns>
         public static string getIcone(string imageSurLeSite)
         {
-            string valeur ;
+            string valeur;
             if (_liensIcones.TryGetValue(imageSurLeSite, out valeur))
                 return valeur;
 
@@ -90,7 +93,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             if (_lignes != null)
                 foreach (LignePrevisionMeteo l in _lignes)
                     l.Dispose();
-            _wb?.Dispose();
+            //   _wb?.Dispose();
         }
 
         /// <summary>
@@ -98,20 +101,44 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// </summary>
         public void ChargeDonnees()
         {
-            try
-            {
-                if (_wb == null)
-                {
-                    _wb = new WebBrowser();
-                    _wb.DocumentCompleted += onDocumentCompleted;
+            _lignes.Clear();
 
-                    _wb.ScriptErrorsSuppressed = true;
-                    _wb.Navigate(_url);
+            string[] lignes = File.ReadAllLines(CHEMIN_FICHIER);
+            if (lignes == null)
+                return;
+
+            foreach (string ligne in lignes)
+            {
+                if (ligne.StartsWith("URL"))
+                    _url = deuxiemePartie(ligne);
+                else
+                    if (ligne.StartsWith("VILLE"))
+                    _title = deuxiemePartie(ligne);
+                else
+                    if (ligne.StartsWith("JOUR"))
+                {
+                    if (_lignes.Count < PanneauInfos.NB_LIGNES_INFO_MAX)
+                        _lignes.Add(CreateLigne(deuxiemePartie(ligne)));
                 }
             }
-            catch (Exception)
-            {
-            }
+
+            _donneesPretes = true;
+            #region meteofrance.fr obsolete
+            //try
+            //{
+            //    if (_wb == null)
+            //    {
+            //        _wb = new WebBrowser();
+            //        _wb.DocumentCompleted += onDocumentCompleted;
+
+            //        _wb.ScriptErrorsSuppressed = true;
+            //        _wb.Navigate(_url);
+            //    }
+            //}
+            //catch (Exception)
+            //{
+            //}
+            #endregion
             #region YAHOO_WEATHER // Obsolete
             /*
             // Create a new XmlDocument  
@@ -186,151 +213,192 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             #endregion
         }
 
+        private LignePrevisionMeteo CreateLigne(string v)
+        {
+            string[] tokens = v.Split('|');
+            string icone = "";
+            string date = "";
+            string tempmin = "";
+            string tempmax = "";
+            string texte = "";
+            string vent = "";
+            string pluie = "";
+
+            foreach(string token in tokens)
+            {
+                if (token.StartsWith("DATE"))
+                    date = deuxiemePartie(token);
+                else
+                    if (token.StartsWith("PREVISION"))
+                    texte = deuxiemePartie(token);
+                else
+                    if (token.StartsWith("PIC"))
+                    icone = getIcone( deuxiemePartie(token));
+                else
+                    if (token.StartsWith("TEMPMIN"))
+                    tempmin = deuxiemePartie(token);
+                else
+                    if (token.StartsWith("TEMPMAX"))
+                    tempmax = deuxiemePartie(token);
+            }
+
+            return new LignePrevisionMeteo(icone, date, tempmin + " " + tempmax, texte, vent, pluie);
+        }
+
+        private string deuxiemePartie(string ligne)
+        {
+            int index = ligne.IndexOf('=');
+            if (index == -1)
+                return "";
+
+            return ligne.Substring(index + 1);
+        }
+
         /// <summary>
         /// Page meteo recue: l'interpreter
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="wex"></param>
-        private void onDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs wex)
-        {
-            if (_hasNewInfo)
-                return;
+        //private void onDocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs wex)
+        //{
+        //    if (_hasNewInfo)
+        //        return;
 
-            _datePrevisions = DateTime.Now;
-            _finPrevisions = _datePrevisions.AddHours(2);
-            _lignes.Clear();
+        //    _datePrevisions = DateTime.Now;
+        //    _finPrevisions = _datePrevisions.AddHours(2);
+        //    _lignes.Clear();
 
-            var doc = _wb.Document;
-            if (doc == null)
-                return;
+        //    var doc = _wb.Document;
+        //    if (doc == null)
+        //        return;
 
-            // meteofrance.com
-            HtmlElement prev = doc.GetElementById("seven-days");
-            if (prev == null)
-                return;
+        //    // meteofrance.com
+        //    HtmlElement prev = doc.GetElementById("seven-days");
+        //    if (prev == null)
+        //        return;
 
-            HtmlElementCollection div = prev.GetElementsByTagName("div");
-            try
-            {
-                foreach (HtmlElement e in div)
-                {
-                    String classe = e.GetAttribute("className");
-                    if ("group-days-summary".Equals(classe))
-                    {
-                        ParseGroupDays(e);
+        //    HtmlElementCollection div = prev.GetElementsByTagName("div");
+        //    try
+        //    {
+        //        foreach (HtmlElement e in div)
+        //        {
+        //            String classe = e.GetAttribute("className");
+        //            if ("group-days-summary".Equals(classe))
+        //            {
+        //                ParseGroupDays(e);
 
-                    }
+        //            }
 
-                }
-            }
-            catch (Exception)
-            {
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-            }
-            /* my-meteo.fr
-            _title = "Crolles my-meteo.fr";
-            _datePrevisions = DateTime.Now;
-            _finPrevisions = _datePrevisions.AddDays(1);
-            _lignes.Clear();
+        //    }
+        //    /* my-meteo.fr
+        //    _title = "Crolles my-meteo.fr";
+        //    _datePrevisions = DateTime.Now;
+        //    _finPrevisions = _datePrevisions.AddDays(1);
+        //    _lignes.Clear();
 
-            HtmlElement colprev = doc.GetElementById("col_previsions");
-            if (colprev == null)
-                return;
+        //    HtmlElement colprev = doc.GetElementById("col_previsions");
+        //    if (colprev == null)
+        //        return;
 
-            try
-            {
-                foreach (HtmlElement e in colprev.All)
-                {
-                    string classe = e.GetAttribute("className");
-                    if (classe.StartsWith("item"))
-                    {
-                        HtmlElementCollection souselements = e.GetElementsByTagName("span");
-                        DecodeLigne(souselements);
+        //    try
+        //    {
+        //        foreach (HtmlElement e in colprev.All)
+        //        {
+        //            string classe = e.GetAttribute("className");
+        //            if (classe.StartsWith("item"))
+        //            {
+        //                HtmlElementCollection souselements = e.GetElementsByTagName("span");
+        //                DecodeLigne(souselements);
 
-                        if (_lignes.Count > 4)
-                            break;
-                    }
-                }
-            }
-            catch (Exception)
-            {
+        //                if (_lignes.Count > 4)
+        //                    break;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-            */
-            _hasNewInfo = true;
-            _donneesPretes = true;
-            _wb = null;
-        }
+        //        throw;
+        //    }
+        //    */
+        //    _hasNewInfo = true;
+        //    _donneesPretes = true;
+        //    _wb = null;
+        //}
 
-        private void ParseGroupDays(HtmlElement e)
-        {
-            HtmlElementCollection articles = e.GetElementsByTagName("article");
-            foreach (HtmlElement article in articles)
-            {
-                String date = "?";
-                String temperature = "?";
-                String icone = "?";
-                String texte = "?";
-                String vent = "?";
-                String pluie = "?";
-                foreach (HtmlElement el in article.Children)
-                {
-                    String tagName = el.TagName?.ToLower();
+        //private void ParseGroupDays(HtmlElement e)
+        //{
+        //    HtmlElementCollection articles = e.GetElementsByTagName("article");
+        //    foreach (HtmlElement article in articles)
+        //    {
+        //        String date = "?";
+        //        String temperature = "?";
+        //        String icone = "?";
+        //        String texte = "?";
+        //        String vent = "?";
+        //        String pluie = "?";
+        //        foreach (HtmlElement el in article.Children)
+        //        {
+        //            String tagName = el.TagName?.ToLower();
 
-                    if ("header".Equals(tagName))
-                    {
-                        // Header: date
-                        date = el.InnerText;
-                    }
-                    else
-                        if ("ul".Equals(tagName))
-                    {
-                        // Boucle dans les <LI>
-                        foreach (HtmlElement li in el.Children)
-                        {
-                            String classe = li.GetAttribute("className");
+        //            if ("header".Equals(tagName))
+        //            {
+        //                // Header: date
+        //                date = el.InnerText;
+        //            }
+        //            else
+        //                if ("ul".Equals(tagName))
+        //            {
+        //                // Boucle dans les <LI>
+        //                foreach (HtmlElement li in el.Children)
+        //                {
+        //                    String classe = li.GetAttribute("className");
 
-                            // temperature
-                            if ("day-summary-temperature".Equals(classe))
-                            {
-                                HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
-                                if (spans != null)
-                                {
-                                    temperature = filtreMin(spans[0]?.InnerText) + ", " + filtreMax(spans[1]?.InnerText);
-                                }
-                            }
+        //                    // temperature
+        //                    if ("day-summary-temperature".Equals(classe))
+        //                    {
+        //                        HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
+        //                        if (spans != null)
+        //                        {
+        //                            temperature = filtreMin(spans[0]?.InnerText) + ", " + filtreMax(spans[1]?.InnerText);
+        //                        }
+        //                    }
 
-                            // image et etxte de prevision
-                            if ("day-summary-image".Equals(classe))
-                            {
-                                HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
-                                if (spans != null)
-                                {
-                                    icone = getIcone(spans[0]?.GetAttribute("className"));
-                                    texte = spans[0]?.InnerText;
-                                }
-                            }
+        //                    // image et etxte de prevision
+        //                    if ("day-summary-image".Equals(classe))
+        //                    {
+        //                        HtmlElementCollection spans = li.GetElementsByTagName("SPAN");
+        //                        if (spans != null)
+        //                        {
+        //                            icone = getIcone(spans[0]?.GetAttribute("className"));
+        //                            texte = spans[0]?.InnerText;
+        //                        }
+        //                    }
 
-                            // Vent
-                            if ("day-summary-wind".Equals(classe))
-                            {
-                                HtmlElementCollection P = li.GetElementsByTagName("P");
-                                if (P != null)
-                                {
-                                    vent = P[0]?.InnerText + ' ' + filtreVent(P[1]?.InnerText);
-                                }
-                            }
-                        }
-                    }
+        //                    // Vent
+        //                    if ("day-summary-wind".Equals(classe))
+        //                    {
+        //                        HtmlElementCollection P = li.GetElementsByTagName("P");
+        //                        if (P != null)
+        //                        {
+        //                            vent = P[0]?.InnerText + ' ' + filtreVent(P[1]?.InnerText);
+        //                        }
+        //                    }
+        //                }
+        //            }
 
 
-                }
-                _lignes.Add(new LignePrevisionMeteo(icone, date, temperature, texte, vent, pluie));
-                if (_lignes.Count >= PanneauInfos.NB_LIGNES_INFO_MAX)
-                    return;
-            }
-        }
+        //        }
+        //        _lignes.Add(new LignePrevisionMeteo(icone, date, temperature, texte, vent, pluie));
+        //        if (_lignes.Count >= PanneauInfos.NB_LIGNES_INFO_MAX)
+        //            return;
+        //    }
+        //}
 
         private static string filtreMax(string texte)
         {

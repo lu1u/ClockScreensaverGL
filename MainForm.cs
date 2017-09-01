@@ -70,8 +70,8 @@ namespace ClockScreenSaverGL
         #region Fonds
         enum FONDS
         {
-            ESPACE, COURONNES, PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
-            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, MYRIADE, ADN,
+            ESPACE, COURONNES, GRILLE,  PARTICULES_GRAVITATION, METABALLES, BOIDS_OISEAUX, MULTICHAINES, NUAGES, MOLECULE, PARTICULES_PLUIE, CARRE_ESPACE, ENCRE, REBOND, TUNNEL, NEIGE_META, LIFE, TERRE,
+            BACTERIES, PARTICULES1, COULEUR, FUSEES, ARTIFICE, NOIR, ATTRACTEUR, NEBULEUSE, VIELLES_TELES, GRAVITE, ENGRENAGES, CUBES, BOIDS_POISSONS, MYRIADE, CONSOLE, ADN,
         };
 
         const FONDS PREMIER_FOND = FONDS.ESPACE;
@@ -164,7 +164,6 @@ namespace ClockScreenSaverGL
         private Fond createBackgroundObject(FONDS Type, bool initial)
         {
             OpenGL gl = openGLControl.OpenGL;
-
             if (!initial)
                 gl.PopAttrib();
 
@@ -218,11 +217,12 @@ namespace ClockScreenSaverGL
                 case FONDS.BOIDS_POISSONS: return new BoidsPoissons(gl);
                 case FONDS.MOLECULE: return new Molecule(gl);
                 case FONDS.MYRIADE: return new Myriade(gl);
+                case FONDS.CONSOLE: return new VielleConsole( gl );
+                case FONDS.GRILLE: return new Grille(gl);
 
                 default:
                     return new Metaballes(gl);
             }
-
         }
 
 

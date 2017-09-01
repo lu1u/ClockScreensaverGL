@@ -50,6 +50,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
             _pluie = pluie;
         }
 
+
         public void Dispose()
         {
             _bmp?.Dispose();
