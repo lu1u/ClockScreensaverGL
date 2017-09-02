@@ -29,8 +29,8 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         #endregion MEMBRES_PUBLICS
 
         private string _url;
-        private DateTime _datePrevisions;
-        private DateTime _finPrevisions;
+        //private DateTime _datePrevisions;
+        //private DateTime _finPrevisions;
         //WebBrowser _wb;
         static Dictionary<string, string> _liensIcones = new Dictionary<string, string>();
 
@@ -112,7 +112,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                 if (ligne.StartsWith("URL"))
                     _url = deuxiemePartie(ligne);
                 else
-                    if (ligne.StartsWith("VILLE"))
+                    if (ligne.StartsWith("TITRE"))
                     _title = deuxiemePartie(ligne);
                 else
                     if (ligne.StartsWith("JOUR"))
@@ -539,21 +539,22 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
         /// validite donnee avec la reponse de yahoo
         /// </summary>
         /// <returns></returns>
-        public float validitePassee()
-        {
-            DateTime now = DateTime.Now;
-            double dureeTotale = _finPrevisions.Subtract(_datePrevisions).TotalSeconds;
-            double dureeActuelle = _finPrevisions.Subtract(now).TotalSeconds;
-
-            return (float)dureeActuelle / (float)dureeTotale;
-        }
+        ///public float validitePassee()
+        ///{
+        ///    DateTime now = DateTime.Now;
+        ///    double dureeTotale = _finPrevisions.Subtract(_datePrevisions).TotalSeconds;
+        ///    double dureeActuelle = _finPrevisions.Subtract(now).TotalSeconds;
+        ///
+        ///    return (float)dureeActuelle / (float)dureeTotale;
+        ///}
 
         public bool MustRefresh(Temps maintenant)
         {
-            if (!_donneesPretes)
-                return false;
-
-            return maintenant.temps > _finPrevisions;
+            return false;
+            ///if (!_donneesPretes)
+            ///    return false;
+            ///
+            ///return maintenant.temps > _finPrevisions;
         }
 
         /***

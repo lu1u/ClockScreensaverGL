@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClockScreenSaverGL", "ClockScreenSaverGL.csproj", "{EE2C855D-D170-4D51-8F40-4329E2B61780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extraire Donnees Meteo", "..\Extraire Donnees Meteo\Extraire Donnees Meteo.csproj", "{E2F5125E-EE5A-4CF5-B5F1-81EB50F72046}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extraire Donnees Meteo", "Extraire Donnees Meteo\Extraire Donnees Meteo.csproj", "{E2F5125E-EE5A-4CF5-B5F1-81EB50F72046}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

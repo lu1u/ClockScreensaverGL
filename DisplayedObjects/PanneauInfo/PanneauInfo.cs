@@ -121,7 +121,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
 
                 gl.Translate(0, _taille.Height, 0);
                 // Jauge de duree de validite des previsions
-                float actuelle = _meteo.validitePassee();
+                /*float actuelle = _meteo.validitePassee();
                 col[3] = 0.9f;
                 gl.Color(col);
                 gl.Disable(OpenGL.GL_TEXTURE_2D);
@@ -143,7 +143,7 @@ namespace ClockScreenSaverGL.DisplayedObjects.Meteo
                     gl.Vertex(_taille.Width, 0);
                     gl.Vertex(_taille.Width, LARGEUR_JAUGE);
                 }
-                gl.End();
+                gl.End();*/
 
                 gl.MatrixMode(OpenGL.GL_PROJECTION);
                 gl.PopMatrix();
