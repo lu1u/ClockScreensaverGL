@@ -8,21 +8,30 @@ Features:
 - digital clock and date
 - GDI+ and OpenGL graphics
 - french citations (can be easily changed to add your own texts)
-- 10 different backgrounds
+- rss news
+- weather forecast
+- 20+ different backgrounds
 
-Snow background:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-1.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-1.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-2.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-3.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-4.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-5.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-6.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-7.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-8.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-9.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-10.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-11.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-12.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-13.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-14.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-15.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-16.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-17.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-18.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-19.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-20.png)
+![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/sans-titre-21.png)
 
-Blobs:
-
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-2.png)
-
-Space:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-3.png)
-
-Game of life:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-4.png)
-
-Moving bands:
-![ScreenShot](https://github.com/lu1u/ClockScreensaverGL/blob/master/screenshots/Sans%20titre-5.png)
 More...
