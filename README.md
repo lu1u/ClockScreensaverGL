@@ -1,5 +1,5 @@
 # ClockScreensaverGL
-Highly versatile Windows screen saver showing hour, dates and various things including 3D Opengl ([SharpGL](https://github.com/dwmkerr/sharpgl)) background.
+Highly versatile Windows screen saver written in C# showing hour, dates and various things including 3D Opengl ([SharpGL](https://github.com/dwmkerr/sharpgl)) background.
 
 I daily use this clock as a physiotherapist to mesure exercices time.
 
